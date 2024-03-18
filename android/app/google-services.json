@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "751042445266",
+    "project_id": "flutter-mango",
+    "storage_bucket": "flutter-mango.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751042445266:android:30110590e127a0b4ee120b",
+        "android_client_info": {
+          "package_name": "com.example.mangoflutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
