@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    var kk = snapshot.data!.data()['Email'];
+    // var kk = snapshot.data!.data()['Email'];
     return Scaffold(
       appBar: AppBar(
         // TRY THIS: Try changing the color here to a specific color (to
@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          future: checkFirebaseConnection(),
+          // future: checkFirebaseConnection(),
           // Column is also a layout widget. It takes a list of children and
           // arranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
               //how to print kk here,
               'You have pushed the button this many times:',
             ),
-            Text('$kk'),
+            // Text('$kk'),
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.headlineMedium,
