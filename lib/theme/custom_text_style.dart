@@ -1,0 +1,110 @@
+import 'package:flutter/material.dart';
+import '../core/app_export.dart';
+
+extension on TextStyle {
+  TextStyle get poppins {
+    return copyWith(
+      fontFamily: 'Poppins',
+    );
+  }
+
+  TextStyle get sofiaPro {
+    return copyWith(
+      fontFamily: 'Sofia Pro',
+    );
+  }
+}
+
+/// A collection of pre-defined text styles for customizing text appearance,
+/// categorized by different font families and weights.
+/// Additionally, this class includes extensions on [TextStyle] to easily apply specific font families to text.
+class CustomTextStyles {
+  // Body text style
+  static get bodyLarge18 => theme.textTheme.bodyLarge!.copyWith(
+        fontSize: 18.fSize,
+      );
+  static get bodyLargeSofiaPro => theme.textTheme.bodyLarge!.sofiaPro;
+  static get bodySmallGray500 => theme.textTheme.bodySmall!.copyWith(
+        color: appTheme.gray500,
+      );
+  static get bodySmallOnPrimaryContainer => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.onPrimaryContainer,
+        fontSize: 11.fSize,
+      );
+  static get bodySmallPrimary => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.primary,
+        fontSize: 11.fSize,
+      );
+  static get bodySmallSofiaProGray500 =>
+      theme.textTheme.bodySmall!.sofiaPro.copyWith(
+        color: appTheme.gray500,
+      );
+// Headline text style
+  static get headlineLargeSemiBold => theme.textTheme.headlineLarge!.copyWith(
+        fontWeight: FontWeight.w600,
+      );
+// Label text style
+  static get labelLarge12 => theme.textTheme.labelLarge!.copyWith(
+        fontSize: 12.fSize,
+      );
+  static get labelLargeGray900 => theme.textTheme.labelLarge!.copyWith(
+        color: appTheme.gray900,
+        fontSize: 12.fSize,
+        fontWeight: FontWeight.w600,
+      );
+  static get labelLargeSofiaProGray500 =>
+      theme.textTheme.labelLarge!.sofiaPro.copyWith(
+        color: appTheme.gray500,
+        fontSize: 12.fSize,
+      );
+// Title text style
+  static get titleLargeOnPrimary => theme.textTheme.titleLarge!.copyWith(
+        color: theme.colorScheme.onPrimary,
+        fontSize: 22.fSize,
+        fontWeight: FontWeight.w700,
+      );
+  static get titleLargeOnPrimaryBold => theme.textTheme.titleLarge!.copyWith(
+        color: theme.colorScheme.onPrimary,
+        fontSize: 22.fSize,
+        fontWeight: FontWeight.w700,
+      );
+  static get titleMediumGray50 => theme.textTheme.titleMedium!.copyWith(
+        color: appTheme.gray50,
+      );
+  static get titleMediumGray700 => theme.textTheme.titleMedium!.copyWith(
+        color: appTheme.gray700,
+      );
+  static get titleMediumOnErrorContainer =>
+      theme.textTheme.titleMedium!.copyWith(
+        color: theme.colorScheme.onErrorContainer,
+      );
+  static get titleMediumPrimaryContainer =>
+      theme.textTheme.titleMedium!.copyWith(
+        color: theme.colorScheme.primaryContainer,
+        fontSize: 18.fSize,
+        fontWeight: FontWeight.w700,
+      );
+  static get titleMediumPrimaryContainerSemiBold =>
+      theme.textTheme.titleMedium!.copyWith(
+        color: theme.colorScheme.primaryContainer,
+        fontWeight: FontWeight.w600,
+      );
+  static get titleMediumPrimaryContainer_1 =>
+      theme.textTheme.titleMedium!.copyWith(
+        color: theme.colorScheme.primaryContainer,
+      );
+  static get titleMediumSofiaProPrimaryContainer =>
+      theme.textTheme.titleMedium!.sofiaPro.copyWith(
+        color: theme.colorScheme.primaryContainer,
+        fontWeight: FontWeight.w600,
+      );
+  static get titleSmallBluegray900 => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.blueGray900,
+      );
+  static get titleSmallGray50 => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.gray50,
+      );
+  static get titleSmallGray50001 => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.gray50001,
+      );
+}
