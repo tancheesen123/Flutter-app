@@ -1,25 +1,37 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
+import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/app_bar/appbar_leading_image.dart';
 import '../../widgets/app_bar/custom_app_bar.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
+import '../../widgets/custom_text_form_field.dart';
 
-// ignore_for_file: must_be_immutable
-class SignUpScreen extends StatelessWidget {
-  SignUpScreen({Key? key})
-      : super(
-          key: key,
-        );
+class SignUpScreen extends StatefulWidget {
+  SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignUpScreenState createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
 
   TextEditingController userNameController = TextEditingController();
-
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,26 +152,25 @@ class SignUpScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 45.v),
-                    GestureDetector(
-                      onTap: () {
-                        onTapTxtAlreadyhaveaccount(context);
-                      },
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: "Already Have Account? ",
-                              style: theme.textTheme.bodyLarge,
-                            ),
-                            TextSpan(
-                              text: "Log In",
-                              style: CustomTextStyles
-                                  .titleMediumPrimaryContainer_1,
-                            )
-                          ],
-                        ),
-                        textAlign: TextAlign.left,
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Already Have Account? ",
+                            style: theme.textTheme.bodyLarge,
+                          ),
+                          TextSpan(
+                            text: "Log In",
+                            style:
+                                CustomTextStyles.titleMediumPrimaryContainer_1,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                navigateToLogin(context);
+                              },
+                          )
+                        ],
                       ),
+                      textAlign: TextAlign.left,
                     ),
                     SizedBox(height: 5.v)
                   ],
@@ -172,7 +183,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: double.maxFinite,
@@ -186,7 +196,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildUserName(BuildContext context) {
     return CustomTextFormField(
       controller: userNameController,
@@ -205,7 +214,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildEmail(BuildContext context) {
     return CustomTextFormField(
       controller: emailController,
@@ -225,7 +233,6 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildPassword(BuildContext context) {
     return CustomTextFormField(
       controller: passwordController,
@@ -259,21 +266,41 @@ class SignUpScreen extends StatelessWidget {
     );
   }
 
-  /// Section Widget
   Widget _buildSignUp(BuildContext context) {
     return CustomElevatedButton(
       text: "SIGN UP",
       buttonTextStyle: CustomTextStyles.titleMediumOnErrorContainer,
+      onPressed: () {
+        _signUp(context);
+      },
     );
   }
 
-  /// Navigates back to the previous screen.
+  navigateToLogin(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.logInScreen);
+  }
+
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
   }
 
-  /// Navigates to the logInScreen when the action is triggered.
   onTapTxtAlreadyhaveaccount(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.logInScreen);
+  }
+
+  void _signUp(BuildContext context) async {
+    String username = userNameController.text;
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _firebaseAuthService.signUpWithEmailAndPassword(
+        email, password);
+
+    if (user != null) {
+      print("User created successfully");
+      Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+    } else {
+      print("User creation failed");
+    }
   }
 }

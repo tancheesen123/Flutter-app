@@ -1,21 +1,43 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
+import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
 import '../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
 
-// ignore_for_file: must_be_immutable
-class LogInScreen extends StatelessWidget {
-  LogInScreen({Key? key})
-      : super(
-          key: key,
-        );
+class LogInScreen extends StatefulWidget {
+  const LogInScreen({Key? key}) : super(key: key);
 
+  @override
+  _LogInScreenState createState() => _LogInScreenState();
+}
+
+class _LogInScreenState extends State<LogInScreen> {
+  bool _isSigning = false;
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   TextEditingController emailController = TextEditingController();
-
   TextEditingController passwordController = TextEditingController();
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers and form key
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    _formKey = GlobalKey<FormState>();
+  }
+
+  @override
+  void dispose() {
+    // Dispose of controllers
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,6 +103,7 @@ class LogInScreen extends StatelessWidget {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
+                      textStyle: TextStyle(color: Colors.black),
                     ),
                     SizedBox(height: 24.v),
                     CustomTextFormField(
@@ -99,12 +122,21 @@ class LogInScreen extends StatelessWidget {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
-                      suffix: Container(
-                        margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgUnion,
-                          height: 13.v,
-                          width: 16.h,
+                      suffix: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
+                          child: CustomImageView(
+                            imagePath: _isPasswordVisible
+                                ? ImageConstant.imgUnion // Icon for visible password
+                                : ImageConstant.imgUnion, // Icon for hidden password
+                            height: 13.v,
+                            width: 16.h,
+                          ),
                         ),
                       ),
                       suffixConstraints: BoxConstraints(
@@ -112,6 +144,7 @@ class LogInScreen extends StatelessWidget {
                       ),
                       obscureText: true,
                       contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                      textStyle: TextStyle(color: Colors.black),
                     ),
                     SizedBox(height: 8.v),
                     Align(
@@ -127,7 +160,7 @@ class LogInScreen extends StatelessWidget {
                       buttonTextStyle:
                           CustomTextStyles.titleMediumOnErrorContainer,
                       onPressed: () {
-                        navigateToSignUp(context);
+                        _signIn(context);
                       },
                     ),
                     SizedBox(height: 35.v),
@@ -205,6 +238,10 @@ class LogInScreen extends StatelessWidget {
                             text: "Create Account",
                             style:
                                 CustomTextStyles.titleMediumPrimaryContainer_1,
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                navigateToSignUp(context);
+                              },
                           )
                         ],
                       ),
@@ -221,8 +258,33 @@ class LogInScreen extends StatelessWidget {
     );
   }
 
-  /// Navigates to the signUpScreen when the action is triggered.
+ 
+ 
+
+
   navigateToSignUp(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
+  }
+
+  void _signIn(BuildContext context) async {
+
+    setState(() {
+      _isSigning = true;
+    });
+    String email = emailController.text;
+    String password = passwordController.text;
+
+    User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+
+    setState(() {
+      _isSigning = false;
+    });
+
+    if (user != null) {
+      print("User sign in successfully");
+      Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+    } else {
+      print("User sign in failed");
+    }
   }
 }
