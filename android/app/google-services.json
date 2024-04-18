@@ -12,7 +12,12 @@
           "package_name": "com.example.firebase"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "751042445266-a6fmp16m89iqrk5n6689ia9qd6roqdg9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.workwise.app.testProject"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +48,20 @@
           "package_name": "com.example.mangoflutter"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "751042445266-ppkfuurbnqu0rgbvqfadnhmm3mtltete.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mangoflutter",
+            "certificate_hash": "b71d69e07115d3dc530782f2d8720d7294435c17"
+          }
+        },
+        {
+          "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA"
@@ -39,7 +69,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "751042445266-a6fmp16m89iqrk5n6689ia9qd6roqdg9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.workwise.app.testProject"
+              }
+            }
+          ]
         }
       }
     },
@@ -50,7 +92,12 @@
           "package_name": "com.example.test"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA"
@@ -58,7 +105,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "751042445266-a6fmp16m89iqrk5n6689ia9qd6roqdg9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.workwise.app.testProject"
+              }
+            }
+          ]
         }
       }
     },
@@ -69,7 +128,12 @@
           "package_name": "com.workwise.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA"
@@ -77,7 +141,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751042445266-dlobkl19tv79hlbs1o1hore9d50t07a2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "751042445266-a6fmp16m89iqrk5n6689ia9qd6roqdg9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.workwise.app.testProject"
+              }
+            }
+          ]
         }
       }
     }
