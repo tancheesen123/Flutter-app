@@ -25,6 +25,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  String? emailErrorMessage;
+  String? passwordErrorMessage;
+  
+
   @override
   void dispose() {
     userNameController.dispose();
@@ -84,6 +88,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     _buildUserName(context),
                     SizedBox(height: 24.v),
                     _buildEmail(context),
+                    SizedBox(height: 8), // Spacing between text field and error message
+                    // Display error message if exists
+                    if (emailErrorMessage != null)
+                      Text(
+                        emailErrorMessage!,
+                        style: TextStyle(color: Colors.red),
+                      ),
                     SizedBox(height: 24.v),
                     _buildPassword(context),
                     SizedBox(height: 40.v),
@@ -211,60 +222,107 @@ class _SignUpScreenState extends State<SignUpScreen> {
       prefixConstraints: BoxConstraints(
         maxHeight: 54.v,
       ),
+      textStyle: TextStyle(color: Colors.black),
     );
   }
 
   Widget _buildEmail(BuildContext context) {
-    return CustomTextFormField(
-      controller: emailController,
-      hintText: "Email Address",
-      textInputType: TextInputType.emailAddress,
-      prefix: Container(
-        margin: EdgeInsets.fromLTRB(20.h, 17.v, 15.h, 17.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgMessage,
-          height: 20.adaptSize,
-          width: 20.adaptSize,
-        ),
+  return CustomTextFormField(
+    controller: emailController,
+    hintText: "Email Address",
+    textInputType: TextInputType.emailAddress,
+    prefix: Container(
+      margin: EdgeInsets.fromLTRB(20.h, 17.v, 15.h, 17.v),
+      child: CustomImageView(
+        imagePath: ImageConstant.imgMessage,
+        height: 20.adaptSize,
+        width: 20.adaptSize,
       ),
-      prefixConstraints: BoxConstraints(
-        maxHeight: 54.v,
-      ),
-    );
-  }
+    ),
+    prefixConstraints: BoxConstraints(
+      maxHeight: 54.v,
+    ),
+    // Set the border directly within the CustomTextFormField
+    borderDecoration: emailErrorMessage != null
+        ? OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8.0),
+            borderSide: BorderSide(color: Colors.red),
+          )
+        : null,
+    onChanged: (value) {
+      setState(() {
+        emailErrorMessage = null; // Clear error message when text changes
+      });
+    },
+    textStyle: TextStyle(color: Colors.black),
+  );
+}
+
+
+
 
   Widget _buildPassword(BuildContext context) {
-    return CustomTextFormField(
-      controller: passwordController,
-      hintText: "Password",
-      textInputAction: TextInputAction.done,
-      textInputType: TextInputType.visiblePassword,
-      prefix: Container(
-        margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgLocationGray700,
-          height: 26.v,
-          width: 20.h,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      CustomTextFormField(
+        controller: passwordController,
+        hintText: "Password",
+        textInputAction: TextInputAction.done,
+        textInputType: TextInputType.visiblePassword,
+        prefix: Container(
+          margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
+          child: CustomImageView(
+            imagePath: ImageConstant.imgLocationGray700,
+            height: 26.v,
+            width: 20.h,
+          ),
         ),
-      ),
-      prefixConstraints: BoxConstraints(
-        maxHeight: 54.v,
-      ),
-      suffix: Container(
-        margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-        child: CustomImageView(
-          imagePath: ImageConstant.imgUnion,
-          height: 13.v,
-          width: 16.h,
+        prefixConstraints: BoxConstraints(
+          maxHeight: 54.v,
         ),
+        suffix: Container(
+          margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
+          child: CustomImageView(
+            imagePath: ImageConstant.imgUnion,
+            height: 13.v,
+            width: 16.h,
+          ),
+        ),
+        suffixConstraints: BoxConstraints(
+          maxHeight: 54.v,
+        ),
+        obscureText: true,
+        contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+        textStyle: TextStyle(color: Colors.black),
+        borderDecoration: passwordErrorMessage != null
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide(color: Colors.red),
+              )
+            : null,
+        onChanged: (value) {
+          setState(() {
+            passwordErrorMessage = null; // Clear error message when text changes
+          });
+        },
       ),
-      suffixConstraints: BoxConstraints(
-        maxHeight: 54.v,
-      ),
-      obscureText: true,
-      contentPadding: EdgeInsets.symmetric(vertical: 15.v),
-    );
-  }
+      // Error Message Text Widget
+      if (passwordErrorMessage != null)
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+          child: Text(
+            passwordErrorMessage!,
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 12.0,
+            ),
+          ),
+        ),
+    ],
+  );
+}
+
 
   Widget _buildSignUp(BuildContext context) {
     return CustomElevatedButton(
@@ -289,10 +347,36 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _signUp(BuildContext context) async {
-    String username = userNameController.text;
-    String email = emailController.text;
-    String password = passwordController.text;
+  String username = userNameController.text;
+  String email = emailController.text;
+  String password = passwordController.text;
 
+  // Regular expression patterns for password validation
+  RegExp lowercaseRegex = RegExp(r'(?=.*[a-z])');
+  RegExp uppercaseRegex = RegExp(r'(?=.*[A-Z])');
+  RegExp digitRegex = RegExp(r'(?=.*\d)');
+  RegExp lengthRegex = RegExp(r'^.{8,}$');
+
+  // Regular expression pattern for email validation
+  RegExp emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+  // Check both email and password validations
+  bool isEmailValid = emailRegex.hasMatch(email);
+  bool isPasswordValid = lowercaseRegex.hasMatch(password) &&
+      uppercaseRegex.hasMatch(password) &&
+      digitRegex.hasMatch(password) &&
+      lengthRegex.hasMatch(password);
+
+  // Set error messages accordingly
+  setState(() {
+    emailErrorMessage = isEmailValid ? null : "Please enter a valid email";
+    passwordErrorMessage = isPasswordValid
+        ? null
+        : "Password must contain at least 8 characters, including uppercase, lowercase, and numbers";
+  });
+
+  // If both email and password are valid, proceed with sign up
+  if (isEmailValid && isPasswordValid) {
     User? user = await _firebaseAuthService.signUpWithEmailAndPassword(
         email, password);
 
@@ -303,4 +387,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       print("User creation failed");
     }
   }
+}
+
 }
