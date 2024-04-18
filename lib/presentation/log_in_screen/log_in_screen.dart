@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/app_export.dart';
 import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -210,7 +211,9 @@ class _LogInScreenState extends State<LogInScreen> {
                           decoration: IconButtonStyleHelper.fillBlue,
                           child: CustomImageView(
                             imagePath: ImageConstant.img1421929991558096326,
+                            onTap:() => _signInWithGoogle(),
                           ),
+                          
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 20.h),
@@ -285,6 +288,32 @@ class _LogInScreenState extends State<LogInScreen> {
       Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
     } else {
       print("User sign in failed");
+    }
+  }
+
+  _signInWithGoogle()async{
+    
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+    try{
+      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      if(googleSignInAccount != null){
+        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+          accessToken: googleSignInAuthentication.accessToken,
+          idToken: googleSignInAuthentication.idToken
+        );
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+        User? user = userCredential.user;
+        if(user != null){
+          print("User sign in successfully");
+          Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+        }else{
+          print("User sign in failed");
+        }
+      }
+    }catch(e){
+      print("Error: ${e.toString()}");
     }
   }
 }
