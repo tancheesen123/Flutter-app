@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">workwise</string>
+    <string name="facebook_app_id">2565341600314066</string>
+    <string name="fb_login_protocol_scheme">fb2565341600314066</string>
+    <string name="facebook_client_token">7829d88ae55bb37f22fb8bf74b81a57a</string>
     
 </resources>
