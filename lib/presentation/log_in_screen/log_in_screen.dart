@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../core/app_export.dart';
 import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
@@ -22,6 +23,8 @@ class _LogInScreenState extends State<LogInScreen> {
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isPasswordVisible = true;
+  Map<String, dynamic>? _userData;
+  String welcome = "Facebook";
 
   @override
   void initState() {
@@ -133,8 +136,10 @@ class _LogInScreenState extends State<LogInScreen> {
                           margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
                           child: CustomImageView(
                             imagePath: _isPasswordVisible
-                                ? ImageConstant.imgUnion // Icon for visible password
-                                : ImageConstant.imgUnion, // Icon for hidden password
+                                ? ImageConstant
+                                    .imgUnion // Icon for visible password
+                                : ImageConstant
+                                    .imgUnion, // Icon for hidden password
                             height: 13.v,
                             width: 16.h,
                           ),
@@ -211,9 +216,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           decoration: IconButtonStyleHelper.fillBlue,
                           child: CustomImageView(
                             imagePath: ImageConstant.img1421929991558096326,
-                            onTap:() => _signInWithGoogle(),
+                            onTap: () => _signInWithGoogle(),
                           ),
-                          
                         ),
                         Padding(
                           padding: EdgeInsets.only(left: 20.h),
@@ -224,6 +228,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             decoration: IconButtonStyleHelper.fillIndigo,
                             child: CustomImageView(
                               imagePath: ImageConstant.imgFacebook,
+                              onTap: () => signInFacebook(),
                             ),
                           ),
                         )
@@ -261,23 +266,19 @@ class _LogInScreenState extends State<LogInScreen> {
     );
   }
 
- 
- 
-
-
   navigateToSignUp(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
   }
 
   void _signIn(BuildContext context) async {
-
     setState(() {
       _isSigning = true;
     });
     String email = emailController.text;
     String password = passwordController.text;
 
-    User? user = await _firebaseAuthService.signInWithEmailAndPassword(email, password);
+    User? user =
+        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
 
     setState(() {
       _isSigning = false;
@@ -291,29 +292,52 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 
-  _signInWithGoogle()async{
-    
+  _signInWithGoogle() async {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
 
-    try{
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
-      if(googleSignInAccount != null){
-        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
+    try {
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
+      if (googleSignInAccount != null) {
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
         final AuthCredential authCredential = GoogleAuthProvider.credential(
-          accessToken: googleSignInAuthentication.accessToken,
-          idToken: googleSignInAuthentication.idToken
-        );
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken);
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(authCredential);
         User? user = userCredential.user;
-        if(user != null){
+        if (user != null) {
           print("User sign in successfully");
           Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
-        }else{
+        } else {
           print("User sign in failed");
         }
       }
-    }catch(e){
+    } catch (e) {
       print("Error: ${e.toString()}");
     }
+  }
+
+  Future<UserCredential> signInFacebook() async {
+    final LoginResult result = await FacebookAuth.instance
+        .login(permissions: ['email']);
+
+    if (result.status == LoginStatus.success) {
+      final userData = await FacebookAuth.instance.getUserData();
+      Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+
+      _userData = userData;
+    }else {
+      print(result.message);
+    }
+
+    setState(() {
+      welcome = _userData?['email'];
+    });
+
+    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 }
