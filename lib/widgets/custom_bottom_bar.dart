@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-enum BottomBarEnum { Settings }
+enum BottomBarEnum { Home, Messages, Myjobs, Notifications, Settings }
 // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
@@ -21,32 +21,32 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
+      icon: ImageConstant.imgNavHome,
+      activeIcon: ImageConstant.imgNavHome,
+      title: "Home",
+      type: BottomBarEnum.Home,
+    ),
+    BottomMenuModel(
+      icon: ImageConstant.imgNavMessages,
+      activeIcon: ImageConstant.imgNavMessages,
+      title: "Messages",
+      type: BottomBarEnum.Messages,
+    ),
+    BottomMenuModel(
+      icon: ImageConstant.imgPhBagFillPrimary,
+      activeIcon: ImageConstant.imgPhBagFillPrimary,
+      title: "My Jobs",
+      type: BottomBarEnum.Myjobs,
+    ),
+    BottomMenuModel(
       icon: ImageConstant.imgHome,
       activeIcon: ImageConstant.imgHome,
-      title: "Settings",
-      type: BottomBarEnum.Settings,
+      title: "Notifications",
+      type: BottomBarEnum.Notifications,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgUserOnprimarycontainer,
-      activeIcon: ImageConstant.imgUserOnprimarycontainer,
-      title: "Settings",
-      type: BottomBarEnum.Settings,
-    ),
-    BottomMenuModel(
-      icon: ImageConstant.imgPhBagFillOnprimarycontainer,
-      activeIcon: ImageConstant.imgPhBagFillOnprimarycontainer,
-      title: "Settings",
-      type: BottomBarEnum.Settings,
-    ),
-    BottomMenuModel(
-      icon: ImageConstant.imgHomeOnprimarycontainer,
-      activeIcon: ImageConstant.imgHomeOnprimarycontainer,
-      title: "Settings",
-      type: BottomBarEnum.Settings,
-    ),
-    BottomMenuModel(
-      icon: ImageConstant.imgNavSettings,
-      activeIcon: ImageConstant.imgNavSettings,
+      icon: ImageConstant.imgNavSettingsOnprimarycontainer,
+      activeIcon: ImageConstant.imgNavSettingsOnprimarycontainer,
       title: "Settings",
       type: BottomBarEnum.Settings,
     )
