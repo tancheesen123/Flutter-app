@@ -9,6 +9,9 @@ class AppDecoration {
   static BoxDecoration get fillOnErrorContainer => BoxDecoration(
         color: theme.colorScheme.onErrorContainer,
       );
+  static BoxDecoration get fillWhiteA => BoxDecoration(
+        color: appTheme.whiteA700,
+      );
 // Outline decorations
   static BoxDecoration get outlineBlack => BoxDecoration(
         color: theme.colorScheme.onErrorContainer,
@@ -66,6 +69,37 @@ class AppDecoration {
           width: 1.h,
         ),
       );
+
+  static BoxDecoration get outlineGray => BoxDecoration(
+        color: appTheme.whiteA700,
+        boxShadow: [
+          BoxShadow(
+            color: appTheme.gray80019,
+            spreadRadius: 2.h,
+            blurRadius: 2.h,
+            offset: Offset(
+              0,
+              10,
+            ),
+          )
+        ],
+      );
+  static BoxDecoration get outlineGray5001 => BoxDecoration(
+        color: theme.colorScheme.primary,
+        border: Border.all(
+          color: appTheme.gray5001,
+          width: 1.h,
+          strokeAlign: BorderSide.strokeAlignCenter,
+        ),
+      );
+
+  static BoxDecoration get outlineGray300 => BoxDecoration(
+    color: appTheme.whiteA700,
+    border: Border.all(
+      color: appTheme.gray300,
+      width: 1.h,
+    ),
+  );
 }
 
 class BorderRadiusStyle {
@@ -78,5 +112,12 @@ class BorderRadiusStyle {
       );
   static BorderRadius get roundedBorder20 => BorderRadius.circular(
         20.h,
+      );
+  static BorderRadius get roundedBorder9 => BorderRadius.circular(
+        9.h,
+      );
+  // Custom borders
+  static BorderRadius get customBorderTL30 => BorderRadius.vertical(
+        top: Radius.circular(30.h),
       );
 }
