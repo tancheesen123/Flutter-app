@@ -17,12 +17,15 @@ class LogInScreen extends StatefulWidget {
 }
 
 class _LogInScreenState extends State<LogInScreen> {
+  String? _emailError;
+  String? _passwordError;
+  String? _signInError;
   bool _isSigning = false;
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isPasswordVisible = true;
+  bool _isPasswordVisible = false;
   Map<String, dynamic>? _userData;
   String welcome = "Facebook";
 
@@ -95,6 +98,7 @@ class _LogInScreenState extends State<LogInScreen> {
                     CustomTextFormField(
                       controller: emailController,
                       hintText: "Email Address",
+                      errorText: _emailError,
                       textInputType: TextInputType.emailAddress,
                       prefix: Container(
                         margin: EdgeInsets.fromLTRB(20.h, 15.v, 10.h, 15.v),
@@ -107,14 +111,28 @@ class _LogInScreenState extends State<LogInScreen> {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
+                      borderDecoration: _emailError != null && _passwordError != "Email or password is incorrect. Please try again."
+                          ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(color: Colors.red),
+                            )
+                          : null,
+                      onChanged: (value) {
+                        setState(() {
+                          _emailError =
+                              null; // Clear error message when text changes
+                        });
+                      },
                       textStyle: TextStyle(color: Colors.black),
                     ),
                     SizedBox(height: 24.v),
                     CustomTextFormField(
                       controller: passwordController,
                       hintText: "Password",
+                      errorText: _passwordError, // Set the error text
                       textInputAction: TextInputAction.done,
                       textInputType: TextInputType.visiblePassword,
+                      obscureText: !_isPasswordVisible,
                       prefix: Container(
                         margin: EdgeInsets.fromLTRB(20.h, 14.v, 14.h, 14.v),
                         child: CustomImageView(
@@ -126,30 +144,31 @@ class _LogInScreenState extends State<LogInScreen> {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
-                      suffix: GestureDetector(
-                        onTap: () {
+                      suffix: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey, // Explicitly use the default icon color
+                        ),
+                        onPressed: () {
                           setState(() {
                             _isPasswordVisible = !_isPasswordVisible;
                           });
                         },
-                        child: Container(
-                          margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-                          child: CustomImageView(
-                            imagePath: _isPasswordVisible
-                                ? ImageConstant
-                                    .imgUnion // Icon for visible password
-                                : ImageConstant
-                                    .imgUnion, // Icon for hidden password
-                            height: 13.v,
-                            width: 16.h,
-                          ),
-                        ),
                       ),
-                      suffixConstraints: BoxConstraints(
-                        maxHeight: 54.v,
-                      ),
-                      obscureText: true,
-                      contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                      borderDecoration: _passwordError != null && _passwordError != "Email or password is incorrect. Please try again."
+                           ? OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                              borderSide: BorderSide(color: Colors.red),
+                            )
+                          : null,
+                      onChanged: (value) {
+                        setState(() {
+                          _passwordError =
+                              null; // Clear error message when text changes
+                        });
+                      },
                       textStyle: TextStyle(color: Colors.black),
                     ),
                     SizedBox(height: 8.v),
@@ -270,25 +289,47 @@ class _LogInScreenState extends State<LogInScreen> {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
   }
 
-  void _signIn(BuildContext context) async {
-    setState(() {
-      _isSigning = true;
-    });
-    String email = emailController.text;
-    String password = passwordController.text;
-
-    User? user =
-        await _firebaseAuthService.signInWithEmailAndPassword(email, password);
-
-    setState(() {
-      _isSigning = false;
-    });
-
-    if (user != null) {
-      print("User sign in successfully");
-      Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+  void _signIn(BuildContext context) {
+    if (!emailController.text.contains('@') || emailController.text.isEmpty) {
+      setState(() {
+        _emailError = "Please enter a valid email address";
+      });
     } else {
-      print("User sign in failed");
+      setState(() {
+        _emailError = null;
+      });
+    }
+
+    // Similar handling for password
+    if (passwordController.text.isEmpty) {
+      setState(() {
+        _passwordError = "Password cannot be empty";
+      });
+    } else {
+      setState(() {
+        _passwordError = null;
+      });
+    }
+
+    // If no errors, proceed with sign-in
+    if (_emailError == null && _passwordError == null) {
+      _firebaseAuthService
+          .signInWithEmailAndPassword(
+              emailController.text, passwordController.text)
+          .then((user) {
+        if (user != null) {
+          Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+        } else {
+          setState(() {
+            _passwordError =
+                "Email or password is incorrect. Please try again.";
+          });
+        }
+      }).catchError((error) {
+        setState(() {
+          _passwordError = "Failed to sign in. Please try again.";
+        });
+      });
     }
   }
 
@@ -320,15 +361,15 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<UserCredential> signInFacebook() async {
-    final LoginResult result = await FacebookAuth.instance
-        .login(permissions: ['email']);
+    final LoginResult result =
+        await FacebookAuth.instance.login(permissions: ['email']);
 
     if (result.status == LoginStatus.success) {
       final userData = await FacebookAuth.instance.getUserData();
       Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
 
       _userData = userData;
-    }else {
+    } else {
       print(result.message);
     }
 
@@ -336,7 +377,8 @@ class _LogInScreenState extends State<LogInScreen> {
       welcome = _userData?['email'];
     });
 
-    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
