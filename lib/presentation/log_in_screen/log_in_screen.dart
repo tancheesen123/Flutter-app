@@ -382,4 +382,5 @@ class _LogInScreenState extends State<LogInScreen> {
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
+  
 }
