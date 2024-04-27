@@ -10,18 +10,36 @@ import '../presentation/Freelancer/sign_up_screen/sign_up_screen.dart';
 import '../presentation/Freelancer/myjob_applications_container_screen/myjob_applications_container_screen.dart';
 import '../presentation/Freelancer/profile_screen/profile_screen.dart';
 import '../presentation/Freelancer/search_tab_container_screen/search_tab_container_screen.dart';
-import '../presentation/Freelancer/settings_screen/settings_screen.dart'; // ignore_for_file: must_be_immutable
+import '../presentation/Freelancer/settings_screen/settings_screen.dart'; 
+import '../presentation/Freelancer/change_password_screen/change_password_screen.dart';
+import '../presentation/Freelancer/sign_up_verification_screen/sign_up_verification_screen.dart';
+import '../presentation/Client/home_client_container_screen/home_client_container_screen.dart';
+import '../presentation/Client/post_client_screen/post_client_screen.dart';
+import '../presentation/Client/post_client_one_screen/post_client_one_screen.dart';
 
-// ignore_for_file: must_be_immutable
 class AppRoutes {
+ 
+  //Client Routes
+  static const String homeClientContainerScreen ='/home_client_container_screen';
+
+  static const String homeClientPage = '/home_client_page';
+
+  static const String postClientScreen = '/post_client_screen';
+
+  static const String postClientOneScreen = '/post_client_one_screen';
+
+  //Freelancer Routes
+  static const String changePasswordScreen = '/change_password_screen';
+
+  static const String signUpVerificationScreen = '/sign_up_verification_screen';
+
   static const String logInScreen = '/log_in_screen';
 
   static const String signUpScreen = '/sign_up_screen';
 
   static const String selectJobCategoryScreen = '/select_job_category_screen';
 
-  static const String selectJobPreferenceScreen =
-      '/select_job_preference_screen';
+  static const String selectJobPreferenceScreen = '/select_job_preference_screen';
 
   static const String homeContainerScreen = '/home_container_screen';
 
@@ -37,8 +55,7 @@ class AppRoutes {
 
   static const String profileScreen = '/profile_screen';
 
-  static const String myjobApplicationsContainerScreen =
-      '/myjob_applications_container_screen';
+  static const String myjobApplicationsContainerScreen = '/myjob_applications_container_screen';
 
   static const String myjobApplicationsPage = '/myjob_applications_page';
 
@@ -46,6 +63,8 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
+
+    //Freelancer
     signUpScreen: (context) => SignUpScreen(),
     selectJobCategoryScreen: (context) => SelectJobCategoryScreen(),
     selectJobPreferenceScreen: (context) => SelectJobPreferenceScreen(),
@@ -56,6 +75,14 @@ class AppRoutes {
     profileScreen: (context) => ProfileScreen(),
     myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
     homePage: (context) => HomePage(),
+    changePasswordScreen: (context) => ChangePasswordScreen(),
+    signUpVerificationScreen: (context) => SignUpVerificationScreen(),
+
+    //Client
+    homeClientContainerScreen: (context) => HomeClientContainerScreen(),
+    postClientScreen: (context) => PostClientScreen(),
+    postClientOneScreen: (context) => PostClientOneScreen(),
+    
     initialRoute: (context) => LogInScreen()
   };
 }
