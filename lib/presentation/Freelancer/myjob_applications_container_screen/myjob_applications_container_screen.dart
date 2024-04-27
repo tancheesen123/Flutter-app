@@ -43,10 +43,10 @@ class MyjobApplicationsContainerScreen extends StatelessWidget {
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Home:
-        return AppRoutes.myjobApplicationsPage;
+        return AppRoutes.homeContainerScreen;
       case BottomBarEnum.Messages:
         return "/";
-      case BottomBarEnum.Myjobs:
+      case BottomBarEnum.Jobs:
         return "/";
       case BottomBarEnum.Notifications:
         return "/";

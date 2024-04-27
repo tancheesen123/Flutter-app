@@ -367,7 +367,6 @@ class _LogInScreenState extends State<LogInScreen> {
     if (result.status == LoginStatus.success) {
       final userData = await FacebookAuth.instance.getUserData();
       Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
-
       _userData = userData;
     } else {
       print(result.message);
