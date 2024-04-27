@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Freelancer/home_page/home_page.dart';
 import '../core/app_export.dart';
-import '../presentation/app_navigation_screen/app_navigation_screen.dart';
-import '../presentation/home_container_screen/home_container_screen.dart';
+import '../presentation/Freelancer/app_navigation_screen.dart';
+import '../presentation/Freelancer/home_container_screen/home_container_screen.dart';
 import '../presentation/log_in_screen/log_in_screen.dart';
-import '../presentation/select_job_category_screen/select_job_category_screen.dart';
-import '../presentation/select_job_preference_screen/select_job_preference_screen.dart';
-import '../presentation/sign_up_screen/sign_up_screen.dart';
-import '../presentation/myjob_applications_container_screen/myjob_applications_container_screen.dart';
-import '../presentation/profile_screen/profile_screen.dart';
-import '../presentation/search_tab_container_screen/search_tab_container_screen.dart';
-import '../presentation/settings_screen/settings_screen.dart'; // ignore_for_file: must_be_immutable
+import '../presentation/Freelancer/select_job_category_screen/select_job_category_screen.dart';
+import '../presentation/Freelancer/select_job_preference_screen/select_job_preference_screen.dart';
+import '../presentation/Freelancer/sign_up_screen/sign_up_screen.dart';
+import '../presentation/Freelancer/myjob_applications_container_screen/myjob_applications_container_screen.dart';
+import '../presentation/Freelancer/profile_screen/profile_screen.dart';
+import '../presentation/Freelancer/search_tab_container_screen/search_tab_container_screen.dart';
+import '../presentation/Freelancer/settings_screen/settings_screen.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class AppRoutes {
@@ -54,6 +55,7 @@ class AppRoutes {
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
     myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
+    homePage: (context) => HomePage(),
     initialRoute: (context) => LogInScreen()
   };
 }

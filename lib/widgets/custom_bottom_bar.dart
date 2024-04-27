@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../core/app_export.dart';
 
-enum BottomBarEnum { Home, Messages, Myjobs, Notifications, Settings }
+enum BottomBarEnum { Home, Messages, Jobs, Notifications, Settings }
 // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
@@ -33,10 +33,10 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Messages,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgPhBagFillPrimary,
-      activeIcon: ImageConstant.imgPhBagFillPrimary,
+      icon: ImageConstant.imgPhBagFill,
+      activeIcon: ImageConstant.imgPhBagFill,
       title: "My Jobs",
-      type: BottomBarEnum.Myjobs,
+      type: BottomBarEnum.Jobs,
     ),
     BottomMenuModel(
       icon: ImageConstant.imgHome,
@@ -45,8 +45,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Notifications,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgNavSettingsOnprimarycontainer,
-      activeIcon: ImageConstant.imgNavSettingsOnprimarycontainer,
+      icon: ImageConstant.imgNavSettings,
+      activeIcon: ImageConstant.imgNavSettings,
       title: "Settings",
       type: BottomBarEnum.Settings,
     )
@@ -54,8 +54,15 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 40.v,
+    return Container(
+      height: 70.v,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.onErrorContainer,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(31.h),
+          topRight: Radius.circular(30.h),
+        ),
+      ),
       child: BottomNavigationBar(
         backgroundColor: Colors.transparent,
         showSelectedLabels: false,
@@ -66,20 +73,14 @@ class CustomBottomBarState extends State<CustomBottomBar> {
         type: BottomNavigationBarType.fixed,
         items: List.generate(bottomMenuList.length, (index) {
           return BottomNavigationBarItem(
-            icon: CustomImageView(
-              imagePath: bottomMenuList[index].icon,
-              height: 18.v,
-              width: 17.h,
-              color: theme.colorScheme.primary,
-            ),
-            activeIcon: Column(
+            icon: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 CustomImageView(
-                  imagePath: bottomMenuList[index].activeIcon,
-                  height: 18.v,
-                  width: 17.h,
+                  imagePath: bottomMenuList[index].icon,
+                  height: 18.adaptSize,
+                  width: 18.adaptSize,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),
                 Padding(
@@ -89,6 +90,28 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                     style:
                         CustomTextStyles.bodySmallOnPrimaryContainer.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            activeIcon: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CustomImageView(
+                  imagePath: bottomMenuList[index].activeIcon,
+                  height: 18.v,
+                  width: 17.h,
+                  color: Color(0xFF007BFF),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 1.v),
+                  child: Text(
+                    bottomMenuList[index].title ?? "",
+                    style:
+                        CustomTextStyles.bodySmallSecondaryContainer.copyWith(
+                      color: Color(0xFF007BFF),
                     ),
                   ),
                 )
