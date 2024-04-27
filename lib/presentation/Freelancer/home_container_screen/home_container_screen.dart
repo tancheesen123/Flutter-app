@@ -24,22 +24,37 @@ class HomeContainerScreen extends StatelessWidget {
             transitionDuration: Duration(seconds: 0),
           ),
         ),
-        bottomNavigationBar: Padding(
-          padding: EdgeInsets.only(
-            left: 24.h,
-            right: 11.h,
-          ),
-          child: _buildBottomBarSection(context),
-        ),
+        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
 
   /// Section Widget
-  Widget _buildBottomBarSection(BuildContext context) {
+  Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {},
+      onChanged: (BottomBarEnum type) {
+        Navigator.pushNamed(
+            navigatorKey.currentContext!, getCurrentRoute(type));
+      },
     );
+  }
+
+  ///Handling route based on bottom click actions
+  String getCurrentRoute(BottomBarEnum type) {
+    switch (type) {
+      case BottomBarEnum.Home:
+        return AppRoutes.homeContainerScreen;
+      case BottomBarEnum.Messages:
+        return "/";
+      case BottomBarEnum.Jobs:
+        return "/";
+      case BottomBarEnum.Notifications:
+        return "/";
+      case BottomBarEnum.Settings:
+        return "/";
+      default:
+        return "/";
+    }
   }
 
   ///Handling page based on route

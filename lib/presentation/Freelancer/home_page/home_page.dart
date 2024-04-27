@@ -266,50 +266,50 @@ class HomePage extends StatelessWidget {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: EdgeInsets.only(top: 11.v),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 2.v),
-                      child: Text(
-                        "Home",
-                        style: CustomTextStyles.bodySmallPrimary,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 25.h,
-                        top: 2.v,
-                      ),
-                      child: Text(
-                        "Messages",
-                        style: CustomTextStyles.bodySmallOnPrimaryContainer,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 24.h,
-                        top: 2.v,
-                      ),
-                      child: Text(
-                        "My Jobs",
-                        style: CustomTextStyles.bodySmallOnPrimaryContainer,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 25.h),
-                      child: Text(
-                        "Notifications",
-                        style: CustomTextStyles.bodySmallOnPrimaryContainer,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            )
+            // Align(
+            //   alignment: Alignment.topLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.only(top: 11.v),
+            //     child: Row(
+            //       children: [
+            //         Padding(
+            //           padding: EdgeInsets.only(bottom: 2.v),
+            //           child: Text(
+            //             "Home",
+            //             style: CustomTextStyles.bodySmallPrimary,
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.only(
+            //             left: 25.h,
+            //             top: 2.v,
+            //           ),
+            //           child: Text(
+            //             "Messages",
+            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.only(
+            //             left: 24.h,
+            //             top: 2.v,
+            //           ),
+            //           child: Text(
+            //             "My Jobs",
+            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+            //           ),
+            //         ),
+            //         Padding(
+            //           padding: EdgeInsets.only(left: 25.h),
+            //           child: Text(
+            //             "Notifications",
+            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+            //           ),
+            //         )
+            //       ],
+            //     ),
+            //   ),
+            // )
           ],
         ),
       ),

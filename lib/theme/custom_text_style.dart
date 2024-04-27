@@ -52,7 +52,11 @@ class CustomTextStyles {
   static get titleMediumGray900 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.gray900,
         fontWeight: FontWeight.w500,
-      );    
+      );  
+  static get bodySmallSecondaryContainer => theme.textTheme.bodySmall!.copyWith(
+        color: theme.colorScheme.secondaryContainer,
+        fontSize: 11.fSize,
+      );  
 // Headline text style
   static get headlineLargeSemiBold => theme.textTheme.headlineLarge!.copyWith(
         fontWeight: FontWeight.w600,
