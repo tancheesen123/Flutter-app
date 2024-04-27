@@ -23,6 +23,9 @@ class CustomTextStyles {
   static get bodyLarge18 => theme.textTheme.bodyLarge!.copyWith(
         fontSize: 18.fSize,
       );
+  static get bodyLargeLight => theme.textTheme.bodyLarge!.copyWith(
+        fontWeight: FontWeight.w300,
+      );
   static get bodyLargeOnError => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.onError,
         fontWeight: FontWeight.w300,
@@ -56,7 +59,24 @@ class CustomTextStyles {
   static get bodySmallSecondaryContainer => theme.textTheme.bodySmall!.copyWith(
         color: theme.colorScheme.secondaryContainer,
         fontSize: 11.fSize,
-      );  
+      ); 
+  static get bodyLargeGray700 => theme.textTheme.bodyLarge!.copyWith(
+        color: appTheme.gray700,
+      );
+  static get bodyMediumGray600 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray600,
+        fontSize: 14.fSize,
+        fontWeight: FontWeight.w300,
+      );
+  static get bodySmallGray700 => theme.textTheme.bodySmall!.copyWith(
+      color: appTheme.gray700.withOpacity(0.8),
+    );
+  static get bodyMediumGray70001 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray70001,
+      );
+  static get bodyMediumOnErrorContainer => theme.textTheme.bodyMedium!.copyWith(
+        color: theme.colorScheme.onErrorContainer,
+      ); 
 // Headline text style
   static get headlineLargeSemiBold => theme.textTheme.headlineLarge!.copyWith(
         fontWeight: FontWeight.w600,
@@ -64,6 +84,9 @@ class CustomTextStyles {
 // Label text style
   static get labelLarge12 => theme.textTheme.labelLarge!.copyWith(
         fontSize: 12.fSize,
+      );
+  static get labelLargeGreenA700 => theme.textTheme.labelLarge!.copyWith(
+        color: appTheme.greenA700,
       );
   static get labelLargeGray900 => theme.textTheme.labelLarge!.copyWith(
         color: appTheme.gray900,
@@ -74,6 +97,10 @@ class CustomTextStyles {
       theme.textTheme.labelLarge!.sofiaPro.copyWith(
         color: appTheme.gray500,
         fontSize: 12.fSize,
+      );
+  static get labelLargeSemiBold => theme.textTheme.labelLarge!.copyWith(
+        fontSize: 13.fSize,
+        fontWeight: FontWeight.w600,
       );
 // Title text style
   static get titleLargeOnPrimary => theme.textTheme.titleLarge!.copyWith(
@@ -138,5 +165,12 @@ class CustomTextStyles {
   static get titleMediumOrangeA200 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.orangeA200,
         fontWeight: FontWeight.w500,
+      );
+  static get titleMediumGreenA700 => theme.textTheme.titleMedium!.copyWith(
+        color: appTheme.greenA700,
+        fontWeight: FontWeight.w500,
+      );
+  static get titleLargeSemiBold => theme.textTheme.titleLarge!.copyWith(
+        fontWeight: FontWeight.w600,
       );
 }
