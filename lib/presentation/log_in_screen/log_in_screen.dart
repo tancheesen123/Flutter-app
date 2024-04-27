@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,9 @@ class _LogInScreenState extends State<LogInScreen> {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
-                      borderDecoration: _emailError != null && _passwordError != "Email or password is incorrect. Please try again."
+                      borderDecoration: _emailError != null &&
+                              _passwordError !=
+                                  "Email or password is incorrect. Please try again."
                           ? OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               borderSide: BorderSide(color: Colors.red),
@@ -149,7 +152,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           _isPasswordVisible
                               ? Icons.visibility
                               : Icons.visibility_off,
-                          color: Colors.grey, // Explicitly use the default icon color
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
                         ),
                         onPressed: () {
                           setState(() {
@@ -157,8 +161,10 @@ class _LogInScreenState extends State<LogInScreen> {
                           });
                         },
                       ),
-                      borderDecoration: _passwordError != null && _passwordError != "Email or password is incorrect. Please try again."
-                           ? OutlineInputBorder(
+                      borderDecoration: _passwordError != null &&
+                              _passwordError !=
+                                  "Email or password is incorrect. Please try again."
+                          ? OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               borderSide: BorderSide(color: Colors.red),
                             )
@@ -316,9 +322,18 @@ class _LogInScreenState extends State<LogInScreen> {
       _firebaseAuthService
           .signInWithEmailAndPassword(
               emailController.text, passwordController.text)
-          .then((user) {
+          .then((user) async {
         if (user != null) {
-          Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+          getRoleType(emailController.text.toLowerCase()).then((roleType) {
+            if (roleType == 1) {
+              Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+            } else if (roleType == 2) {
+              Navigator.pushNamed(context, AppRoutes.homeClientContainerScreen);
+            }
+          }).catchError((error) {
+            print("Error: $error");
+            // Handle error, such as showing a dialog or displaying an error message
+          });
         } else {
           setState(() {
             _passwordError =
@@ -360,6 +375,28 @@ class _LogInScreenState extends State<LogInScreen> {
     }
   }
 
+  Future<int> getRoleType(String email) async {
+    print("This is email intextbox $email");
+    final snapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .where('email', isEqualTo: email.toLowerCase())
+        .get();
+
+    if (snapshot.docs.isNotEmpty) {
+      final userData = snapshot.docs.first.data();
+      final int roleType = userData['roleType'];
+      // final email2 = userData[
+      //     'email']; // Accessing the 'roleType' field from the document data
+      // print("This is role type123: $roleType");
+      // print("This is email123: $email2");
+      return roleType;
+    } else {
+      print("No user found with email: $email");
+      throw Exception("No user found with email: $email");
+    }
+    // notifyListeners();
+  }
+
   Future<UserCredential> signInFacebook() async {
     final LoginResult result =
         await FacebookAuth.instance.login(permissions: ['email']);
@@ -381,5 +418,4 @@ class _LogInScreenState extends State<LogInScreen> {
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
-  
 }
