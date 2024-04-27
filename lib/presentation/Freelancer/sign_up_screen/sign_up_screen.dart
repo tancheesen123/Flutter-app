@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
@@ -392,6 +393,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       if (user != null) {
         print("User created successfully");
+        addPersonalData(username, email, 1);
         Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
       } else {
         print("User creation failed");
@@ -447,5 +449,26 @@ class _SignUpScreenState extends State<SignUpScreen> {
         FacebookAuthProvider.credential(result.accessToken!.token);
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<DocumentReference> addPersonalData(
+      String username, String email, int roleType) {
+    // if (!_loggedIn) {
+    //   throw Exception('Must be logged in');
+    // }
+
+    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
+      'username': username,
+      'email': email,
+      'dateOfBirth': "1-1-2024",
+      'gender': "male",
+      'IdentityNum': 0102302103213,
+      'roleType': roleType,
+      'Nationality': "Malaysia",
+      'Token': "123456",
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
+      // 'name': FirebaseAuth.instance.currentUser!.displayName,
+      // 'userId': FirebaseAuth.instance.currentUser!.uid,
+    });
   }
 }
