@@ -46,7 +46,7 @@ class SettingsScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
+        // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -304,14 +304,14 @@ class SettingsScreen extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
-      },
-    );
-  }
+  // Widget _buildBottomBar(BuildContext context) {
+  //   return CustomBottomBar(
+  //     onChanged: (BottomBarEnum type) {
+  //       Navigator.pushNamed(
+  //           navigatorKey.currentContext!, getCurrentRoute(type));
+  //     },
+  //   );
+  // }
 
   /// Common widget
   Widget _buildJobExperience(
@@ -349,30 +349,30 @@ class SettingsScreen extends StatelessWidget {
   }
 
   ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return AppRoutes.homeContainerScreen;
-      case BottomBarEnum.Messages:
-        return "/";
-      case BottomBarEnum.Jobs:
-        return "/";
-      case BottomBarEnum.Notifications:
-        return "/";
-      case BottomBarEnum.Settings:
-        return "/";
-      default:
-        return "/";
-    }
-  }
+  // String getCurrentRoute(BottomBarEnum type) {
+  //   switch (type) {
+  //     case BottomBarEnum.Home:
+  //       return AppRoutes.homeContainerScreen;
+  //     case BottomBarEnum.Messages:
+  //       return "/";
+  //     case BottomBarEnum.Jobs:
+  //       return "/";
+  //     case BottomBarEnum.Notifications:
+  //       return "/";
+  //     case BottomBarEnum.Settings:
+  //       return "/";
+  //     default:
+  //       return "/";
+  //   }
+  // }
 
   ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.myjobApplicationsPage:
-        return MyjobApplicationsPage();
-      default:
-        return DefaultWidget();
-    }
-  }
+  // Widget getCurrentPage(String currentRoute) {
+  //   switch (currentRoute) {
+  //     case AppRoutes.myjobApplicationsPage:
+  //       return MyjobApplicationsPage();
+  //     default:
+  //       return DefaultWidget();
+  //   }
+  // }
 }
