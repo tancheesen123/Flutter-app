@@ -168,10 +168,13 @@ class PrimaryColors {
   Color get gray5001 => Color(0XFFF8F8F8);
   Color get gray5002 => Color(0XFFFAFAFA);
   Color get gray50001 => Color(0XFF94969D);
+  Color get gray600 => Color(0XFF808080);
   Color get gray700 => Color(0XFF6A6A6A);
   Color get gray900 => Color(0XFF151313);
   Color get gray40011 => Color(0X11C4C4C4);
   Color get gray80019 => Color(0X193F3B4B);
+  Color get gray70001 => Color(0XFF636363);
+  Color get gray90011 => Color(0X11071429);
 // Grayc
   Color get gray6004c => Color(0X4C808080);
 // Orange
@@ -184,4 +187,7 @@ Color get orangeA200 => Color(0XFFF29339);
   Color get yellow800 => Color(0XFFECB22E);
 // White
   Color get whiteA700 => Color(0XFFFFFFFF);
+// Green
+  Color get green5033 => Color(0X33DDFFE9);
+  Color get greenA700 => Color(0XFF1ED760);
 }
