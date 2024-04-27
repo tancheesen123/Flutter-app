@@ -451,13 +451,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
 
-  Future<DocumentReference> addPersonalData(
-      String username, String email, int roleType) {
+  Future<void> addPersonalData(
+      String username, String email, int roleType) async {
     // if (!_loggedIn) {
     //   throw Exception('Must be logged in');
     // }
 
-    return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
+    // String customDocumentId = 'unique_id_here';
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('user').doc(username);
+
+    await documentReference.set({
       'username': username,
       'email': email,
       'dateOfBirth': "1-1-2024",
@@ -470,5 +474,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
       // 'name': FirebaseAuth.instance.currentUser!.displayName,
       // 'userId': FirebaseAuth.instance.currentUser!.uid,
     });
+
+    // return FirebaseFirestore.instance.collection('user').add(<String, dynamic>{
+    //   'username': username,
+    //   'email': email,
+    //   'dateOfBirth': "1-1-2024",
+    //   'gender': "male",
+    //   'IdentityNum': 0102302103213,
+    //   'roleType': roleType,
+    //   'Nationality': "Malaysia",
+    //   'Token': "123456",
+    //   'timestamp': DateTime.now().millisecondsSinceEpoch,
+    //   // 'name': FirebaseAuth.instance.currentUser!.displayName,
+    //   // 'userId': FirebaseAuth.instance.currentUser!.uid,
+    // });
   }
 }
