@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
               ),
               SizedBox(height: 1.v),
               Text(
-                "Total Earning: RM2,590.00",
+                "Total Earning: RM2,123123.00",
                 style: CustomTextStyles.titleSmallBluegray900,
               )
             ],
