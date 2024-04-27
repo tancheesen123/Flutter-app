@@ -86,4 +86,63 @@ class ImageConstant {
   static String imgFacebook = '$imagePath/img_facebook.svg';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String imgNavHome = '$imagePath/img_nav_home.svg';
+
+  static String imgNavMessages = '$imagePath/img_nav_messages.svg';
+
+// Settings images
+  static String imgIconamoonProfile = '$imagePath/img_iconamoon_profile.svg';
+
+  static String imgArrowRight = '$imagePath/img_arrow_right.svg';
+
+  static String imgMingcuteBankLine = '$imagePath/img_mingcute_bank_line.svg';
+
+  static String imgUilBag = '$imagePath/img_uil_bag.svg';
+
+  static String imgMingcuteNotificationLine =
+      '$imagePath/img_mingcute_notification_line.svg';
+
+  static String imgFluentPhone12Regular =
+      '$imagePath/img_fluent_phone_12_regular.svg';
+
+  static String imgMdiPasswordOutline =
+      '$imagePath/img_mdi_password_outline.svg';
+
+  static String imgUilMoneyWithdrawal =
+      '$imagePath/img_uil_money_withdrawal.svg';
+
+  static String imgGgDarkMode = '$imagePath/img_gg_dark_mode.svg';
+
+  static String imgMaterialSymbolsLanguage =
+      '$imagePath/img_material_symbols_language.svg';
+
+  static String imgMaterialSymbolsLogout =
+      '$imagePath/img_material_symbols_logout.svg';
+
+
+// Profile images
+  
+  static String imgFill244 = '$imagePath/img_fill_244.svg';
+
+  static String imgArrowdown = '$imagePath/img_arrowdown.svg';
+
+  static String imgClose = '$imagePath/img_close.svg';
+
+// MyJob-Applications - Container images
+  static String imgPhBagFillPrimary = '$imagePath/img_ph_bag_fill_primary.svg';
+
+  static String imgNavSettingsOnprimarycontainer =
+      '$imagePath/img_nav_settings_onprimarycontainer.svg';
+
+// MyJob-Applications images
+  static String imgRectangle5162 = '$imagePath/img_rectangle_516_2.png';
+
+  static String imgNotification = '$imagePath/img_notification.svg';
+
+  static String imgRectangle5163 = '$imagePath/img_rectangle_516_3.png';
+
+  static String imgRectangle5164 = '$imagePath/img_rectangle_516_4.png';
+  
+
 }
