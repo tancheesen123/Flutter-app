@@ -18,6 +18,10 @@ extension IconButtonStyleHelper on CustomIconButton {
         color: appTheme.gray300,
         borderRadius: BorderRadius.circular(15.h),
       );
+  static BoxDecoration get fillSecondaryContainer => BoxDecoration(
+        color: Color(0xFF007BFF),
+        borderRadius: BorderRadius.circular(15.h),
+      );
 }
 
 class CustomIconButton extends StatelessWidget {
