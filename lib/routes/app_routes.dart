@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Freelancer/home_page/home_page.dart';
 import '../core/app_export.dart';
 import '../presentation/Freelancer/app_navigation_screen.dart';
 import '../presentation/Freelancer/home_container_screen/home_container_screen.dart';
@@ -54,6 +55,7 @@ class AppRoutes {
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
     myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
+    homePage: (context) => HomePage(),
     initialRoute: (context) => LogInScreen()
   };
 }
