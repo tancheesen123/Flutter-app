@@ -394,7 +394,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       if (user != null) {
         print("User created successfully");
         addPersonalData(username, email, 1);
-        Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+        Navigator.pushNamed(context, AppRoutes.signUpVerificationScreen);
       } else {
         print("User creation failed");
       }
