@@ -143,6 +143,23 @@ class ImageConstant {
   static String imgRectangle5163 = '$imagePath/img_rectangle_516_3.png';
 
   static String imgRectangle5164 = '$imagePath/img_rectangle_516_4.png';
-  
+
+// Home(Client) images
+  static String imgRectangle517 = '$imagePath/img_rectangle_516_2.png';
+
+// Post(Client) images
+  static String imgGoBtn = '$imagePath/img_go_btn.svg';
+
+  static String imgNavHomeOnprimarycontainer = '$imagePath/img_nav_home_onprimarycontainer.svg';
+
+  static String imgPhBagFillSecondarycontainer = '$imagePath/img_ph_bag_fill_secondarycontainer.svg';
+
+// Post(Client) One images
+  static String imgGroup71 = '$imagePath/img_group_71.png';
+
+  static String imgIcons8Information = '$imagePath/img_icons8_information.svg';
+
+// Sign Up Verification images
+  static String imgEmail = '$imagePath/img_email.svg';
 
 }
