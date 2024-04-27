@@ -12,4 +12,10 @@ class CustomButtonStyles {
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
         elevation: MaterialStateProperty.all<double>(0),
       );
+static ButtonStyle get fillOrangeA => ElevatedButton.styleFrom(
+        backgroundColor: appTheme.orangeA200.withOpacity(0.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.h),
+        ),
+      );
 }
