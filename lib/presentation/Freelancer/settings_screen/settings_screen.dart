@@ -322,16 +322,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  /// Section Widget
-  // Widget _buildBottomBar(BuildContext context) {
-  //   return CustomBottomBar(
-  //     onChanged: (BottomBarEnum type) {
-  //       Navigator.pushNamed(
-  //           navigatorKey.currentContext!, getCurrentRoute(type));
-  //     },
-  //   );
-  // }
-
   /// Common widget
   Widget _buildJobExperience(
     BuildContext context, {
@@ -374,19 +364,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> logout(BuildContext context) async {
-    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-    try {
-      await _firebaseAuth.signOut();
-      // Navigate to the login page and remove all previous routes
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => LogInScreen()),
-        (route) => false,
-      );
-    } catch (e) {
-      // Handle any errors here
-      print("Error signing out: $e");
-    }
+  try {
+    await _firebaseAuth.signOut();
+    
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil( MaterialPageRoute( builder: (BuildContext context) { return LogInScreen(); }, ), (_) => false, );
+    
+  } catch (e) {
+    // Handle any errors here
+    print("Error signing out: $e");
   }
+}
+
 }
