@@ -1,18 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import '../../../widgets/custom_switch.dart';
-import '../myjob_applications_page/myjob_applications_page.dart'; // ignore_for_file: must_be_immutable
+import '../myjob_applications_page/myjob_applications_page.dart';
+import '../../log_in_screen/log_in_screen.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key? key})
       : super(
           key: key,
         );
 
+  @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
   bool isSelectedSwitch = false;
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
@@ -22,28 +29,30 @@ class SettingsScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 20.v),
-              _buildAccountColumnIconamoon(context),
-              SizedBox(height: 27.v),
-              _buildAccountColumnGgdarkmod(context),
-              SizedBox(height: 31.v),
-              _buildLogout(context),
-              Container(
-                height: 48.v,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(0, 0),
-                    end: Alignment(0, 1),
-                    colors: [theme.colorScheme.onPrimary, appTheme.gray40011],
-                  ),
-                ),
-              )
-            ],
+        body: SingleChildScrollView(
+          child: SizedBox(
+            width: double.maxFinite,
+            child: Column(
+              children: [
+                SizedBox(height: 20.v),
+                _buildAccountColumnIconamoon(context),
+                SizedBox(height: 27.v),
+                _buildAccountColumnGgdarkmod(context),
+                SizedBox(height: 31.v),
+                _buildLogout(context),
+                // Container(
+                //   height: 48.v,
+                //   width: double.maxFinite,
+                //   decoration: BoxDecoration(
+                //     gradient: LinearGradient(
+                //       begin: Alignment(0, 0),
+                //       end: Alignment(0, 1),
+                //       colors: [theme.colorScheme.onPrimary, appTheme.gray40011],
+                //     ),
+                //   ),
+                // )
+              ],
+            ),
           ),
         ),
         // bottomNavigationBar: _buildBottomBar(context),
@@ -272,33 +281,43 @@ class SettingsScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildLogout(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 20.h),
-      padding: EdgeInsets.symmetric(
-        horizontal: 23.h,
-        vertical: 18.v,
-      ),
-      decoration: AppDecoration.outlineGray.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder12,
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          CustomImageView(
-            imagePath: ImageConstant.imgMaterialSymbolsLogout,
-            height: 20.adaptSize,
-            width: 20.adaptSize,
-            margin: EdgeInsets.only(bottom: 4.v),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 12.h),
-            child: Text(
-              "Logout",
-              style: CustomTextStyles.titleMediumGray900,
+    return GestureDetector(
+      onTap: () async {
+        try {
+          await logout(context); // Call the logout function passing the context
+        } catch (e) {
+          // Handle any errors here
+          print("Error during logout: $e");
+        }
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 20.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: 23.h,
+          vertical: 18.v,
+        ),
+        decoration: AppDecoration.outlineGray.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder12,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            CustomImageView(
+              imagePath: ImageConstant.imgMaterialSymbolsLogout,
+              height: 20.adaptSize,
+              width: 20.adaptSize,
+              margin: EdgeInsets.only(bottom: 6.v),
             ),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: 12.h),
+              child: Text(
+                "Logout",
+                style: CustomTextStyles.titleMediumGray900,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -348,31 +367,26 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  ///Handling route based on bottom click actions
-  // String getCurrentRoute(BottomBarEnum type) {
-  //   switch (type) {
-  //     case BottomBarEnum.Home:
-  //       return AppRoutes.homeContainerScreen;
-  //     case BottomBarEnum.Messages:
-  //       return "/";
-  //     case BottomBarEnum.Jobs:
-  //       return "/";
-  //     case BottomBarEnum.Notifications:
-  //       return "/";
-  //     case BottomBarEnum.Settings:
-  //       return "/";
-  //     default:
-  //       return "/";
-  //   }
-  // }
+  FirebaseAuth auth = FirebaseAuth.instance;
 
-  ///Handling page based on route
-  // Widget getCurrentPage(String currentRoute) {
-  //   switch (currentRoute) {
-  //     case AppRoutes.myjobApplicationsPage:
-  //       return MyjobApplicationsPage();
-  //     default:
-  //       return DefaultWidget();
-  //   }
-  // }
+  signOut() async {
+    await auth.signOut();
+  }
+
+  Future<void> logout(BuildContext context) async {
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+    try {
+      await _firebaseAuth.signOut();
+      // Navigate to the login page and remove all previous routes
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LogInScreen()),
+        (route) => false,
+      );
+    } catch (e) {
+      // Handle any errors here
+      print("Error signing out: $e");
+    }
+  }
 }
