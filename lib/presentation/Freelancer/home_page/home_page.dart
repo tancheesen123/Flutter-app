@@ -1,9 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_search_view.dart';
 import 'widgets/userprofile1_item_widget.dart';
-import 'widgets/userprofile_item_widget.dart'; // ignore_for_file: must_be_immutable
+import 'widgets/userprofile_item_widget.dart';
+import '../profile_screen/profile_screen.dart';
+// ignore_for_file: must_be_immutable
 // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
@@ -45,15 +48,14 @@ class HomePage extends StatelessWidget {
                           showAllText: "Show All",
                         ),
                       ),
-                      SizedBox(height: 14.v),
                       SizedBox(
                         height: 380.v,
                         width: double.maxFinite,
                         child: Stack(
                           alignment: Alignment.topCenter,
                           children: [
-                            _buildSlack(context),
-                            _buildUserprofile(context)
+                            // _buildSlack(context),
+                            _buildUserProfile(context)
                           ],
                         ),
                       )
@@ -75,58 +77,68 @@ class HomePage extends StatelessWidget {
         left: 32.h,
         right: 20.h,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Welcome Back!",
-                style: CustomTextStyles.titleSmallGray50001,
-              ),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "  ",
-                    ),
-                    TextSpan(
-                      text: "Adam Shafi 👋",
-                      style: CustomTextStyles.titleLargeOnPrimary,
-                    )
-                  ],
+      child: GestureDetector(
+        onTap: () {
+          // Add your onclick function here
+          // For example, you can navigate to another screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ProfileScreen()),
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Welcome Back!",
+                  style: CustomTextStyles.titleSmallGray50001,
                 ),
-                textAlign: TextAlign.left,
-              ),
-              SizedBox(height: 1.v),
-              Text(
-                "Total Earning: RM2,590.00",
-                style: CustomTextStyles.titleSmallBluegray900,
-              )
-            ],
-          ),
-          Container(
-            height: 44.adaptSize,
-            width: 44.adaptSize,
-            margin: EdgeInsets.only(
-              top: 7.v,
-              bottom: 26.v,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(
-                22.h,
-              ),
-              image: DecorationImage(
-                image: AssetImage(
-                  ImageConstant.imgRectangle382,
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "  ",
+                      ),
+                      TextSpan(
+                        text: "Adam Shafi 👋",
+                        style: CustomTextStyles.titleLargeOnPrimary,
+                      )
+                    ],
+                  ),
+                  textAlign: TextAlign.left,
                 ),
-                fit: BoxFit.cover,
-              ),
+                SizedBox(height: 1.v),
+                Text(
+                  "Total Earning: RM2,.00",
+                  style: CustomTextStyles.titleSmallBluegray900,
+                )
+              ],
             ),
-          )
-        ],
+            Container(
+              height: 44.adaptSize,
+              width: 44.adaptSize,
+              margin: EdgeInsets.only(
+                top: 7.v,
+                bottom: 26.v,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(
+                  22.h,
+                ),
+                image: DecorationImage(
+                  image: AssetImage(
+                    ImageConstant.imgRectangle382,
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -175,22 +187,10 @@ class HomePage extends StatelessWidget {
         ),
         SizedBox(height: 20.v),
         Align(
-          alignment: Alignment.centerRight,
+          alignment: Alignment.centerLeft,
           child: SizedBox(
-            height: 160.v,
-            child: ListView.separated(
-              padding: EdgeInsets.only(left: 20.h),
-              scrollDirection: Axis.horizontal,
-              separatorBuilder: (context, index) {
-                return SizedBox(
-                  width: 20.h,
-                );
-              },
-              itemCount: 4,
-              itemBuilder: (context, index) {
-                return UserprofileItemWidget();
-              },
-            ),
+            height: 185.v,
+            child: UserprofileItemWidget(), // Remove 'return' keyword here
           ),
         )
       ],
@@ -317,20 +317,20 @@ class HomePage extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildUserprofile(BuildContext context) {
+  Widget _buildUserProfile(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: 36.v),
+        padding: EdgeInsets.only(bottom: 1.0),
         child: ListView.separated(
-          physics: NeverScrollableScrollPhysics(),
+          // Remove physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           separatorBuilder: (context, index) {
             return SizedBox(
-              height: 20.v,
+              height: 10,
             );
           },
-          itemCount: 4,
+          itemCount: 8,
           itemBuilder: (context, index) {
             return Userprofile1ItemWidget();
           },
@@ -368,5 +368,18 @@ class HomePage extends StatelessWidget {
         )
       ],
     );
+  }
+
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    List<Map<String, dynamic>> dataList = [];
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('ClientJobList').get();
+
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      dataList.add(data);
+    });
+
+    return dataList;
   }
 }
