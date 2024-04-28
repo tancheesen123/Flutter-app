@@ -459,11 +459,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     // String customDocumentId = 'unique_id_here';
     DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('user').doc(username);
+        FirebaseFirestore.instance.collection('user').doc(email.toLowerCase());
 
     await documentReference.set({
       'username': username,
-      'email': email,
+      'email': email.toLowerCase(),
       'dateOfBirth': "1-1-2024",
       'gender': "male",
       'IdentityNum': 0102302103213,

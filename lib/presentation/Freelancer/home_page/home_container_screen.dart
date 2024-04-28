@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
-import '../home_page/home_page.dart'; // ignore_for_file: must_be_immutable
+import 'home_page.dart';
+import '../profile_screen/profile_screen.dart';
+import '../settings_screen/settings_screen.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class HomeContainerScreen extends StatelessWidget {
@@ -33,6 +35,7 @@ class HomeContainerScreen extends StatelessWidget {
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(
       onChanged: (BottomBarEnum type) {
+        print("type $type");
         Navigator.pushNamed(
             navigatorKey.currentContext!, getCurrentRoute(type));
       },
@@ -45,13 +48,13 @@ class HomeContainerScreen extends StatelessWidget {
       case BottomBarEnum.Home:
         return AppRoutes.homeContainerScreen;
       case BottomBarEnum.Messages:
-        return "/";
+        return AppRoutes.profileScreen;
       case BottomBarEnum.Jobs:
         return "/";
       case BottomBarEnum.Notifications:
         return "/";
       case BottomBarEnum.Settings:
-        return "/";
+        return AppRoutes.settingsScreen;
       default:
         return "/";
     }
@@ -62,6 +65,10 @@ class HomeContainerScreen extends StatelessWidget {
     switch (currentRoute) {
       case AppRoutes.homePage:
         return HomePage();
+      case AppRoutes.profileScreen:
+        return ProfileScreen();
+      case AppRoutes.settingsScreen:
+        return SettingsScreen();
       default:
         return HomePage();
     }
