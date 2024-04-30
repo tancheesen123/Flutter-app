@@ -84,12 +84,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: GestureDetector(
         onTap: () {
-          // Add your onclick function here
-          // For example, you can navigate to another screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileScreen()),
-          );
+          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.profileScreen);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +113,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 SizedBox(height: 1.v),
                 Text(
-                  "Total Earning: RM2,.00",
+                  "Total Earning: RM2,590.00",
                   style: CustomTextStyles.titleSmallBluegray900,
                 )
               ],
@@ -158,7 +153,7 @@ class _HomePageState extends State<HomePage> {
           Expanded(
             child: CustomSearchView(
               controller: searchController,
-              hintText: "Serach here...",
+              hintText: "Search here...",
             ),
           ),
           Padding(
