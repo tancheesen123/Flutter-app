@@ -7,6 +7,18 @@ class CustomButtonStyles {
   static ButtonStyle get fillGrayC => ElevatedButton.styleFrom(
         backgroundColor: appTheme.gray6004c.withOpacity(0.5),
       );
+  static ButtonStyle get fillPrimary => ElevatedButton.styleFrom(
+    backgroundColor: theme.colorScheme.primary.withOpacity(0.8),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15.h),
+    ),
+  );
+  static ButtonStyle get fillPrimaryTL12 => ElevatedButton.styleFrom(
+        backgroundColor: theme.colorScheme.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.h),
+        ),
+      );
   static ButtonStyle get fillSecondaryContainerTL12 => ElevatedButton.styleFrom(
         backgroundColor: Color(0xFF007BFF),
         foregroundColor: Colors.white,
