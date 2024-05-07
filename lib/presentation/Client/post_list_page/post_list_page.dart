@@ -7,8 +7,8 @@ import '../home_client_page/home_client_page.dart';
 import 'widgets/listchageemy_item_widget.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class PostClientScreen extends StatelessWidget {
-  PostClientScreen({Key? key})
+class PostListScreen extends StatelessWidget {
+  PostListScreen({Key? key})
       : super(
           key: key,
         );
@@ -178,6 +178,6 @@ class PostClientScreen extends StatelessWidget {
 
   /// Navigates to the postClientOneScreen when the action is triggered.
   onTapBtnUserone(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.postClientOneScreen);
+    Navigator.pushNamed(context, AppRoutes.previewPostPage);
   }
 }

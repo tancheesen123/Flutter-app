@@ -150,6 +150,6 @@ class HomeClientPage extends StatelessWidget {
 
   /// Navigates to the postClientScreen when the action is triggered.
   onTapTxtShowall(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.postClientScreen);
+    Navigator.pushNamed(context, AppRoutes.postListPage);
   }
 }
