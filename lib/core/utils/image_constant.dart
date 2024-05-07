@@ -120,6 +120,8 @@ class ImageConstant {
   static String imgMaterialSymbolsLogout =
       '$imagePath/img_material_symbols_logout.svg';
 
+  static String imgArrowLeftPrimary = '$imagePath/img_arrow_left_primary.svg';
+
 
 // Profile images
   
@@ -161,5 +163,29 @@ class ImageConstant {
 
 // Sign Up Verification images
   static String imgEmail = '$imagePath/img_email.svg';
+
+
+
+  static String imgGroup56 = '$imagePath/img_group_56.png';
+
+  // Success Post (Client) images
+  static String imgVector = '$imagePath/img_vector.svg';
+
+  // Forgot Password Two images
+  static String imgGroup46 = '$imagePath/img_group_46.svg';
+
+  static String imgGroup47 = '$imagePath/img_group_47.svg';
+
+  static String imgPath = '$imagePath/img_path.svg';
+
+  static String imgEnvelopes2 = '$imagePath/img_envelopes_2.svg';
+
+  static String imgEnvelopes1 = '$imagePath/img_envelopes_1.svg';
+
+  static String imgThumbsUp = '$imagePath/img_thumbs_up.svg';
+
+  static String imgMailBox = '$imagePath/img_mail_box.svg';
+
+  static String imgGroup = '$imagePath/img_group.svg';
 
 }
