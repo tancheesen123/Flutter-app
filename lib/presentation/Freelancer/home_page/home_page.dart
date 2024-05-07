@@ -10,12 +10,17 @@ import '../profile_screen/profile_screen.dart';
 // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   HomePage({Key? key})
       : super(
           key: key,
         );
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -79,12 +84,7 @@ class HomePage extends StatelessWidget {
       ),
       child: GestureDetector(
         onTap: () {
-          // Add your onclick function here
-          // For example, you can navigate to another screen
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => ProfileScreen()),
-          );
+          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.profileScreen);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +113,7 @@ class HomePage extends StatelessWidget {
                 ),
                 SizedBox(height: 1.v),
                 Text(
-                  "Total Earning: RM2,.00",
+                  "Total Earning: RM2,590.00",
                   style: CustomTextStyles.titleSmallBluegray900,
                 )
               ],
@@ -153,7 +153,7 @@ class HomePage extends StatelessWidget {
           Expanded(
             child: CustomSearchView(
               controller: searchController,
-              hintText: "Serach here...",
+              hintText: "Search here...",
             ),
           ),
           Padding(
