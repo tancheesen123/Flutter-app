@@ -8,8 +8,8 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class PostClientOneScreen extends StatelessWidget {
-  PostClientOneScreen({Key? key})
+class NewPostClientScreen extends StatelessWidget {
+  NewPostClientScreen({Key? key})
       : super(
           key: key,
         );
@@ -98,7 +98,7 @@ class PostClientOneScreen extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              ImageConstant.imgGroup71,
+              ImageConstant.imgGroup56,
             ),
             fit: BoxFit.cover,
           ),
@@ -111,18 +111,13 @@ class PostClientOneScreen extends StatelessWidget {
               width: 150.h,
               text: "Cancel",
               margin: EdgeInsets.only(top: 32.v),
-              buttonStyle: CustomButtonStyles.fillGray,
-              buttonTextStyle: CustomTextStyles.bodyMediumGray70001,
-              onPressed: () {
-                onTapCancel(context);
-              },
             ),
             CustomElevatedButton(
               width: 156.h,
               text: "Preview",
               margin: EdgeInsets.only(top: 32.v),
-              buttonStyle: CustomButtonStyles.fillSecondaryContainer,
-              buttonTextStyle: CustomTextStyles.bodyMediumOnErrorContainer,
+              buttonStyle: CustomButtonStyles.fillPrimary,
+              buttonTextStyle: CustomTextStyles.bodyMediumWhiteA700,
             )
           ],
         ),
@@ -214,7 +209,7 @@ class PostClientOneScreen extends StatelessWidget {
             horizontal: 19.h,
             vertical: 16.v,
           ),
-          decoration: AppDecoration.fillOnErrorContainer.copyWith(
+          decoration: AppDecoration.fillWhiteA.copyWith(
             borderRadius: BorderRadiusStyle.roundedBorder15,
           ),
           child: Column(
@@ -232,7 +227,7 @@ class PostClientOneScreen extends StatelessWidget {
                       bottom: 7.v,
                     ),
                     decoration: BoxDecoration(
-                      color: appTheme.gray900,
+                      color: appTheme.gray90001,
                       borderRadius: BorderRadius.circular(
                         2.h,
                       ),
@@ -249,7 +244,7 @@ class PostClientOneScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text: "9.30 am sharp.",
-                            style: CustomTextStyles.labelLargeSemiBold,
+                            style: theme.textTheme.labelLarge,
                           )
                         ],
                       ),
@@ -271,7 +266,7 @@ class PostClientOneScreen extends StatelessWidget {
                         bottom: 6.v,
                       ),
                       decoration: BoxDecoration(
-                        color: appTheme.gray900,
+                        color: appTheme.gray90001,
                         borderRadius: BorderRadius.circular(
                           2.h,
                         ),
@@ -301,7 +296,7 @@ class PostClientOneScreen extends StatelessWidget {
                         bottom: 130.v,
                       ),
                       decoration: BoxDecoration(
-                        color: appTheme.gray900,
+                        color: appTheme.gray90001,
                         borderRadius: BorderRadius.circular(
                           2.h,
                         ),
@@ -335,7 +330,7 @@ class PostClientOneScreen extends StatelessWidget {
                       bottom: 6.v,
                     ),
                     decoration: BoxDecoration(
-                      color: appTheme.gray900,
+                      color: appTheme.gray90001,
                       borderRadius: BorderRadius.circular(
                         2.h,
                       ),
@@ -369,7 +364,7 @@ class PostClientOneScreen extends StatelessWidget {
         Text(
           budgetPerHour,
           style: theme.textTheme.bodyLarge!.copyWith(
-            color: appTheme.black900,
+            color: theme.colorScheme.errorContainer,
           ),
         ),
         CustomImageView(
@@ -388,10 +383,5 @@ class PostClientOneScreen extends StatelessWidget {
   /// Navigates back to the previous screen.
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
-  }
-
-  /// Navigates to the postClientScreen when the action is triggered.
-  onTapCancel(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.postClientScreen);
   }
 }

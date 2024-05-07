@@ -23,6 +23,9 @@ class CustomTextStyles {
   static get bodyLarge18 => theme.textTheme.bodyLarge!.copyWith(
         fontSize: 18.fSize,
       );
+  static get bodyMediumWhiteA700 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.whiteA700,
+      );
   static get bodyLargeLight => theme.textTheme.bodyLarge!.copyWith(
         fontWeight: FontWeight.w300,
       );
@@ -172,5 +175,8 @@ class CustomTextStyles {
       );
   static get titleLargeSemiBold => theme.textTheme.titleLarge!.copyWith(
         fontWeight: FontWeight.w600,
+      );
+  static get titleMediumWhiteA700 => theme.textTheme.titleMedium!.copyWith(
+        color: appTheme.whiteA700,
       );
 }
