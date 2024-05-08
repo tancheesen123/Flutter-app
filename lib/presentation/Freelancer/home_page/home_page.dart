@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
@@ -70,6 +71,15 @@ class _HomePageState extends State<HomePage> {
               )
             ],
           ),
+          //button
+        ),
+        floatingActionButton: ElevatedButton(
+          onPressed: () async {
+            String userEmail = await getUserEmail();
+            // Now you can use the userEmail variable here
+            print('User email: $userEmail');
+          },
+          child: Icon(Icons.add),
         ),
       ),
     );
@@ -84,7 +94,8 @@ class _HomePageState extends State<HomePage> {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.profileScreen);
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.profileScreen);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -381,5 +392,10 @@ class _HomePageState extends State<HomePage> {
     });
 
     return dataList;
+  }
+
+  Future<String> getUserEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString('userEmail') ?? '';
   }
 }
