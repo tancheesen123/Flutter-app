@@ -31,4 +31,14 @@ class FirebaseAuthService{
       throw Exception("No user logged in or email already verified.");
     }
   }
+
+  //Scrum16:Forgot Password
+  Future<void> sendPasswordResetEmail(String email) async {
+    try{
+      await _auth.sendPasswordResetEmail(email: email);
+    }
+    catch(e){
+      print(e);
+    }
+  }
 }
