@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import '../../core/app_export.dart';
 import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -180,9 +181,20 @@ class _LogInScreenState extends State<LogInScreen> {
                     SizedBox(height: 8.v),
                     Align(
                       alignment: Alignment.centerRight,
-                      child: Text(
-                        "Forget Password?",
-                        style: theme.textTheme.bodySmall,
+                      child: GestureDetector(
+                        onTap: () {
+                          // Navigate to the forgot password page
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ForgotPasswordOneScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          "Forget Password?",
+                          style: theme.textTheme.bodySmall,
+                        ),
                       ),
                     ),
                     SizedBox(height: 35.v),
