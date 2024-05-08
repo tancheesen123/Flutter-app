@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_bottom_bar.dart';
-import '../settings_page/settings_page.dart'; // ignore_for_file: must_be_immutable
+import '../settings_page/settings_page.dart';
+import '../../profile_screen/profile_screen.dart';
+import '../../home_page/home_page.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class SettingsContainerScreen extends StatelessWidget {
@@ -18,7 +20,7 @@ class SettingsContainerScreen extends StatelessWidget {
       child: Scaffold(
         body: Navigator(
           key: navigatorKey,
-          initialRoute: AppRoutes.settingsPage,
+          initialRoute: AppRoutes.settingsScreen,
           onGenerateRoute: (routeSetting) => PageRouteBuilder(
             pageBuilder: (ctx, ani, ani1) => getCurrentPage(routeSetting.name!),
             transitionDuration: Duration(seconds: 0),
@@ -49,7 +51,7 @@ class SettingsContainerScreen extends StatelessWidget {
       case BottomBarEnum.Notifications:
         return "/";
       case BottomBarEnum.Settings:
-        return "/";
+        return AppRoutes.settingsContainerScreen;
       default:
         return "/";
     }
@@ -58,8 +60,12 @@ class SettingsContainerScreen extends StatelessWidget {
   ///Handling page based on route
   Widget getCurrentPage(String currentRoute) {
     switch (currentRoute) {
-      case AppRoutes.settingsPage:
-        return SettingsPage();
+      case AppRoutes.homePage:
+        return HomePage();
+      case AppRoutes.profileScreen:
+        return ProfileScreen();
+      case AppRoutes.settingsContainerScreen:
+        return SettingsContainerScreen();
       default:
         return DefaultWidget();
     }
