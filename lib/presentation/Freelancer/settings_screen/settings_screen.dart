@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -364,17 +365,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> logout(BuildContext context) async {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  try {
-    await _firebaseAuth.signOut();
-    
-      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil( MaterialPageRoute( builder: (BuildContext context) { return LogInScreen(); }, ), (_) => false, );
-    
-  } catch (e) {
-    // Handle any errors here
-    print("Error signing out: $e");
+    try {
+      await _firebaseAuth.signOut();
+      await deleteAllData();
+
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return LogInScreen();
+          },
+        ),
+        (_) => false,
+      );
+    } catch (e) {
+      // Handle any errors here
+      print("Error signing out: $e");
+    }
   }
-}
 
+  Future<void> deleteAllData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    print('All data deleted successfully');
+  }
 }
