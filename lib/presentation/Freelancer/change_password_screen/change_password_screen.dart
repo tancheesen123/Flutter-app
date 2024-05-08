@@ -14,6 +14,8 @@ class ChangePasswordScreen extends StatelessWidget {
           key: key,
         );
 
+  TextEditingController oldpasswordController = TextEditingController();
+
   TextEditingController newpasswordController = TextEditingController();
 
   TextEditingController newpassword1Controller = TextEditingController();
@@ -55,6 +57,38 @@ class ChangePasswordScreen extends StatelessWidget {
                         height: 1.50,
                       ),
                     ),
+                  ),
+                  SizedBox(height: 44.v),
+                  CustomTextFormField(
+                    controller: oldpasswordController,
+                    hintText: "Old Password",
+                    textInputType: TextInputType.visiblePassword,
+                    prefix: Container(
+                      margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgLocation,
+                        height: 26.v,
+                        width: 20.h,
+                      ),
+                    ),
+                    prefixConstraints: BoxConstraints(
+                      maxHeight: 54.v,
+                    ),
+                    suffix: Container(
+                      margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgUnion,
+                        height: 13.v,
+                        width: 16.h,
+                      ),
+                    ),
+                    suffixConstraints: BoxConstraints(
+                      maxHeight: 54.v,
+                    ),
+                    obscureText: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                    borderDecoration:
+                        TextFormFieldStyleHelper.fillOnErrorContainerTL12,
                   ),
                   SizedBox(height: 44.v),
                   CustomTextFormField(
