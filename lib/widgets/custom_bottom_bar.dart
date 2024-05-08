@@ -27,12 +27,6 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Home,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgNavMessages,
-      activeIcon: ImageConstant.imgNavMessages,
-      title: "Messages",
-      type: BottomBarEnum.Messages,
-    ),
-    BottomMenuModel(
       icon: ImageConstant.imgPhBagFill,
       activeIcon: ImageConstant.imgPhBagFill,
       title: "My Jobs",

@@ -43,15 +43,14 @@ class HomeClientContainerScreen extends StatelessWidget {
   String getCurrentRoute(BottomBarEnum type) {
     switch (type) {
       case BottomBarEnum.Home:
-        return AppRoutes.homeClientPage;
-      case BottomBarEnum.Messages:
-        return "/";
+        return AppRoutes.homeContainerScreen;
+      // Remove the case for BottomBarEnum.Messages
       case BottomBarEnum.Jobs:
         return "/";
       case BottomBarEnum.Notifications:
         return "/";
       case BottomBarEnum.Settings:
-        return "/";
+        return AppRoutes.settingsScreen;
       default:
         return "/";
     }
