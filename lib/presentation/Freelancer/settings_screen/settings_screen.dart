@@ -82,14 +82,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: EdgeInsets.only(left: 9.h),
             child: Text(
               "Account",
-              style: theme.textTheme.titleMedium,
+              style: CustomTextStyles.titleMediumPrimaryContainer,
             ),
           ),
-          SizedBox(height: 8.v),
+          SizedBox(height: 11.v),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: 22.h,
-              vertical: 16.v,
+              vertical: 17.v,
             ),
             decoration: AppDecoration.outlineGray.copyWith(
               borderRadius: BorderRadiusStyle.roundedBorder12,
@@ -99,7 +99,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 1.h),
+                  padding: EdgeInsets.symmetric(horizontal: 1.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -113,7 +113,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         padding: EdgeInsets.only(left: 12.h),
                         child: Text(
                           "Edit Profile",
-                          style: CustomTextStyles.titleMediumGray900,
+                          style: theme.textTheme.titleMedium,
                         ),
                       ),
                       Spacer(),
@@ -126,56 +126,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20.v),
+                SizedBox(height: 24.v),
                 Padding(
                   padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
+                  child: _buildPassword(
                     context,
-                    bagImage: ImageConstant.imgMingcuteBankLine,
-                    updateText: "Update Bank Details",
+                    passwordImage: ImageConstant.imgUilBag,
+                    changePasswordText: "Update Job Experience",
                   ),
                 ),
-                SizedBox(height: 19.v),
+                SizedBox(height: 23.v),
                 Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
+                  padding: EdgeInsets.only(right: 1.h),
+                  child: _buildPassword(
                     context,
-                    bagImage: ImageConstant.imgUilBag,
-                    updateText: "Update Job Experience",
+                    passwordImage: ImageConstant.imgMdiPasswordOutline,
+                    changePasswordText: "Change Password",
                   ),
-                ),
-                SizedBox(height: 17.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgMingcuteNotificationLine,
-                    updateText: "Notifications",
-                  ),
-                ),
-                SizedBox(height: 21.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgFluentPhone12Regular,
-                    updateText: "Change Phone Number",
-                  ),
-                ),
-                SizedBox(height: 19.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgMdiPasswordOutline,
-                    updateText: "Change Password",
-                  ),
-                ),
-                SizedBox(height: 18.v),
-                _buildJobExperience(
-                  context,
-                  bagImage: ImageConstant.imgUilMoneyWithdrawal,
-                  updateText: "Withdraw Earnings",
                 )
               ],
             ),
@@ -320,6 +287,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPassword(
+    BuildContext context, {
+    required String passwordImage,
+    required String changePasswordText,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomImageView(
+          imagePath: passwordImage,
+          height: 20.adaptSize,
+          width: 20.adaptSize,
+          margin: EdgeInsets.only(bottom: 3.v),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12.h),
+          child: Text(
+            changePasswordText,
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: appTheme.gray900,
+            ),
+          ),
+        ),
+        Spacer(),
+        CustomImageView(
+          imagePath: ImageConstant.imgArrowRight,
+          height: 20.v,
+          width: 25.h,
+          margin: EdgeInsets.only(bottom: 3.v),
+        )
+      ],
     );
   }
 
