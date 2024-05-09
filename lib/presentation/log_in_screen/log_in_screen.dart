@@ -298,6 +298,7 @@ class _LogInScreenState extends State<LogInScreen> {
 
   Future<void> _signIn(BuildContext context) async {
     print("This is email intextbox ${emailController.text}");
+    //Store data inside shared preference
     await storeUserEmail(emailController.text);
     if (!emailController.text.contains('@') || emailController.text.isEmpty) {
       setState(() {
