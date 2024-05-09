@@ -1,3 +1,4 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
@@ -307,7 +308,10 @@ class _LogInScreenState extends State<LogInScreen> {
     Navigator.pushNamed(context, AppRoutes.signUpScreen);
   }
 
-  void _signIn(BuildContext context) {
+  Future<void> _signIn(BuildContext context) async {
+    print("This is email intextbox ${emailController.text}");
+    //Store data inside shared preference
+    await storeUserEmail(emailController.text);
     if (!emailController.text.contains('@') || emailController.text.isEmpty) {
       setState(() {
         _emailError = "Please enter a valid email address";
@@ -429,5 +433,10 @@ class _LogInScreenState extends State<LogInScreen> {
         FacebookAuthProvider.credential(result.accessToken!.token);
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+  Future<void> storeUserEmail(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', email);
   }
 }
