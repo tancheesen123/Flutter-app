@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:workwise/presentation/Client/new_post_client_screen/new_post_client_screen.dart';
 import 'package:workwise/presentation/Client/success_post_client_screen/success_post_client_screen.dart';
 import 'package:workwise/presentation/Freelancer/new_settings/settings_container_screen/settings_container_screen.dart';
-import 'package:workwise/presentation/Freelancer/new_settings/settings_page/settings_page.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_two_screen/forgot_password_two_screen.dart';
 import 'package:workwise/presentation/Freelancer/home_page/home_page.dart';
