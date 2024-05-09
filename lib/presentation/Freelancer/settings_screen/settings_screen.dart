@@ -8,6 +8,7 @@ import '../../../widgets/custom_bottom_bar.dart';
 import '../../../widgets/custom_switch.dart';
 import '../myjob_applications_page/myjob_applications_page.dart';
 import '../../log_in_screen/log_in_screen.dart'; // ignore_for_file: must_be_immutable
+import '../change_password_screen/change_password_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class SettingsScreen extends StatefulWidget {
@@ -138,10 +139,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(height: 23.v),
                 Padding(
                   padding: EdgeInsets.only(right: 1.h),
-                  child: _buildPassword(
-                    context,
-                    passwordImage: ImageConstant.imgMdiPasswordOutline,
-                    changePasswordText: "Change Password",
+                  child: GestureDetector(
+                    onTap: () {
+                      // Handle onTap action here
+                      // For example, navigate to a new screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChangePasswordScreen()),
+                      );
+                    },
+                    child: _buildPassword(
+                      context,
+                      passwordImage: ImageConstant.imgMdiPasswordOutline,
+                      changePasswordText: "Change Password",
+                    ),
                   ),
                 )
               ],
