@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -7,6 +8,7 @@ import '../../../widgets/custom_bottom_bar.dart';
 import '../../../widgets/custom_switch.dart';
 import '../myjob_applications_page/myjob_applications_page.dart';
 import '../../log_in_screen/log_in_screen.dart'; // ignore_for_file: must_be_immutable
+import '../change_password_screen/change_password_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class SettingsScreen extends StatefulWidget {
@@ -81,14 +83,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
             padding: EdgeInsets.only(left: 9.h),
             child: Text(
               "Account",
-              style: theme.textTheme.titleMedium,
+              style: CustomTextStyles.titleMediumPrimaryContainer,
             ),
           ),
-          SizedBox(height: 8.v),
+          SizedBox(height: 11.v),
           Container(
             padding: EdgeInsets.symmetric(
               horizontal: 22.h,
-              vertical: 16.v,
+              vertical: 17.v,
             ),
             decoration: AppDecoration.outlineGray.copyWith(
               borderRadius: BorderRadiusStyle.roundedBorder12,
@@ -98,7 +100,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
-                  padding: EdgeInsets.only(left: 1.h),
+                  padding: EdgeInsets.symmetric(horizontal: 1.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -112,7 +114,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         padding: EdgeInsets.only(left: 12.h),
                         child: Text(
                           "Edit Profile",
-                          style: CustomTextStyles.titleMediumGray900,
+                          style: theme.textTheme.titleMedium,
                         ),
                       ),
                       Spacer(),
@@ -125,56 +127,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: 20.v),
+                SizedBox(height: 24.v),
                 Padding(
                   padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
+                  child: _buildPassword(
                     context,
-                    bagImage: ImageConstant.imgMingcuteBankLine,
-                    updateText: "Update Bank Details",
+                    passwordImage: ImageConstant.imgUilBag,
+                    changePasswordText: "Update Job Experience",
                   ),
                 ),
-                SizedBox(height: 19.v),
+                SizedBox(height: 23.v),
                 Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgUilBag,
-                    updateText: "Update Job Experience",
+                  padding: EdgeInsets.only(right: 1.h),
+                  child: GestureDetector(
+                    onTap: () {
+                      // Handle onTap action here
+                      // For example, navigate to a new screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChangePasswordScreen()),
+                      );
+                    },
+                    child: _buildPassword(
+                      context,
+                      passwordImage: ImageConstant.imgMdiPasswordOutline,
+                      changePasswordText: "Change Password",
+                    ),
                   ),
-                ),
-                SizedBox(height: 17.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgMingcuteNotificationLine,
-                    updateText: "Notifications",
-                  ),
-                ),
-                SizedBox(height: 21.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgFluentPhone12Regular,
-                    updateText: "Change Phone Number",
-                  ),
-                ),
-                SizedBox(height: 19.v),
-                Padding(
-                  padding: EdgeInsets.only(left: 1.h),
-                  child: _buildJobExperience(
-                    context,
-                    bagImage: ImageConstant.imgMdiPasswordOutline,
-                    updateText: "Change Password",
-                  ),
-                ),
-                SizedBox(height: 18.v),
-                _buildJobExperience(
-                  context,
-                  bagImage: ImageConstant.imgUilMoneyWithdrawal,
-                  updateText: "Withdraw Earnings",
                 )
               ],
             ),
@@ -322,6 +302,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Widget _buildPassword(
+    BuildContext context, {
+    required String passwordImage,
+    required String changePasswordText,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomImageView(
+          imagePath: passwordImage,
+          height: 20.adaptSize,
+          width: 20.adaptSize,
+          margin: EdgeInsets.only(bottom: 3.v),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 12.h),
+          child: Text(
+            changePasswordText,
+            style: theme.textTheme.titleMedium!.copyWith(
+              color: appTheme.gray900,
+            ),
+          ),
+        ),
+        Spacer(),
+        CustomImageView(
+          imagePath: ImageConstant.imgArrowRight,
+          height: 20.v,
+          width: 25.h,
+          margin: EdgeInsets.only(bottom: 3.v),
+        )
+      ],
+    );
+  }
+
   /// Common widget
   Widget _buildJobExperience(
     BuildContext context, {
@@ -364,17 +378,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> logout(BuildContext context) async {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  try {
-    await _firebaseAuth.signOut();
-    
-      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil( MaterialPageRoute( builder: (BuildContext context) { return LogInScreen(); }, ), (_) => false, );
-    
-  } catch (e) {
-    // Handle any errors here
-    print("Error signing out: $e");
+    try {
+      await _firebaseAuth.signOut();
+      await deleteAllData();
+
+      Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (BuildContext context) {
+            return LogInScreen();
+          },
+        ),
+        (_) => false,
+      );
+    } catch (e) {
+      // Handle any errors here
+      print("Error signing out: $e");
+    }
   }
-}
 
+  Future<void> deleteAllData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    print('All data deleted successfully');
+  }
 }
