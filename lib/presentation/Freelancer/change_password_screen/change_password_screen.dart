@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
@@ -13,6 +15,8 @@ class ChangePasswordScreen extends StatelessWidget {
       : super(
           key: key,
         );
+  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+  TextEditingController oldpasswordController = TextEditingController();
 
   TextEditingController newpasswordController = TextEditingController();
 
@@ -55,6 +59,38 @@ class ChangePasswordScreen extends StatelessWidget {
                         height: 1.50,
                       ),
                     ),
+                  ),
+                  SizedBox(height: 44.v),
+                  CustomTextFormField(
+                    controller: oldpasswordController,
+                    hintText: "Old Password",
+                    textInputType: TextInputType.visiblePassword,
+                    prefix: Container(
+                      margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgLocation,
+                        height: 26.v,
+                        width: 20.h,
+                      ),
+                    ),
+                    prefixConstraints: BoxConstraints(
+                      maxHeight: 54.v,
+                    ),
+                    suffix: Container(
+                      margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgUnion,
+                        height: 13.v,
+                        width: 16.h,
+                      ),
+                    ),
+                    suffixConstraints: BoxConstraints(
+                      maxHeight: 54.v,
+                    ),
+                    obscureText: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                    borderDecoration:
+                        TextFormFieldStyleHelper.fillOnErrorContainerTL12,
                   ),
                   SizedBox(height: 44.v),
                   CustomTextFormField(
@@ -138,6 +174,9 @@ class ChangePasswordScreen extends StatelessWidget {
                     height: 54.v,
                     text: "Change Password",
                     buttonStyle: CustomButtonStyles.fillSecondaryContainerTL12,
+                    onPressed: () {
+                      ChangePassword();
+                    },
                   ),
                   SizedBox(height: 5.v)
                 ],
@@ -174,5 +213,36 @@ class ChangePasswordScreen extends StatelessWidget {
   /// Navigates back to the previous screen.
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  void ChangePassword() async {
+    String oldPassword = oldpasswordController.text;
+    String newPassword = newpasswordController.text;
+    String confirmNewPassword = newpassword1Controller.text;
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userEmail = prefs.getString('userEmail');
+
+    print("Old Password: ${oldPassword}");
+    print("New Password: ${newPassword}");
+    print("Confirm New Password: ${confirmNewPassword}");
+    print("User Email: ${userEmail}");
+
+    if (userEmail != null && oldPassword != null) {
+      _firebaseAuthService
+          .signInWithEmailAndPassword(userEmail!, oldPassword)
+          .then((user) async {
+        if (user != null) {
+          print("account exist");
+          await user.updatePassword(newPassword);
+          print('Password changed successfully');
+        } else {
+          print("account does not exist");
+        }
+      }).catchError((error) {
+        print("Error: ${error}");
+      });
+    }
+    ;
   }
 }
