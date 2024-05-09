@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Freelancer/new_settings/settings_page/settings_page.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import 'home_page.dart';
 import '../profile_screen/profile_screen.dart';
-import '../settings_screen/settings_screen.dart'; // ignore_for_file: must_be_immutable
+import '../settings_screen/settings_screen.dart';
+import '../new_settings/settings_container_screen/settings_container_screen.dart';
+import '../new_settings/settings_page/settings_page.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class HomeContainerScreen extends StatefulWidget {
@@ -12,7 +15,6 @@ class HomeContainerScreen extends StatefulWidget {
 
   @override
   _HomeContainerScreenState createState() => _HomeContainerScreenState();
-  
 }
 
 class _HomeContainerScreenState extends State<HomeContainerScreen> {
@@ -31,15 +33,20 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
             transitionDuration: Duration(seconds: 0),
           ),
         ),
-        bottomNavigationBar: _showNavigationBar ? _buildBottomBar(context) : null,
+        bottomNavigationBar:
+            _showNavigationBar ? _buildBottomBar(context) : null,
       ),
     );
   }
 
   bool _shouldShowBottomBar(BuildContext context) {
     // Define the routes where you want the navigation bar
-    final desiredRoutes = [AppRoutes.homeContainerScreen, AppRoutes.settingsScreen];
-    return desiredRoutes.contains(ModalRoute.of(context)?.settings.name) && _showNavigationBar;
+    final desiredRoutes = [
+      AppRoutes.homeContainerScreen,
+      AppRoutes.settingsScreen
+    ];
+    return desiredRoutes.contains(ModalRoute.of(context)?.settings.name) &&
+        _showNavigationBar;
   }
 
   Widget _buildBottomBar(BuildContext context) {
@@ -59,7 +66,10 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
   void _updateNavigationState(String targetRoute) {
     // Update _showNavigationBar based on the target route
     setState(() {
-      _showNavigationBar = [AppRoutes.homeContainerScreen, AppRoutes.settingsScreen].contains(targetRoute);
+      _showNavigationBar = [
+        AppRoutes.homeContainerScreen,
+        AppRoutes.settingsScreen
+      ].contains(targetRoute);
     });
   }
 
@@ -67,8 +77,6 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
     switch (type) {
       case BottomBarEnum.Home:
         return AppRoutes.homeContainerScreen;
-      case BottomBarEnum.Messages:
-        return AppRoutes.profileScreen;
       case BottomBarEnum.Jobs:
         return "/";
       case BottomBarEnum.Notifications:
