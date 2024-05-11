@@ -10,19 +10,23 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class ChangePasswordScreen extends StatelessWidget {
-  ChangePasswordScreen({Key? key})
-      : super(
-          key: key,
-        );
+class ChangePasswordScreen extends StatefulWidget {
+  ChangePasswordScreen({Key? key}) : super(key: key);
+
+  @override
+  _ChangePasswordScreenState createState() => _ChangePasswordScreenState();
+}
+
+class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
   TextEditingController oldpasswordController = TextEditingController();
-
   TextEditingController newpasswordController = TextEditingController();
-
   TextEditingController newpassword1Controller = TextEditingController();
-
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isOldPasswordVisible = false;
+  bool _isNewPasswordVisible = false;
+  bool _isConfirmNewPasswordVisible = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +69,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     controller: oldpasswordController,
                     hintText: "Old Password",
                     textInputType: TextInputType.visiblePassword,
+                    obscureText: !_isOldPasswordVisible,
                     prefix: Container(
                       margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
                       child: CustomImageView(
@@ -76,27 +81,34 @@ class ChangePasswordScreen extends StatelessWidget {
                     prefixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    suffix: Container(
-                      margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgUnion,
-                        height: 13.v,
-                        width: 16.h,
+                    suffix: IconButton(
+                        icon: Icon(
+                          _isOldPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isOldPasswordVisible = !_isOldPasswordVisible;
+                          });
+                        },
                       ),
-                    ),
                     suffixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    obscureText: true,
                     contentPadding: EdgeInsets.symmetric(vertical: 15.v),
                     borderDecoration:
                         TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                    textStyle: TextStyle(color: Colors.black),
                   ),
                   SizedBox(height: 44.v),
                   CustomTextFormField(
                     controller: newpasswordController,
                     hintText: "New Password",
                     textInputType: TextInputType.visiblePassword,
+                    obscureText: !_isNewPasswordVisible,
                     prefix: Container(
                       margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
                       child: CustomImageView(
@@ -108,21 +120,27 @@ class ChangePasswordScreen extends StatelessWidget {
                     prefixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    suffix: Container(
-                      margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgUnion,
-                        height: 13.v,
-                        width: 16.h,
+                    suffix: IconButton(
+                        icon: Icon(
+                          _isNewPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isNewPasswordVisible = !_isNewPasswordVisible;
+                          });
+                        },
                       ),
-                    ),
                     suffixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    obscureText: true,
                     contentPadding: EdgeInsets.symmetric(vertical: 15.v),
                     borderDecoration:
                         TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                    textStyle: TextStyle(color: Colors.black),
                   ),
                   SizedBox(height: 46.v),
                   CustomTextFormField(
@@ -130,6 +148,7 @@ class ChangePasswordScreen extends StatelessWidget {
                     hintText: "Confirm New Password",
                     textInputAction: TextInputAction.done,
                     textInputType: TextInputType.visiblePassword,
+                    obscureText: !_isConfirmNewPasswordVisible,
                     prefix: Container(
                       margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
                       child: CustomImageView(
@@ -141,21 +160,27 @@ class ChangePasswordScreen extends StatelessWidget {
                     prefixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    suffix: Container(
-                      margin: EdgeInsets.fromLTRB(30.h, 20.v, 20.h, 20.v),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgUnion,
-                        height: 13.v,
-                        width: 16.h,
+                    suffix: IconButton(
+                        icon: Icon(
+                          _isConfirmNewPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isConfirmNewPasswordVisible = !_isConfirmNewPasswordVisible;
+                          });
+                        },
                       ),
-                    ),
                     suffixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
-                    obscureText: true,
                     contentPadding: EdgeInsets.symmetric(vertical: 15.v),
                     borderDecoration:
                         TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                    textStyle: TextStyle(color: Colors.black),
                   ),
                   SizedBox(height: 20.v),
                   SizedBox(
@@ -232,8 +257,9 @@ class ChangePasswordScreen extends StatelessWidget {
       _firebaseAuthService
           .signInWithEmailAndPassword(userEmail!, oldPassword)
           .then((user) async {
-        if (user != null) {
+        if (user != null && (newPassword == confirmNewPassword)) {
           print("account exist");
+          print("New password same with confirm new password");
           await user.updatePassword(newPassword);
           print('Password changed successfully');
         } else {
