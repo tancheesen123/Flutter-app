@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg_provider/flutter_svg_provider.dart' as fs;
+import 'package:get/get.dart';
+import 'package:workwise/Controller/ForgotPasswordController.dart';
+import 'package:workwise/presentation/log_in_screen/log_in_screen.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
@@ -8,13 +11,16 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_outlined_button.dart';
 
 class ForgotPasswordTwoScreen extends StatelessWidget {
-  const ForgotPasswordTwoScreen({Key? key})
+  final String email;
+  const ForgotPasswordTwoScreen({Key? key, required this.email})
       : super(
           key: key,
         );
+      
 
   @override
   Widget build(BuildContext context) {
+    
     return SafeArea(
       child: Scaffold(
         appBar: _buildAppBar(context),
@@ -166,11 +172,13 @@ class ForgotPasswordTwoScreen extends StatelessWidget {
                 ),
                 buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                 buttonTextStyle: CustomTextStyles.titleMediumWhiteA700,
+                onPressed: ()=> Navigator.pushNamed(context, AppRoutes.logInScreen)
               ),
               SizedBox(height: 20.v),
               CustomOutlinedButton(
                 text: "RESEND EMAIL",
                 margin: EdgeInsets.only(right: 5.h),
+                onPressed: () => ForgotPasswordController.instance.resendPasswordResetEmail(email),
               ),
               SizedBox(height: 5.v)
             ],

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:workwise/Controller/ForgotPasswordController.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
@@ -19,6 +21,7 @@ class ForgotPasswordOneScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ForgotPasswordController());
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -29,6 +32,7 @@ class ForgotPasswordOneScreen extends StatelessWidget {
           ),
           child: Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.onUserInteraction,
             child: Container(
               width: double.maxFinite,
               padding: EdgeInsets.symmetric(
@@ -66,28 +70,42 @@ class ForgotPasswordOneScreen extends StatelessWidget {
                   SizedBox(height: 19.v),
                   Padding(
                     padding: EdgeInsets.only(left: 6.h),
-                    child: CustomTextFormField(
-                      controller: emailController,
-                      hintText: "hellobesnik@gmail.com",
-                      textInputAction: TextInputAction.done,
-                      textInputType: TextInputType.emailAddress,
-                      prefix: Container(
-                        margin: EdgeInsets.fromLTRB(20.h, 15.v, 10.h, 15.v),
-                        child: CustomImageView(
-                          imagePath: ImageConstant.imgMessage,
-                          height: 24.adaptSize,
-                          width: 24.adaptSize,
-                        ),
-                      ),
-                      prefixConstraints: BoxConstraints(
-                        maxHeight: 54.v,
-                      ),
-                      contentPadding: EdgeInsets.only(
-                        top: 15.v,
-                        right: 30.h,
-                        bottom: 15.v,
-                      ),
-                      borderDecoration: TextFormFieldStyleHelper.fillWhiteATL12,
+                    child: FutureBuilder<String?>(
+                      future: _validateEmail(controller),
+                      builder: (context, snapshot) {
+                        return Form(
+                          key: controller.ForgotPasswordFormKey,
+                          child: CustomTextFormField(
+                            controller: controller.email,
+                            hintText: "Email Address",
+                            textInputAction: TextInputAction.done,
+                            textInputType: TextInputType.emailAddress,
+                            prefix: Container(
+                              margin:
+                                  EdgeInsets.fromLTRB(20.h, 15.v, 10.h, 15.v),
+                              child: CustomImageView(
+                                imagePath: ImageConstant.imgMessage,
+                                height: 24.adaptSize,
+                                width: 24.adaptSize,
+                              ),
+                            ),
+                            prefixConstraints: BoxConstraints(
+                              maxHeight: 54.v,
+                            ),
+                            contentPadding: EdgeInsets.only(
+                              top: 15.v,
+                              right: 30.h,
+                              bottom: 15.v,
+                            ),
+                            borderDecoration:
+                                TextFormFieldStyleHelper.fillWhiteATL12,
+                            textStyle: TextStyle(color: Colors.black),
+                            validator: (value) {
+                              return snapshot.data;
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
                   SizedBox(height: 34.v),
@@ -97,6 +115,7 @@ class ForgotPasswordOneScreen extends StatelessWidget {
                     margin: EdgeInsets.only(left: 6.h),
                     buttonStyle: CustomButtonStyles.fillPrimaryTL12,
                     buttonTextStyle: CustomTextStyles.titleMediumWhiteA700,
+                    onPressed: () => controller.sendPasswordResetEmail(context),
                   ),
                   SizedBox(height: 5.v)
                 ],
@@ -125,5 +144,21 @@ class ForgotPasswordOneScreen extends StatelessWidget {
   /// Navigates back to the previous screen.
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  Future<String?> _validateEmail(ForgotPasswordController controller) async {
+    String? value = controller.email.text;
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
+    } else if (!GetUtils.isEmail(value)) {
+      return 'Enter a valid email';
+    } else {
+      // Perform the asynchronous check if the email is registered
+      bool isRegistered = await controller.isEmailRegistered(value);
+      if (!isRegistered) {
+        return 'Email is not registered';
+      }
+    }
+    return null; // Return null if validation succeeds
   }
 }
