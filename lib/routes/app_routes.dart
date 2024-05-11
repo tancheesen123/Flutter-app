@@ -102,7 +102,11 @@ class AppRoutes {
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
     settingsContainerScreen: (context) => SettingsContainerScreen(),
     forgotPasswordOneScreen: (context) => ForgotPasswordOneScreen(),
-    forgotPasswordTwoScreen: (context) => ForgotPasswordTwoScreen(),
+    //Scrum 16 - Forgot Password: Pass email arguments from screen one to screen two for resend purpose
+    forgotPasswordTwoScreen: (context) {
+      final email = ModalRoute.of(context)?.settings.arguments as String?;
+      return ForgotPasswordTwoScreen(email: email ?? '');
+    },
     checkSession: (context) => CheckSession(),
 
     //Client
