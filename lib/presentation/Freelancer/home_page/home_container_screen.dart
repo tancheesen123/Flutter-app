@@ -7,7 +7,8 @@ import 'home_page.dart';
 import '../profile_screen/profile_screen.dart';
 import '../settings_screen/settings_screen.dart';
 import '../new_settings/settings_container_screen/settings_container_screen.dart';
-import '../new_settings/settings_page/settings_page.dart'; // ignore_for_file: must_be_immutable
+import '../new_settings/settings_page/settings_page.dart';
+import '../myjob_applications_page/myjob_applications_page.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
 class HomeContainerScreen extends StatefulWidget {
@@ -43,7 +44,8 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
     // Define the routes where you want the navigation bar
     final desiredRoutes = [
       AppRoutes.homeContainerScreen,
-      AppRoutes.settingsScreen
+      AppRoutes.settingsScreen,
+      AppRoutes.myjobApplicationsPage,
     ];
     return desiredRoutes.contains(ModalRoute.of(context)?.settings.name) &&
         _showNavigationBar;
@@ -68,7 +70,8 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
     setState(() {
       _showNavigationBar = [
         AppRoutes.homeContainerScreen,
-        AppRoutes.settingsScreen
+        AppRoutes.settingsScreen,
+        AppRoutes.myjobApplicationsPage,
       ].contains(targetRoute);
     });
   }
@@ -78,7 +81,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
       case BottomBarEnum.Home:
         return AppRoutes.homeContainerScreen;
       case BottomBarEnum.Jobs:
-        return "/";
+        return AppRoutes.myjobApplicationsPage;
       case BottomBarEnum.Notifications:
         return "/";
       case BottomBarEnum.Settings:
@@ -96,6 +99,8 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
         return ProfileScreen();
       case AppRoutes.settingsScreen:
         return SettingsScreen();
+      case AppRoutes.myjobApplicationsPage:
+        return MyjobApplicationsPage();
       default:
         return HomePage();
     }

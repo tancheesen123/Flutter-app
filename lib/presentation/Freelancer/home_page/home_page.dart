@@ -24,65 +24,87 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
 
+  late Future<String> _usernameFuture;
+  String? _username;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUsername();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          width: double.maxFinite,
-          padding: EdgeInsets.symmetric(vertical: 13.v),
-          decoration: AppDecoration.fillGray,
-          child: Column(
-            children: [
-              SizedBox(height: 19.v),
-              Expanded(
-                child: SingleChildScrollView(
+    return FutureBuilder<String>(
+        future: _loadUsername(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error fetching email: ${snapshot.error}');
+          } else {
+            if (_username == null) {
+              _username = snapshot.data;
+            }
+            return SafeArea(
+              child: Scaffold(
+                resizeToAvoidBottomInset: false,
+                body: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.symmetric(vertical: 13.v),
+                  decoration: AppDecoration.fillGray,
                   child: Column(
                     children: [
-                      _buildWelcomeBackSection(context),
-                      SizedBox(height: 3.v),
-                      _buildSearchBoxSection(context),
-                      SizedBox(height: 24.v),
-                      _buildFeaturedJobSection(context),
-                      SizedBox(height: 20.v),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20.h),
-                        child: _buildRecentPostSection(
-                          context,
-                          recentPostText: "Recent Post",
-                          showAllText: "Show All",
-                        ),
-                      ),
-                      SizedBox(
-                        height: 380.v,
-                        width: double.maxFinite,
-                        child: Stack(
-                          alignment: Alignment.topCenter,
-                          children: [
-                            // _buildSlack(context),
-                            _buildUserProfile(context)
-                          ],
+                      SizedBox(height: 19.v),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              _buildWelcomeBackSection(context),
+                              SizedBox(height: 3.v),
+                              _buildSearchBoxSection(context),
+                              SizedBox(height: 24.v),
+                              _buildFeaturedJobSection(context),
+                              SizedBox(height: 20.v),
+                              Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20.h),
+                                child: _buildRecentPostSection(
+                                  context,
+                                  recentPostText: "Recent Post",
+                                  showAllText: "Show All",
+                                ),
+                              ),
+                              SizedBox(
+                                height: 380.v,
+                                width: double.maxFinite,
+                                child: Stack(
+                                  alignment: Alignment.topCenter,
+                                  children: [
+                                    // _buildSlack(context),
+                                    _buildUserProfile(context)
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       )
                     ],
                   ),
+                  //button
                 ),
-              )
-            ],
-          ),
-          //button
-        ),
-        floatingActionButton: ElevatedButton(
-          onPressed: () async {
-            String userEmail = await getUserEmail();
-            // Now you can use the userEmail variable here
-            print('User email: $userEmail');
-          },
-          child: Icon(Icons.add),
-        ),
-      ),
-    );
+                floatingActionButton: ElevatedButton(
+                  onPressed: () async {
+                    String userEmail = await getUserEmail();
+                    // Now you can use the userEmail variable here
+                    print('User email: $_username');
+                  },
+                  child: Icon(Icons.add),
+                ),
+              ),
+            );
+          }
+        });
   }
 
   /// Section Widget
@@ -115,7 +137,7 @@ class _HomePageState extends State<HomePage> {
                         text: "  ",
                       ),
                       TextSpan(
-                        text: "Adam Shafi 👋",
+                        text: "$_username 👋",
                         style: CustomTextStyles.titleLargeOnPrimary,
                       )
                     ],
@@ -396,6 +418,62 @@ class _HomePageState extends State<HomePage> {
 
   Future<String> getUserEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userEmail') ?? '';
+    return prefs.getString('username') ?? '';
+  }
+
+  // Future<String> getUsername() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? userEmail = prefs.getString('userEmail');
+  //   final snapshot = await FirebaseFirestore.instance
+  //       .collection('user')
+  //       .where('email', isEqualTo: userEmail)
+  //       .get();
+
+  //   if (snapshot.docs.isNotEmpty) {
+  //     final userData = snapshot.docs.first.data();
+  //     final String username = userData['username'];
+  //     // final email2 = userData[
+  //     //     'email']; // Accessing the 'roleType' field from the document data
+  //     // print("This is role type123: $roleType");
+  //     // print("This is email123: $email2");
+  //     return username;
+  //   } else {
+  //     print("No user found with email: $userEmail");
+  //     throw Exception("No user found with email: $userEmail");
+  //   }
+  // }
+
+  Future<String> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    _username = prefs.getString('username');
+    return prefs.getString('username') ?? "";
+  }
+
+  Future<String> _getUsername() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool usernameRetrieved = prefs.getBool('usernameRetrieved') ?? false;
+
+    if (!usernameRetrieved) {
+      String? userEmail = prefs.getString('userEmail');
+
+      if (userEmail != null) {
+        QuerySnapshot snapshot = await FirebaseFirestore.instance
+            .collection('user')
+            .where('email', isEqualTo: userEmail)
+            .get();
+
+        if (snapshot.docs.isNotEmpty) {
+          String username = snapshot.docs.first.get('username');
+          setState(() {
+            _username = username;
+          });
+          prefs.setBool('usernameRetrieved', true);
+          await prefs.setString('username', username);
+          return username;
+        }
+      }
+    }
+
+    return '';
   }
 }
