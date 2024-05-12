@@ -51,21 +51,33 @@ class CustomOutlinedButton extends BaseButton {
         height: this.height ?? 54.v,
         width: this.width ?? double.maxFinite,
         margin: margin,
-        decoration: decoration,
-        child: OutlinedButton(
-          style: buttonStyle,
-          onPressed: isDisabled ?? false ? null : onPressed ?? () {},
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              leftIcon ?? const SizedBox.shrink(),
-              Text(
-                text,
-                style: buttonTextStyle,
-              ),
-              rightIcon ?? const SizedBox.shrink()
-            ],
+        decoration: BoxDecoration(
+          borderRadius:
+              BorderRadius.circular(12.0), // Set the desired border radius
+          border: Border.all(color: Color(0xFF007BFF)), // Add border
+        ),
+        child: Material(
+          borderRadius:
+              BorderRadius.circular(12.0), // Set the same border radius
+          clipBehavior:
+              Clip.antiAlias, // Clip content outside the border radius
+          child: InkWell(
+            onTap: onPressed,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                leftIcon ?? const SizedBox.shrink(),
+                Text(
+                  text,
+                  style: buttonTextStyle != null
+                      ? buttonTextStyle!.copyWith(color: Color(0xFF007BFF))
+                      : TextStyle(
+                          color: Color(0xFF007BFF)), // Change text color
+                ),
+                rightIcon ?? const SizedBox.shrink()
+              ],
+            ),
           ),
         ),
       );
