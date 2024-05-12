@@ -28,7 +28,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   bool _isOldPasswordVisible = false;
   bool _isNewPasswordVisible = false;
   bool _isConfirmNewPasswordVisible = false;
-
+  String? _oldPasswordError;
+  String? _newPasswordError;
+  String? _confirmNewPasswordError;
 
   @override
   Widget build(BuildContext context) {
@@ -69,102 +71,97 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   SizedBox(height: 44.v),
                   Padding(
                     padding: EdgeInsets.only(left: 6.h),
-                    child: FutureBuilder<String?>(
-                      future: _validateOldPassword(), // Perform asynchronous validation
-                      builder: (context, snapshot) {
-                        return CustomTextFormField(
-                          controller: oldpasswordController,
-                          hintText: "Old Password",
-                          textInputType: TextInputType.visiblePassword,
-                          obscureText: !_isOldPasswordVisible,
-                          prefix: Container(
-                            margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgLocation,
-                              height: 26.v,
-                              width: 20.h,
-                            ),
-                          ),
-                          prefixConstraints: BoxConstraints(
-                            maxHeight: 54.v,
-                          ),
-                          suffix: IconButton(
-                            icon: Icon(
-                              _isOldPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isOldPasswordVisible = !_isOldPasswordVisible;
-                              });
-                            },
-                          ),
-                          suffixConstraints: BoxConstraints(
-                            maxHeight: 54.v,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 15.v),
-                          borderDecoration:
-                              TextFormFieldStyleHelper.fillOnErrorContainerTL12,
-                          textStyle: TextStyle(color: Colors.black),
-                          // Validator retrieves error message from snapshot
-                          validator: (value) {
-                            return snapshot.data;
-                          },
-                        );
+                    child: CustomTextFormField(
+                      controller: oldpasswordController,
+                      hintText: "Old Password",
+                      errorText: _oldPasswordError,
+                      textInputType: TextInputType.visiblePassword,
+                      obscureText: !_isOldPasswordVisible,
+                      prefix: Container(
+                        margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgLocation,
+                          height: 26.v,
+                          width: 20.h,
+                        ),
+                      ),
+                      prefixConstraints: BoxConstraints(
+                        maxHeight: 54.v,
+                      ),
+                      suffix: IconButton(
+                        icon: Icon(
+                          _isOldPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.grey,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isOldPasswordVisible = !_isOldPasswordVisible;
+                          });
+                        },
+                      ),
+                      suffixConstraints: BoxConstraints(
+                        maxHeight: 54.v,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                      borderDecoration:
+                          TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                      textStyle: TextStyle(color: Colors.black),
+                      onChanged: (value) {
+                        setState(() {
+                          _oldPasswordError =
+                              null; // Clear error message when text changes
+                        });
                       },
                     ),
                   ),
                   SizedBox(height: 44.v),
                   Padding(
                     padding: EdgeInsets.only(left: 6.h),
-                    child: FutureBuilder<String?>(
-                      future:
-                          _validateNewPassword(), // Perform asynchronous validation
-                      builder: (context, snapshot) {
-                        return CustomTextFormField(
-                          controller: newpasswordController,
-                          hintText: "New Password",
-                          textInputType: TextInputType.visiblePassword,
-                          obscureText: !_isNewPasswordVisible,
-                          prefix: Container(
-                            margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
-                            child: CustomImageView(
-                              imagePath: ImageConstant.imgLocation,
-                              height: 26.v,
-                              width: 20.h,
-                            ),
-                          ),
-                          prefixConstraints: BoxConstraints(
-                            maxHeight: 54.v,
-                          ),
-                          suffix: IconButton(
-                            icon: Icon(
-                              _isNewPasswordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                              color: Colors
-                                  .grey, // Explicitly use the default icon color
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _isNewPasswordVisible = !_isNewPasswordVisible;
-                              });
-                            },
-                          ),
-                          suffixConstraints: BoxConstraints(
-                            maxHeight: 54.v,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(vertical: 15.v),
-                          borderDecoration:
-                              TextFormFieldStyleHelper.fillOnErrorContainerTL12,
-                          textStyle: TextStyle(color: Colors.black),
-                          // Validator retrieves error message from snapshot
-                          validator: (value) {
-                            return snapshot.data;
-                          },
-                        );
+                    child: CustomTextFormField(
+                      controller: newpasswordController,
+                      hintText: "New Password",
+                      errorText: _newPasswordError,
+                      textInputType: TextInputType.visiblePassword,
+                      obscureText: !_isNewPasswordVisible,
+                      prefix: Container(
+                        margin: EdgeInsets.fromLTRB(20.h, 12.v, 15.h, 16.v),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgLocation,
+                          height: 26.v,
+                          width: 20.h,
+                        ),
+                      ),
+                      prefixConstraints: BoxConstraints(
+                        maxHeight: 54.v,
+                      ),
+                      suffix: IconButton(
+                        icon: Icon(
+                          _isNewPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isNewPasswordVisible = !_isNewPasswordVisible;
+                          });
+                        },
+                      ),
+                      suffixConstraints: BoxConstraints(
+                        maxHeight: 54.v,
+                      ),
+                      contentPadding: EdgeInsets.symmetric(vertical: 15.v),
+                      borderDecoration:
+                          TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                      textStyle: TextStyle(color: Colors.black),
+                      onChanged: (value) {
+                        setState(() {
+                          _newPasswordError =
+                              null; // Clear error message when text changes
+                        });
                       },
                     ),
                   ),
@@ -172,6 +169,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   CustomTextFormField(
                     controller: newpassword1Controller,
                     hintText: "Confirm New Password",
+                    errorText: _confirmNewPasswordError,
                     textInputAction: TextInputAction.done,
                     textInputType: TextInputType.visiblePassword,
                     obscureText: !_isConfirmNewPasswordVisible,
@@ -187,34 +185,33 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       maxHeight: 54.v,
                     ),
                     suffix: IconButton(
-                        icon: Icon(
-                          _isConfirmNewPasswordVisible
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors
-                              .grey, // Explicitly use the default icon color
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isConfirmNewPasswordVisible = !_isConfirmNewPasswordVisible;
-                          });
-                        },
+                      icon: Icon(
+                        _isConfirmNewPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors
+                            .grey, // Explicitly use the default icon color
                       ),
+                      onPressed: () {
+                        setState(() {
+                          _isConfirmNewPasswordVisible =
+                              !_isConfirmNewPasswordVisible;
+                        });
+                      },
+                    ),
                     suffixConstraints: BoxConstraints(
                       maxHeight: 54.v,
                     ),
                     contentPadding: EdgeInsets.symmetric(vertical: 15.v),
-                    borderDecoration: TextFormFieldStyleHelper.fillOnErrorContainerTL12,
+                    borderDecoration:
+                        TextFormFieldStyleHelper.fillOnErrorContainerTL12,
                     textStyle: TextStyle(color: Colors.black),
-                    //Check new password match with confirm new password
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Confirm new password cannot be empty';
-                      }else if (value != newpasswordController.text) {
-                        return 'New password and confirm new password does not\nmatch';
-                      }
-                      return null;
-                    },
+                    onChanged: (value) {
+                        setState(() {
+                          _confirmNewPasswordError =
+                              null; // Clear error message when text changes
+                        });
+                      },
                   ),
                   SizedBox(height: 20.v),
                   SizedBox(
@@ -230,15 +227,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   ),
                   SizedBox(height: 54.v),
                   CustomElevatedButton(
-                    height: 54.v,
-                    text: "Change Password",
-                    buttonStyle: CustomButtonStyles.fillSecondaryContainerTL12,
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        ChangePassword();
-                      }
-                    },
-                  ),
+                      height: 54.v,
+                      text: "Change Password",
+                      buttonStyle:
+                          CustomButtonStyles.fillSecondaryContainerTL12,
+                      onPressed: () {
+                        ChangePassword(context);
+                      }),
                   SizedBox(height: 5.v)
                 ],
               ),
@@ -276,7 +271,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     Navigator.pop(context);
   }
 
-  void ChangePassword() async {
+  void ChangePassword(BuildContext context) async {
     String oldPassword = oldpasswordController.text;
     String newPassword = newpasswordController.text;
     String confirmNewPassword = newpassword1Controller.text;
@@ -288,6 +283,71 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     print("New Password: ${newPassword}");
     print("Confirm New Password: ${confirmNewPassword}");
     print("User Email: ${userEmail}");
+
+    //Old Password text field data validation
+    if (oldPassword.isEmpty) {
+      setState(() {
+        _oldPasswordError = "Old Password cannot be empty";
+      });
+    } else {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: userEmail!,
+          password: oldPassword,
+        );
+        setState(() {
+          _oldPasswordError = null;
+        });
+      } catch (error) {
+        setState(() {
+          _oldPasswordError = "Incorrect old password";
+        });
+      }
+    }
+
+    //New Password text field data validation
+    if (newPassword.isEmpty) {
+      setState(() {
+        _newPasswordError = "New Password cannot be empty";
+      });
+    } else if (newPassword.length < 8 ||
+        !newPassword.contains(RegExp(r'[A-Z]')) ||
+        !newPassword.contains(RegExp(r'[a-z]')) ||
+        !newPassword.contains(RegExp(r'[0-9]'))) {
+      setState(() {
+        _newPasswordError = "Password must contain at least 8 alphanumeric\ncharacters, one uppercase letter, one lower letter,\nand one number";
+      });
+    } else {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: userEmail!,
+          password: newPassword,
+        );
+        setState(() {
+          _newPasswordError = "New password cannot be same as current password";
+        });
+      } catch (error) {
+        setState(() {
+          _newPasswordError = null;
+        });
+      }
+    }
+
+    //Confirm New Password text field data validation
+    if (confirmNewPassword.isEmpty) {
+      setState(() {
+        _confirmNewPasswordError = "Confirm new password cannot be empty";
+      });
+    } else if (confirmNewPassword != newPassword) {
+      setState(() {
+        _confirmNewPasswordError =
+            "New password and confirm new password does\nnot match";
+      });
+    } else {
+      setState(() {
+        _confirmNewPasswordError = null;
+      });
+    }
 
     if (userEmail != null && oldPassword != null) {
       _firebaseAuthService
@@ -315,64 +375,16 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
             fontSize: 16.0,
           );
           // Clear text fields
-        oldpasswordController.clear();
-        newpasswordController.clear();
-        newpassword1Controller.clear();
+          oldpasswordController.clear();
+          newpasswordController.clear();
+          newpassword1Controller.clear();
         } else {
           print("account does not exist");
         }
-        
       }).catchError((error) {
         print("Error: ${error}");
       });
-    };
-  }
-
-  Future<String?> _validateOldPassword() async {
-  String? value = oldpasswordController.text;
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  String? userEmail = prefs.getString('userEmail');
-  if (value == null || value.isEmpty) {
-    return 'Old password cannot be empty';
-  } else {
-    try {
-      // Attempt to sign in with the current user's email and the entered old password
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: userEmail!,
-        password: value,
-      );
-      // If sign-in is successful, return null to indicate no error
-      return null;
-    } catch (error) {
-      // If sign-in fails, return an error message indicating the old password is incorrect
-      return 'Incorrect old password';
     }
-  }
-
-}
-
-Future<String?> _validateNewPassword() async {
-    String? value = newpasswordController.text;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? userEmail = prefs.getString('userEmail');
-    if (value == null || value.isEmpty) {
-      return 'New password cannot be empty';
-    } else if (value != newpasswordController.text) {
-      return 'New password and confirm new password does not\nmatch';
-    } else {
-      try {
-        // Attempt to sign in with the current user's email and the entered old password
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: userEmail!,
-          password: value,
-        );
-        return 'New Password cannot be same as current password';
-      } catch (error) {
-        return null;
-      }
-    }
-  
+    ;
   }
 }
