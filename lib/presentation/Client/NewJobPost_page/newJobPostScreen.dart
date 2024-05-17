@@ -8,8 +8,8 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
 
 // ignore_for_file: must_be_immutable
-class NewPostClientScreen extends StatelessWidget {
-  NewPostClientScreen({Key? key})
+class newJobPostScreen extends StatelessWidget {
+  newJobPostScreen({Key? key})
       : super(
           key: key,
         );
@@ -98,7 +98,7 @@ class NewPostClientScreen extends StatelessWidget {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              ImageConstant.imgGroup56,
+              ImageConstant.imgGroup71,
             ),
             fit: BoxFit.cover,
           ),
@@ -111,13 +111,18 @@ class NewPostClientScreen extends StatelessWidget {
               width: 150.h,
               text: "Cancel",
               margin: EdgeInsets.only(top: 32.v),
+              buttonStyle: CustomButtonStyles.fillGray,
+              buttonTextStyle: CustomTextStyles.bodyMediumGray70001,
+              onPressed: () {
+                onTapCancel(context);
+              },
             ),
             CustomElevatedButton(
               width: 156.h,
               text: "Preview",
               margin: EdgeInsets.only(top: 32.v),
-              buttonStyle: CustomButtonStyles.fillPrimary,
-              buttonTextStyle: CustomTextStyles.bodyMediumWhiteA700,
+              buttonStyle: CustomButtonStyles.fillSecondaryContainer,
+              buttonTextStyle: CustomTextStyles.bodyMediumOnErrorContainer,
             )
           ],
         ),
@@ -209,7 +214,7 @@ class NewPostClientScreen extends StatelessWidget {
             horizontal: 19.h,
             vertical: 16.v,
           ),
-          decoration: AppDecoration.fillWhiteA.copyWith(
+          decoration: AppDecoration.fillOnErrorContainer.copyWith(
             borderRadius: BorderRadiusStyle.roundedBorder15,
           ),
           child: Column(
@@ -227,7 +232,7 @@ class NewPostClientScreen extends StatelessWidget {
                       bottom: 7.v,
                     ),
                     decoration: BoxDecoration(
-                      color: appTheme.gray90001,
+                      color: appTheme.gray900,
                       borderRadius: BorderRadius.circular(
                         2.h,
                       ),
@@ -244,7 +249,7 @@ class NewPostClientScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text: "9.30 am sharp.",
-                            style: theme.textTheme.labelLarge,
+                            style: CustomTextStyles.labelLargeSemiBold,
                           )
                         ],
                       ),
@@ -266,7 +271,7 @@ class NewPostClientScreen extends StatelessWidget {
                         bottom: 6.v,
                       ),
                       decoration: BoxDecoration(
-                        color: appTheme.gray90001,
+                        color: appTheme.gray900,
                         borderRadius: BorderRadius.circular(
                           2.h,
                         ),
@@ -296,7 +301,7 @@ class NewPostClientScreen extends StatelessWidget {
                         bottom: 130.v,
                       ),
                       decoration: BoxDecoration(
-                        color: appTheme.gray90001,
+                        color: appTheme.gray900,
                         borderRadius: BorderRadius.circular(
                           2.h,
                         ),
@@ -330,7 +335,7 @@ class NewPostClientScreen extends StatelessWidget {
                       bottom: 6.v,
                     ),
                     decoration: BoxDecoration(
-                      color: appTheme.gray90001,
+                      color: appTheme.gray900,
                       borderRadius: BorderRadius.circular(
                         2.h,
                       ),
@@ -364,7 +369,7 @@ class NewPostClientScreen extends StatelessWidget {
         Text(
           budgetPerHour,
           style: theme.textTheme.bodyLarge!.copyWith(
-            color: theme.colorScheme.errorContainer,
+            color: appTheme.black900,
           ),
         ),
         CustomImageView(
@@ -383,5 +388,10 @@ class NewPostClientScreen extends StatelessWidget {
   /// Navigates back to the previous screen.
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  /// Navigates to the postClientScreen when the action is triggered.
+  onTapCancel(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.postListPage);
   }
 }
