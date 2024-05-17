@@ -178,6 +178,6 @@ class PostListScreen extends StatelessWidget {
 
   /// Navigates to the postClientOneScreen when the action is triggered.
   onTapBtnUserone(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.previewPostPage);
+    Navigator.pushNamed(context, AppRoutes.newJobPostPage);
   }
 }
