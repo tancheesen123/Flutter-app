@@ -409,9 +409,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         nameController.text = userData['username'] ?? '';
         emailController.text = userData['email'] ?? '';
         dateOfBirthController.text = userData['dateOfBirth'] ?? '';
-        identityNumberController.text = userData['IdentityNum'] != null
-            ? userData['IdentityNum'].toString()
-            : '';
+        identityNumberController.text = userData['IdentityNum'] ?? '';
         selectedGender = userData['gender'] != null
             ? userData['gender'].toString().substring(0, 1).toUpperCase() +
                 userData['gender'].toString().substring(1)
@@ -424,6 +422,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _updateUserData(BuildContext context) {
+    RegExp digitRegex = RegExp(r'^[0-9]+$');
+
+    if (nameController.text.isEmpty) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Name cannot be empty"),
+      ).show(context);
+      return;
+    } else if (dateOfBirthController.text.isEmpty) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Date of birth cannot be empty"),
+      ).show(context);
+      return;
+    } else if (identityNumberController.text.isEmpty) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Identity number cannot be empty"),
+      ).show(context);
+      return;
+    } else if (identityNumberController.text.length != 12) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Identity number must be 12 digits long"),
+      ).show(context);
+      return;
+    } else if (identityNumberController.text.contains('-')) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Do not include - in your identity number"),
+      ).show(context);
+      return;
+    } else if (selectedGender == null) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Gender cannot be empty"),
+      ).show(context);
+      return;
+    } else if (!digitRegex.hasMatch(identityNumberController.text)) {
+      ElegantNotification.error(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text("Error"),
+        description: Text("Identity number must contain only digits."),
+      ).show(context);
+      return;
+    }
+
+  
+
   // Reference to the Firestore collection
   CollectionReference user = firestore.collection('user');
 
@@ -431,7 +498,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   user.doc(FirebaseAuth.instance.currentUser!.email).update({
     'username': nameController.text,
     'dateOfBirth': dateOfBirthController.text,
-    'identityNumber': identityNumberController.text,
+    'IdentityNum': identityNumberController.text.toString(),
     'gender': selectedGender,
   }).then((value) {
     // Handle success
@@ -442,22 +509,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     // Show success notification
     ElegantNotification.success(
-        width: 360,
-        isDismissable: false,
-        animationCurve: Curves.bounceOut,
-        position: Alignment.topCenter,
-        animation: AnimationType.fromTop,
-        title: Text('Profile Updated'),
-        description: Text('Your profile has been updated'),
-        onDismiss: () {},
-        onNotificationPressed: () {},
-        shadow: BoxShadow(
-          color: Colors.green.withOpacity(0.2),
-          spreadRadius: 2,
-          blurRadius: 5,
-          offset: const Offset(0, 4),
-        ),
-).show(context);
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text('Profile Updated'),
+      description: Text('Your profile has been updated'),
+      onDismiss: () {},
+      onNotificationPressed: () {},
+      shadow: BoxShadow(
+        color: Colors.green.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4),
+      ),
+    ).show(context);
   }).catchError((error) {
     // Handle error
     print("Failed to update user data: $error");
@@ -469,6 +534,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ).show(context);
   });
 }
+
 
 
 
