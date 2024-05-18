@@ -3,12 +3,18 @@ import 'package:workwise/widgets/custom_text_form_field.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart'; // ignore: must_be_immutable
 
-class DescriptionItemWidget extends StatelessWidget {
-  const DescriptionItemWidget({Key? key})
+class DescriptionItemWidget extends StatefulWidget {
+  final String? description;
+  const DescriptionItemWidget({Key? key, this.description})
       : super(
           key: key,
         );
 
+  @override
+  State<DescriptionItemWidget> createState() => _DescriptionItemWidgetState();
+}
+
+class _DescriptionItemWidgetState extends State<DescriptionItemWidget> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,22 +22,12 @@ class DescriptionItemWidget extends StatelessWidget {
       children: [
         RichText(
           text: TextSpan(
-            text: "Chargee MY - ",
-            style: TextStyle(fontSize: 16, color: Colors.black),
-            children: [
-              WidgetSpan(
-                child: Icon(
-                  Icons.location_on_outlined,
-                  size: 24,
-                ),
-              ),
-              TextSpan(
-                text: "Intermark Mall, KL",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+            text: "Job Description",
+            style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Poppins'),
           ),
         ),
         SizedBox(height: 20.v), // Adjust as needed
@@ -40,26 +36,20 @@ class DescriptionItemWidget extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              RichText(
-                text: TextSpan(
-                  text: "Chargee MY - ",
-                  style: TextStyle(fontSize: 16, color: Colors.black),
-                  children: [
-                    WidgetSpan(
-                      child: Icon(
-                        Icons.location_on_outlined,
-                        size: 24,
-                      ),
+              Padding(
+                padding: EdgeInsets.only(left: 10.h),
+                child: TextField(
+                  enabled: false,
+                  decoration: InputDecoration(
+                    hintText: "• ${widget.description}",
+                    hintStyle: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
                     ),
-                    TextSpan(
-                      text: "Intermark Mall, KL",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                    border: InputBorder.none,
+                  ),
                 ),
-              ),
+              )
             ],
           ),
         ),
