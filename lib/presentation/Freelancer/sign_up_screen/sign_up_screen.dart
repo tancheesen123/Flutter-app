@@ -466,7 +466,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'email': email.toLowerCase(),
       'dateOfBirth': "1-1-2024",
       'gender': "male",
-      'IdentityNum': 0102302103213,
+      'IdentityNum': "0102302103213",
       'roleType': roleType,
       'Nationality': "Malaysia",
       'Token': "123456",
