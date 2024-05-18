@@ -32,13 +32,13 @@ class CustomTextStyles {
   static get bodyLargeOnError => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.onError,
         fontWeight: FontWeight.w300,
-      ); 
+      );
   static get bodyLargePrimaryContainer => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.primaryContainer,
       );
   static get bodyLargeOnErrorContainer => theme.textTheme.bodyLarge!.copyWith(
         color: theme.colorScheme.onErrorContainer,
-      );   
+      );
   static get bodyLargeSofiaPro => theme.textTheme.bodyLarge!.sofiaPro;
   static get bodySmallGray500 => theme.textTheme.bodySmall!.copyWith(
         color: appTheme.gray500,
@@ -58,11 +58,11 @@ class CustomTextStyles {
   static get titleMediumGray900 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.gray900,
         fontWeight: FontWeight.w500,
-      );  
+      );
   static get bodySmallSecondaryContainer => theme.textTheme.bodySmall!.copyWith(
         color: theme.colorScheme.secondaryContainer,
         fontSize: 11.fSize,
-      ); 
+      );
   static get bodyLargeGray700 => theme.textTheme.bodyLarge!.copyWith(
         color: appTheme.gray700,
       );
@@ -72,14 +72,29 @@ class CustomTextStyles {
         fontWeight: FontWeight.w300,
       );
   static get bodySmallGray700 => theme.textTheme.bodySmall!.copyWith(
-      color: appTheme.gray700.withOpacity(0.8),
-    );
+        color: appTheme.gray700.withOpacity(0.8),
+      );
   static get bodyMediumGray70001 => theme.textTheme.bodyMedium!.copyWith(
         color: appTheme.gray70001,
       );
+  static get bodyMediumGray50001_1 => theme.textTheme.bodyMedium!.copyWith(
+    color: appTheme.gray50001,
+  );
   static get bodyMediumOnErrorContainer => theme.textTheme.bodyMedium!.copyWith(
         color: theme.colorScheme.onErrorContainer,
-      ); 
+      );
+  static get bodyMediumOnPrimary_1 => theme.textTheme.bodyMedium!.copyWith(
+        color: theme.colorScheme.onPrimary,
+      );
+  static get bodyMediumGray50001 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray50001,
+      );
+  static get bodyMediumGray90002 => theme.textTheme.bodyMedium!.copyWith(
+        color: appTheme.gray90002,
+      );
+  static get bodyMediumPrimary => theme.textTheme.bodyMedium!.copyWith(
+        color: theme.colorScheme.primary,
+      );
 // Headline text style
   static get headlineLargeSemiBold => theme.textTheme.headlineLarge!.copyWith(
         fontWeight: FontWeight.w600,
@@ -104,6 +119,22 @@ class CustomTextStyles {
   static get labelLargeSemiBold => theme.textTheme.labelLarge!.copyWith(
         fontSize: 13.fSize,
         fontWeight: FontWeight.w600,
+      );
+  static get labelLargeGray700 => theme.textTheme.labelLarge!.copyWith(
+        color: appTheme.gray700,
+        fontSize: 13.fSize,
+      );
+  static get labelLargeOnPrimary => theme.textTheme.labelLarge!.copyWith(
+        color: theme.colorScheme.onPrimary,
+        fontSize: 13.fSize,
+      );
+  static get labelLargeBlack900 => theme.textTheme.labelLarge!.copyWith(
+        color: appTheme.black900,
+        fontSize: 13.fSize,
+      );
+  static get labelLargeGray50001 => theme.textTheme.labelLarge!.copyWith(
+        color: appTheme.gray50001,
+        fontSize: 13.fSize,
       );
 // Title text style
   static get titleLargeOnPrimary => theme.textTheme.titleLarge!.copyWith(
@@ -155,6 +186,9 @@ class CustomTextStyles {
   static get titleSmallGray50001 => theme.textTheme.titleSmall!.copyWith(
         color: appTheme.gray50001,
       );
+  static get titleSmallGray90002 => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.gray90002,
+      );
   static get titleSmallWhiteA700SemiBold =>
       theme.textTheme.titleSmall!.copyWith(
         color: appTheme.whiteA700,
@@ -178,5 +212,11 @@ class CustomTextStyles {
       );
   static get titleMediumWhiteA700 => theme.textTheme.titleMedium!.copyWith(
         color: appTheme.whiteA700,
+      );
+  static get titleSmallOnPrimary => theme.textTheme.titleSmall!.copyWith(
+        color: theme.colorScheme.onPrimary,
+      );
+  static get titleSmallBlack900 => theme.textTheme.titleSmall!.copyWith(
+        color: appTheme.black900,
       );
 }
