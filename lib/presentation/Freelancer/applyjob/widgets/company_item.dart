@@ -2,8 +2,8 @@ import 'package:flutter/material.dart' hide SearchController;
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart'; // ignore: must_be_immutable
 
-class OrderdetailsItemWidget extends StatelessWidget {
-  const OrderdetailsItemWidget({Key? key})
+class CompanyItemWidget extends StatelessWidget {
+  const CompanyItemWidget({Key? key})
       : super(
           key: key,
         );
