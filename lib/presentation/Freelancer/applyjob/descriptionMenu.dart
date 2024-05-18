@@ -3,7 +3,8 @@ import '../../../core/app_export.dart';
 import 'widgets/description_item.dart'; // ignore_for_file: must_be_immutable
 
 class descriptionMenuPage extends StatefulWidget {
-  const descriptionMenuPage({Key? key})
+  final String? description;
+  const descriptionMenuPage({Key? key, required this.description})
       : super(
           key: key,
         );
@@ -45,7 +46,7 @@ class descriptionMenuPageState extends State<descriptionMenuPage>
         },
         itemCount: 1,
         itemBuilder: (context, index) {
-          return DescriptionItemWidget();
+          return DescriptionItemWidget(description: widget.description);
         },
       ),
     );
