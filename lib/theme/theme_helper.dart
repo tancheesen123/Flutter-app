@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import '../core/app_export.dart';
 
 String _appTheme = "primary";
@@ -178,12 +179,16 @@ class PrimaryColors {
   Color get gray70001 => Color(0XFF636363);
   Color get gray90011 => Color(0X11071429);
   Color get gray90001 => Color(0XFF1F2427);
+  Color get gray90002 => Color(0XFF1A1D1E);
 // Grayc
   Color get gray6004c => Color(0X4C808080);
+// Grayf
+Color get gray6007f => Color(0X7F808080);
 // Orange
-Color get orangeA200 => Color(0XFFF29339);
+  Color get orangeA200 => Color(0XFFF29339);
 // Indigo
   Color get indigo500 => Color(0XFF4460A0);
+  Color get indigo600 => Color(0XFF356899);
 // Red
   Color get redA700 => Color(0XFFFF0000);
 // Yellow

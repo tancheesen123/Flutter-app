@@ -19,6 +19,7 @@ import '../presentation/Client/home_client_container_screen/home_client_containe
 import '../presentation/Client/post_list_page/post_list_page.dart';
 import '../presentation/Client/NewJobPost_page/newJobPostScreen.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
+import '../presentation/Freelancer/notification_screen/notification.dart';
 
 class AppRoutes {
   //Client Routes
@@ -75,6 +76,8 @@ class AppRoutes {
 
   static const String checkSession = '/check_session';
 
+  static const String notificationScreen = '/notification_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -90,6 +93,7 @@ class AppRoutes {
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
     settingsContainerScreen: (context) => SettingsContainerScreen(),
     forgotPasswordOneScreen: (context) => ForgotPasswordOneScreen(),
+    notificationScreen: (context) => NotificationScreen(),
     //Scrum 16 - Forgot Password: Pass email arguments from screen one to screen two for resend purpose
     forgotPasswordTwoScreen: (context) {
       final email = ModalRoute.of(context)?.settings.arguments as String?;
