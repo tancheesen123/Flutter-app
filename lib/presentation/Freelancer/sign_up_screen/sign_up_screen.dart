@@ -468,7 +468,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       'gender': "male",
       'IdentityNum': "0102302103213",
       'roleType': roleType,
-      'Nationality': "Malaysia",
+      'Nationality': "Malaysian",
       'Token': "123456",
       'timestamp': DateTime.now().millisecondsSinceEpoch,
       // 'name': FirebaseAuth.instance.currentUser!.displayName,
