@@ -29,6 +29,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   String? username;
   String? selectedGender;
+  String? selectedNationality;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
@@ -36,7 +37,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  List<String> dropdownItemList = ["Male", "Female"];
+  List<String> genderdropdownItemList = ["Male", "Female"];
+  List<String> nationalityDropDownList = ["Malaysian", "Non-Malaysian"];
 
   @override
   Widget build(BuildContext context) {
@@ -316,13 +318,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         width: 13.h,
                       ),
                     ),
-                    hintText: "Male",
-                    hintStyle: TextStyle(color: Color(0xFF1A1D1E)),
-                    items: dropdownItemList,
+                    hintText: selectedGender,
+                    textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                    items: genderdropdownItemList,
                     onChanged: (String? value) {
                       setState(() {
                         selectedGender = value;
                       });
+                    
                   }),
                 ),
               ],
@@ -335,58 +338,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// Section Widget
   Widget _buildStackCloseOne(BuildContext context) {
-    return SizedBox(
-      height: 101.v,
-      width: double.maxFinite,
-      child: Stack(
-        alignment: Alignment.topLeft,
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 15.h),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              margin: EdgeInsets.only(left: 25.h, top: 49.v, right: 15.h),
-              padding: EdgeInsets.symmetric(horizontal: 11.h, vertical: 12.v),
-              decoration: AppDecoration.outlineGray300.copyWith(
-                borderRadius: BorderRadiusStyle.roundedBorder9,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgClose,
-                    height: 25.adaptSize,
-                    width: 25.adaptSize,
-                    margin: EdgeInsets.only(top: 1.v),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 6.h, top: 6.v, bottom: 6.v),
-                    child: Text("Malaysian", style: theme.textTheme.titleSmall),
-                  ),
-                  Spacer(),
-                  CustomImageView(
-                    imagePath: ImageConstant.imgArrowdown,
-                    height: 7.v,
-                    width: 13.h,
-                    margin: EdgeInsets.only(top: 9.v, right: 5.h, bottom: 10.v),
-                  )
-                ],
-              ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.h),
+            child: Text(
+              "Nationality",
+              style: theme.textTheme.bodyLarge,
             ),
           ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 25.h, top: 24.v),
-              child: Text("Nationality", style: theme.textTheme.bodyLarge),
+          SizedBox(height: 4.v),
+          Padding(
+            padding: EdgeInsets.only(left: 10.h),
+            child: Row(
+              children: [
+                Expanded(
+                  child: CustomDropDown(
+                    icon: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 17.h),
+                      child: CustomImageView(
+                        imagePath: ImageConstant.imgArrowdown,
+                        height: 7.v,
+                        width: 13.h,
+                      ),
+                    ),
+                    hintText: selectedNationality,
+                    textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                    items: nationalityDropDownList,
+                    onChanged: (String? value) {
+                      setState(() {
+                        selectedNationality = value;
+                      });
+                    
+                  }),
+                ),
+              ],
             ),
-          ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: Padding(
-              padding: EdgeInsets.only(left: 25.h, top: 24.v),
-              child: Text("Nationality", style: theme.textTheme.bodyLarge),
-            ),
-          ),
+          )
         ],
       ),
     );
@@ -413,7 +404,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         selectedGender = userData['gender'] != null
             ? userData['gender'].toString().substring(0, 1).toUpperCase() +
                 userData['gender'].toString().substring(1)
-            : dropdownItemList[0];
+            : genderdropdownItemList[0];
+        selectedNationality = userData['Nationality'] ?? '';
 
       });
     } catch (e) {
@@ -500,6 +492,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     'dateOfBirth': dateOfBirthController.text,
     'IdentityNum': identityNumberController.text.toString(),
     'gender': selectedGender,
+    'Nationality': selectedNationality,
   }).then((value) {
     // Handle success
     print("User data updated successfully!");
