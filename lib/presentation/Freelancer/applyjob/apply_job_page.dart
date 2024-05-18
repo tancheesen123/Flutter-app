@@ -1,11 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
-import '../../../widgets/custom_drop_down.dart';
 import '../../../widgets/custom_elevated_button.dart';
-import '../../../widgets/custom_text_form_field.dart';
+import 'package:workwise/Controller/ApplyJobController.dart'; // Import the JobPost model
 import 'descriptionMenu.dart';
 import 'companyMenu.dart';
 
@@ -20,14 +21,9 @@ class ApplyJobScreen extends StatefulWidget {
 
 class _ApplyJobScreenState extends State<ApplyJobScreen>
     with TickerProviderStateMixin {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController dateOfBirthController = TextEditingController();
-  List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late TabController tabviewController;
-  late String? postId;
-
+  final ApplyJobController applyJobController = Get.put(ApplyJobController());
+  String? postId;
   @override
   void initState() {
     super.initState();
@@ -48,146 +44,167 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: _buildAppBar(context),
-        body: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 82.v,
-                  width: 80.h,
-                  child: Stack(
-                    alignment: Alignment.bottomRight,
+        body: FutureBuilder<Map<String, dynamic>?>(
+          future: applyJobController.getJobPostData(widget.postId!),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text("Error loading job details"));
+            } else if (!snapshot.hasData || snapshot.data == null) {
+              return Center(child: Text("Job post not found"));
+            } else {
+              final data = snapshot.data!;
+              return Form(
+                key: GlobalKey<FormState>(),
+                child: SingleChildScrollView(
+                  child: Column(
                     children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.imgRectangle515,
-                        height: 80.adaptSize,
-                        width: 80.adaptSize,
-                        radius: BorderRadius.circular(40.h),
-                        alignment: Alignment.center,
+                      SizedBox(
+                        height: 82.v,
+                        width: 80.h,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            CustomImageView(
+                              imagePath: ImageConstant.imgRectangle515,
+                              height: 80.adaptSize,
+                              width: 80.adaptSize,
+                              radius: BorderRadius.circular(40.h),
+                              alignment: Alignment.center,
+                            ),
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                height: 19.adaptSize,
+                                width: 19.adaptSize,
+                                margin: EdgeInsets.only(right: 6.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5.h, vertical: 6.v),
+                                decoration:
+                                    AppDecoration.outlineGray5001.copyWith(
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder9,
+                                ),
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.imgFill244,
+                                  height: 5.v,
+                                  width: 6.h,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          height: 19.adaptSize,
-                          width: 19.adaptSize,
-                          margin: EdgeInsets.only(right: 6.h),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 5.h, vertical: 6.v),
-                          decoration: AppDecoration.outlineGray5001.copyWith(
-                            borderRadius: BorderRadiusStyle.roundedBorder9,
+                      SizedBox(height: 10.v),
+                      Text(
+                        data['title'] ?? "Job Title",
+                        style: theme.textTheme.headlineLarge,
+                      ),
+                      SizedBox(height: 20.v),
+                      RichText(
+                        text: TextSpan(
+                          text: "Chargee MY -",
+                          style: theme.textTheme.bodyLarge,
+                          children: [
+                            WidgetSpan(
+                              child: Icon(
+                                Icons.location_on_outlined,
+                                size: 24.0,
+                              ),
+                            ),
+                            TextSpan(
+                              text: data['location'] ?? "Location",
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 20.v),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            WidgetSpan(
+                              child: Icon(
+                                Icons.access_time,
+                                size: 24.0,
+                              ),
+                            ),
+                            TextSpan(
+                              text: data['status'] ?? "status",
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                            TextSpan(
+                              text:
+                                  "                   RM${data['budget'] ?? "123"}/${data['workingHours'] ?? "123"}h  ",
+                              style: theme.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 15.v),
+                      Container(
+                        height: 50.v,
+                        width: screenWidth - 30.h,
+                        margin: EdgeInsets.only(left: 20.h),
+                        child: TabBar(
+                          dividerColor: Colors.transparent,
+                          // make border transparent
+                          controller: tabviewController,
+                          labelPadding: EdgeInsets.zero,
+                          labelColor: appTheme.whiteA700,
+                          labelStyle: TextStyle(
+                            fontSize: 14.fSize,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
                           ),
-                          child: CustomImageView(
-                            imagePath: ImageConstant.imgFill244,
-                            height: 5.v,
-                            width: 6.h,
-                            alignment: Alignment.centerLeft,
+                          unselectedLabelColor: appTheme.black900,
+                          unselectedLabelStyle: TextStyle(
+                            fontSize: 14.fSize,
+                            fontFamily: 'Poppins',
+                            fontWeight: FontWeight.w500,
                           ),
+                          indicatorSize: TabBarIndicatorSize.tab,
+                          indicator: BoxDecoration(
+                            color: const Color(0xFF007BFF),
+                            borderRadius: BorderRadius.circular(12.h),
+                          ),
+                          tabs: [
+                            Tab(
+                              child: Text("Description"),
+                            ),
+                            Tab(
+                              child: Text("Company"),
+                            )
+                          ],
                         ),
-                      )
+                      ),
+                      SizedBox(
+                        height: 557.v,
+                        child: TabBarView(
+                          controller: tabviewController,
+                          children: [
+                            descriptionMenuPage(
+                                description: data['description'] ??
+                                    "No description available"), // Pass description here
+                            CompanyMenuPage(),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 15.v),
+                      _buildStackCloseOne(context),
+                      SizedBox(height: 10.v),
                     ],
                   ),
                 ),
-                SizedBox(height: 10.v),
-                Text(
-                  "Chargee",
-                  style: theme.textTheme.headlineLarge,
-                ),
-                SizedBox(height: 20.v),
-                RichText(
-                  text: TextSpan(
-                    text: "Chargee MY -",
-                    style: theme.textTheme.bodyLarge,
-                    children: [
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.location_on_outlined,
-                          size: 24.0,
-                        ),
-                      ),
-                      TextSpan(
-                        text: "Intermark Mall, KL",
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20.v),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      WidgetSpan(
-                        child: Icon(
-                          Icons.access_time,
-                          size: 24.0,
-                        ),
-                      ),
-                      TextSpan(
-                        text: " Part Time ",
-                        style: theme.textTheme.bodyLarge,
-                      ),
-                      TextSpan(
-                        text: "                   RM81/9h ",
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 15.v),
-                Container(
-                  height: 50.v,
-                  width: screenWidth - 30.h,
-                  margin: EdgeInsets.only(left: 20.h),
-                  child: TabBar(
-                    controller: tabviewController,
-                    labelPadding: EdgeInsets.zero,
-                    labelColor: appTheme.whiteA700,
-                    labelStyle: TextStyle(
-                      fontSize: 14.fSize,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    unselectedLabelColor: appTheme.black900,
-                    unselectedLabelStyle: TextStyle(
-                      fontSize: 14.fSize,
-                      fontFamily: 'Poppins',
-                      fontWeight: FontWeight.w500,
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                    indicator: BoxDecoration(
-                      color: const Color(0xFF007BFF),
-                      borderRadius: BorderRadius.circular(12.h),
-                    ),
-                    tabs: [
-                      Tab(
-                        child: Text("Description"),
-                      ),
-                      Tab(
-                        child: Text("Company"),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 557.v,
-                  child: TabBarView(
-                    controller: tabviewController,
-                    children: [
-                      descriptionMenuPage(),
-                      CompanyMenuPage(),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 15.v),
-                _buildStackCloseOne(context),
-                SizedBox(height: 10.v),
-              ],
-            ),
-          ),
+              );
+            }
+          },
         ),
       ),
     );
@@ -232,9 +249,11 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
             height: 48.v,
             text: "Apply Now",
             buttonTextStyle: CustomTextStyles.titleSmallWhiteA700SemiBold,
-            onPressed: () {
+            onPressed: () async {
               print("clicked");
-              print('Post ID in ApplyJobScreen: $postId');
+              print('Post ID in ApplyJobScreen: ${widget.postId}');
+              String username = await applyJobController.loadUsername();
+              print("Loaded Username: $username");
             },
           ),
         ),
