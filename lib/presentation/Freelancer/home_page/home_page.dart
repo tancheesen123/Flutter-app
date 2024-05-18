@@ -130,6 +130,7 @@ class _HomePageState extends State<HomePage> {
                   "Welcome Back!",
                   style: CustomTextStyles.titleSmallGray50001,
                 ),
+                SizedBox(height: 10.v),
                 RichText(
                   text: TextSpan(
                     children: [
@@ -144,11 +145,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                SizedBox(height: 1.v),
-                Text(
-                  "Total Earning: RM2,590.00",
-                  style: CustomTextStyles.titleSmallBluegray900,
-                )
               ],
             ),
             Container(
