@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:workwise/presentation/Freelancer/new_settings/settings_page/settings_page.dart';
+import 'package:workwise/presentation/Freelancer/notification_screen/notification.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import 'home_page.dart';
@@ -46,6 +47,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
       AppRoutes.homeContainerScreen,
       AppRoutes.settingsScreen,
       AppRoutes.myjobApplicationsPage,
+      AppRoutes.notificationScreen,
     ];
     return desiredRoutes.contains(ModalRoute.of(context)?.settings.name) &&
         _showNavigationBar;
@@ -72,6 +74,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
         AppRoutes.homeContainerScreen,
         AppRoutes.settingsScreen,
         AppRoutes.myjobApplicationsPage,
+        AppRoutes.notificationScreen,
       ].contains(targetRoute);
     });
   }
@@ -83,7 +86,7 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
       case BottomBarEnum.Jobs:
         return AppRoutes.myjobApplicationsPage;
       case BottomBarEnum.Notifications:
-        return "/";
+        return AppRoutes.notificationScreen;
       case BottomBarEnum.Settings:
         return AppRoutes.settingsScreen;
       default:
@@ -101,6 +104,8 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
         return SettingsScreen();
       case AppRoutes.myjobApplicationsPage:
         return MyjobApplicationsPage();
+      case AppRoutes.notificationScreen:
+        return NotificationScreen();
       default:
         return HomePage();
     }
