@@ -38,7 +38,8 @@ class CustomTextFormField extends StatelessWidget {
       this.filled = true,
       this.validator,
       this.onChanged,
-      this.errorText
+      this.errorText,
+      this.readOnly = false
       })
       : super(
           key: key,
@@ -91,6 +92,8 @@ class CustomTextFormField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
 
   final String? errorText;
+
+  final bool readOnly;
   
   @override
   Widget build(BuildContext context) {
@@ -122,6 +125,7 @@ class CustomTextFormField extends StatelessWidget {
           keyboardType: textInputType,
           onChanged: onChanged,
           maxLines: maxLines ?? 1,
+          readOnly: readOnly,
           decoration: decoration,
           validator: validator,
         ),
