@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
@@ -11,7 +15,7 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
- // ignore_for_file: must_be_immutable
+// ignore_for_file: must_be_immutable
 
 class ProfileScreen extends StatefulWidget {
   ProfileScreen({Key? key}) : super(key: key);
@@ -28,6 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   String? username;
+  String? profileImageUrl;
   String? selectedGender;
   String? selectedNationality;
   TextEditingController nameController = TextEditingController();
@@ -40,11 +45,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> genderdropdownItemList = ["Male", "Female"];
   List<String> nationalityDropDownList = ["Malaysian", "Non-Malaysian"];
 
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: _buildAppBar(context),
         body: Stack(
           children: [
@@ -63,30 +71,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.imgRectangle382,
-                            height: 80.adaptSize,
-                            width: 80.adaptSize,
-                            radius: BorderRadius.circular(40.h),
-                            alignment: Alignment.center,
+                          GestureDetector(
+                            onTap: _pickImage,
+                            child: CircleAvatar(
+                              radius: 40.h,
+                              backgroundImage: _image != null
+                                ? FileImage(File(_image!.path))
+                                : profileImageUrl != null
+                                  ? CachedNetworkImageProvider(profileImageUrl!)
+                                  : AssetImage(ImageConstant.imgRectangle382) as ImageProvider<Object>,
+                            ),
                           ),
                           Align(
                             alignment: Alignment.bottomRight,
-                            child: Container(
-                              height: 19.adaptSize,
-                              width: 19.adaptSize,
-                              margin: EdgeInsets.only(right: 6.h),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5.h, vertical: 6.v),
-                              decoration:
-                                  AppDecoration.outlineGray5001.copyWith(
-                                borderRadius: BorderRadiusStyle.roundedBorder9,
-                              ),
-                              child: CustomImageView(
-                                imagePath: ImageConstant.imgFill244,
-                                height: 5.v,
-                                width: 6.h,
-                                alignment: Alignment.centerLeft,
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: Container(
+                                height: 19.adaptSize,
+                                width: 19.adaptSize,
+                                margin: EdgeInsets.only(right: 6.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5.h, vertical: 6.v),
+                                decoration:
+                                    AppDecoration.outlineGray5001.copyWith(
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder9,
+                                ),
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.imgFill244,
+                                  height: 5.v,
+                                  width: 6.h,
+                                  alignment: Alignment.centerLeft,
+                                ),
                               ),
                             ),
                           )
@@ -102,10 +118,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildEmailColumn(context),
                     SizedBox(height: 24.v),
                     _buildDateOfBirthColumn(context),
-                    SizedBox(height: 25.v),
-                    _buildGenderColumn(context),
-                    SizedBox(height: 5.v),
-                    _buildStackCloseOne(context),
                     SizedBox(height: 29.v),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -125,7 +137,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             horizontal: 21.h, vertical: 19.v),
                         textStyle: TextStyle(color: Color(0xFF1A1D1E)),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 25.v),
+                    _buildGenderColumn(context),
+                    SizedBox(height: 5.v),
+                    _buildStackCloseOne(context),
                   ],
                 ),
               ),
@@ -239,55 +255,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   /// Section Widget
   Widget _buildDateOfBirthColumn(BuildContext context) {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: Padding(
-      padding: EdgeInsets.only(left: 25.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Date of Birth",
-            style: theme.textTheme.bodyLarge,
-          ),
-          SizedBox(height: 9.v),
-          Padding(
-            padding: EdgeInsets.only(right: 15.h),
-            child: GestureDetector(
-              onTap: () async {
-                var datePicked = await DatePicker.showSimpleDatePicker(
-                  context,
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                  dateFormat: "dd-MMMM-yyyy",
-                  locale: DateTimePickerLocale.en_us,
-                  looping: true,
-                );
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: EdgeInsets.only(left: 25.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Date of Birth",
+              style: theme.textTheme.bodyLarge,
+            ),
+            SizedBox(height: 9.v),
+            Padding(
+              padding: EdgeInsets.only(right: 15.h),
+              child: GestureDetector(
+                onTap: () async {
+                  var datePicked = await DatePicker.showSimpleDatePicker(
+                    context,
+                    firstDate: DateTime(1900),
+                    lastDate: DateTime.now(),
+                    dateFormat: "dd-MMMM-yyyy",
+                    locale: DateTimePickerLocale.en_us,
+                    looping: true,
+                  );
 
-                if (datePicked != null) {
-                  setState(() {
-                    dateOfBirthController.text =
-                        "${datePicked.day}-${datePicked.month}-${datePicked.year}";
-                  });
-                }
-              },
-              child: AbsorbPointer(
-                child: CustomTextFormField(
-                  controller: dateOfBirthController,
-                  textInputAction: TextInputAction.done,
-                  contentPadding: EdgeInsets.symmetric(
-                      horizontal: 21.h, vertical: 19.v),
-                  textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                  if (datePicked != null) {
+                    setState(() {
+                      dateOfBirthController.text =
+                          "${datePicked.day}-${datePicked.month}-${datePicked.year}";
+                    });
+                  }
+                },
+                child: AbsorbPointer(
+                  child: CustomTextFormField(
+                    controller: dateOfBirthController,
+                    textInputAction: TextInputAction.done,
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                    textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   /// Section Widget
   Widget _buildGenderColumn(BuildContext context) {
@@ -310,23 +325,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Expanded(
                   child: CustomDropDown(
-                    icon: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 17.h),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowdown,
-                        height: 7.v,
-                        width: 13.h,
+                      icon: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 17.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgArrowdown,
+                          height: 7.v,
+                          width: 13.h,
+                        ),
                       ),
-                    ),
-                    hintText: selectedGender,
-                    textStyle: TextStyle(color: Color(0xFF1A1D1E)),
-                    items: genderdropdownItemList,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedGender = value;
-                      });
-                    
-                  }),
+                      hintText: selectedGender,
+                      textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                      items: genderdropdownItemList,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedGender = value;
+                        });
+                      }),
                 ),
               ],
             ),
@@ -357,23 +371,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 Expanded(
                   child: CustomDropDown(
-                    icon: Container(
-                      margin: EdgeInsets.symmetric(horizontal: 17.h),
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowdown,
-                        height: 7.v,
-                        width: 13.h,
+                      icon: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 17.h),
+                        child: CustomImageView(
+                          imagePath: ImageConstant.imgArrowdown,
+                          height: 7.v,
+                          width: 13.h,
+                        ),
                       ),
-                    ),
-                    hintText: selectedNationality,
-                    textStyle: TextStyle(color: Color(0xFF1A1D1E)),
-                    items: nationalityDropDownList,
-                    onChanged: (String? value) {
-                      setState(() {
-                        selectedNationality = value;
-                      });
-                    
-                  }),
+                      hintText: selectedNationality,
+                      textStyle: TextStyle(color: Color(0xFF1A1D1E)),
+                      items: nationalityDropDownList,
+                      onChanged: (String? value) {
+                        setState(() {
+                          selectedNationality = value;
+                        });
+                      }),
                 ),
               ],
             ),
@@ -384,36 +397,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _getUserData() async {
+  try {
+    // Fetch user data from Firestore
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
+        .collection('user')
+        .doc(FirebaseAuth.instance.currentUser!.email)
+        .get();
+
+    // Extract data from snapshot
+    Map<String, dynamic> userData = snapshot.data() ?? {};
+
+    setState(() {
+      // Set data to variables
+      username = userData['username'];
+      nameController.text = userData['username'] ?? '';
+      emailController.text = userData['email'] ?? '';
+      dateOfBirthController.text = userData['dateOfBirth'] ?? '';
+      identityNumberController.text = userData['IdentityNum'] ?? '';
+      selectedGender = userData['gender'] != null
+          ? userData['gender'].toString().substring(0, 1).toUpperCase() +
+              userData['gender'].toString().substring(1)
+          : genderdropdownItemList[0];
+      selectedNationality = userData['Nationality'] ?? '';
+      profileImageUrl = userData['profileImageUrl']; 
+    });
+  } catch (e) {
+    print('Error retrieving user data: $e');
+  }
+}
+
+
+  Future<String?> _uploadImage(File imageFile) async {
     try {
-      // Fetch user data from Firestore
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-          .collection('user')
-          .doc(FirebaseAuth.instance.currentUser!.email)
-          .get();
-
-      // Extract data from snapshot
-      Map<String, dynamic> userData = snapshot.data() ?? {};
-
-      setState(() {
-        // Set data to variables
-        username = userData['username'];
-        nameController.text = userData['username'] ?? '';
-        emailController.text = userData['email'] ?? '';
-        dateOfBirthController.text = userData['dateOfBirth'] ?? '';
-        identityNumberController.text = userData['IdentityNum'] ?? '';
-        selectedGender = userData['gender'] != null
-            ? userData['gender'].toString().substring(0, 1).toUpperCase() +
-                userData['gender'].toString().substring(1)
-            : genderdropdownItemList[0];
-        selectedNationality = userData['Nationality'] ?? '';
-
-      });
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('profile_pictures/${user.uid}');
+        UploadTask uploadTask = storageReference.putFile(imageFile);
+        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        return downloadUrl;
+      }
     } catch (e) {
-      print('Error retrieving user data: $e');
+      print("Error uploading image: $e");
     }
+    return null;
   }
 
-  void _updateUserData(BuildContext context) {
+  void _updateUserData(BuildContext context) async {
     RegExp digitRegex = RegExp(r'^[0-9]+$');
 
     if (nameController.text.isEmpty) {
@@ -481,55 +513,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-  
+    // Reference to the Firestore collection
+    CollectionReference user = firestore.collection('user');
 
-  // Reference to the Firestore collection
-  CollectionReference user = firestore.collection('user');
+    String? imageUrl;
+    if (_image != null) {
+      imageUrl = await _uploadImage(File(_image!.path));
+    }
 
-  // Update the document with new data
-  user.doc(FirebaseAuth.instance.currentUser!.email).update({
-    'username': nameController.text,
-    'dateOfBirth': dateOfBirthController.text,
-    'IdentityNum': identityNumberController.text.toString(),
-    'gender': selectedGender,
-    'Nationality': selectedNationality,
-  }).then((value) {
-    // Handle success
-    print("User data updated successfully!");
-    setState(() {
-      username = nameController.text;
+    user.doc(FirebaseAuth.instance.currentUser!.email).update({
+      'username': nameController.text,
+      'dateOfBirth': dateOfBirthController.text,
+      'IdentityNum': identityNumberController.text.toString(),
+      'gender': selectedGender,
+      'Nationality': selectedNationality,
+      if (imageUrl != null) 'profileImageUrl': imageUrl,
+    }).then((value) {
+      // Handle success
+      print("User data updated successfully!");
+      setState(() {
+        username = nameController.text;
+      });
+
+      // Show success notification
+      ElegantNotification.success(
+        width: 360,
+        isDismissable: false,
+        animation: AnimationType.fromTop,
+        title: Text('Profile Updated'),
+        description: Text('Your profile has been updated'),
+        onDismiss: () {},
+        onNotificationPressed: () {},
+        shadow: BoxShadow(
+          color: Colors.green.withOpacity(0.2),
+          spreadRadius: 2,
+          blurRadius: 5,
+          offset: const Offset(0, 4),
+        ),
+      ).show(context);
+    }).catchError((error) {
+      // Handle error
+      print("Failed to update user data: $error");
+
+      // Show error notification
+      ElegantNotification.error(
+        title: Text("Update Failed"),
+        description: Text("Failed to update profile. Please try again."),
+      ).show(context);
     });
+  }
 
-    // Show success notification
-    ElegantNotification.success(
-      width: 360,
-      isDismissable: false,
-      animation: AnimationType.fromTop,
-      title: Text('Profile Updated'),
-      description: Text('Your profile has been updated'),
-      onDismiss: () {},
-      onNotificationPressed: () {},
-      shadow: BoxShadow(
-        color: Colors.green.withOpacity(0.2),
-        spreadRadius: 2,
-        blurRadius: 5,
-        offset: const Offset(0, 4),
-      ),
-    ).show(context);
-  }).catchError((error) {
-    // Handle error
-    print("Failed to update user data: $error");
+  void _pickImage() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
 
-    // Show error notification
-    ElegantNotification.error(
-      title: Text("Update Failed"),
-      description: Text("Failed to update profile. Please try again."),
-    ).show(context);
-  });
-}
-
-
-
+    if (pickedImage != null) {
+      setState(() {
+        _image = pickedImage;
+      });
+    }
+  }
 
   /// Navigates back to the previous screen.
   void onTapArrowleftone(BuildContext context) {
