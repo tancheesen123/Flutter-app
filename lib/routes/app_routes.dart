@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:workwise/presentation/Client/success_post_client_screen/success_post_client_screen.dart';
-import 'package:workwise/presentation/Freelancer/new_settings/settings_container_screen/settings_container_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_two_screen/forgot_password_two_screen.dart';
 import 'package:workwise/presentation/Freelancer/home_page/home_page.dart';
@@ -91,7 +90,6 @@ class AppRoutes {
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
-    settingsContainerScreen: (context) => SettingsContainerScreen(),
     forgotPasswordOneScreen: (context) => ForgotPasswordOneScreen(),
     notificationScreen: (context) => NotificationScreen(),
     //Scrum 16 - Forgot Password: Pass email arguments from screen one to screen two for resend purpose
