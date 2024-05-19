@@ -12,9 +12,9 @@ Future<void> main() async {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   ThemeHelper().changeTheme('primary');
   await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
-  
+
   //Check if the connection to Firebase was successful
   if (Firebase.apps.isNotEmpty) {
     print('Firebase connection established!');
@@ -34,7 +34,6 @@ Future<bool> checkFirebaseConnection() async {
     return false;
   }
 }
-
 
 class MyApp extends StatelessWidget {
   @override

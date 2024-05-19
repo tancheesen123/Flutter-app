@@ -1,183 +1,199 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import '../home_client_page/home_client_page.dart';
-import 'widgets/listchageemy_item_widget.dart'; // ignore_for_file: must_be_immutable
+import 'widgets/listchageemy_item_widget.dart';
 
-// ignore_for_file: must_be_immutable
 class PostListScreen extends StatelessWidget {
-  PostListScreen({Key? key})
-      : super(
-          key: key,
-        );
+  PostListScreen({Key? key});
 
-  TextEditingController serachhereController = TextEditingController();
+  TextEditingController searchTextFieldController = TextEditingController();
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  List<Map<String, dynamic>> jobPost = [
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 1},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
+    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2}
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 40.v),
-              GestureDetector(
-                onTap: () {
-                  onTapTxtPost(context);
-                },
-                child: Text(
-                  "Post",
-                  style: theme.textTheme.titleLarge,
-                ),
-              ),
-              SizedBox(height: 12.v),
-              _buildSearchHere(context),
-              SizedBox(height: 33.v),
-              _buildListChageemy(context),
-              SizedBox(height: 78.v),
-              Container(
-                height: 48.v,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(0, 0),
-                    end: Alignment(0, 1),
-                    colors: [appTheme.gray90011, appTheme.gray40011],
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Container(
+              child: Padding(
+                padding: EdgeInsets.all(28),
+                child: Container(
+                  child: Text(
+                    "Post",
+                    style: theme.textTheme.titleLarge,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20),
+              child: IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                        child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xffB3BAC3).withOpacity(0.25),
+                            spreadRadius: 0,
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: TextField(
+                        controller: searchTextFieldController,
+                        decoration: InputDecoration(
+                            filled: true,
+                            // focusColor: Colors.amber,
+                            fillColor: Colors.white,
+                            hintText: "Search here...",
+                            hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                            contentPadding: EdgeInsets.all(8),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                      ),
+                    )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {},
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          elevation: MaterialStateProperty.all<double>(0.5),
+                        ),
+                        child: SvgPicture.asset(
+                          ImageConstant.imgGoBtn,
+                          colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                        )),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          Navigator.pushNamed(context, AppRoutes.newPostPage);
+                        },
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ))
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(jobPost.length, (index) {
+                      return JobPostContainer(jobPost[index]);
+                    }),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
-        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
+}
 
-  /// Section Widget
-  Widget _buildSerachhere(BuildContext context) {
-    return CustomTextFormField(
-      width: 192.h,
-      controller: serachhereController,
-      hintText: "Serach here...",
-      textInputAction: TextInputAction.done,
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 20.h,
-        vertical: 15.v,
-      ),
-    );
-  }
+class JobPostContainer extends StatelessWidget {
+  final Map<String, dynamic> jobPostDetail;
+  JobPostContainer(this.jobPostDetail, {Key? key}) : super(key: key);
 
-  /// Section Widget
-  Widget _buildSearchHere(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 23.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _buildSerachhere(context),
-          Padding(
-            padding: EdgeInsets.only(left: 10.h),
-            child: CustomIconButton(
-              height: 54.adaptSize,
-              width: 54.adaptSize,
-              padding: EdgeInsets.all(17.h),
-              child: CustomImageView(
-                imagePath: ImageConstant.imgGoBtn,
-              ),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Color(0xffB3BAC3).withOpacity(0.25),
+            spreadRadius: 0,
+            blurRadius: 4,
+            offset: Offset(0, 4),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 19.h),
-            child: CustomIconButton(
-              height: 54.adaptSize,
-              width: 54.adaptSize,
-              padding: EdgeInsets.all(10.h),
-              decoration: IconButtonStyleHelper.fillSecondaryContainer,
-              onTap: () {
-                onTapBtnUserone(context);
-              },
-              child: CustomImageView(
-                imagePath: ImageConstant.imgUser,
-              ),
-            ),
-          )
         ],
       ),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildListChageemy(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.h),
-      child: ListView.separated(
-        physics: NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        separatorBuilder: (context, index) {
-          return SizedBox(
-            height: 26.v,
-          );
-        },
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return ListchageemyItemWidget();
-        },
+      margin: EdgeInsets.only(bottom: 20),
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              margin: EdgeInsets.only(bottom: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Chagee MY",
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  Text(
+                    "Warehouse Crew",
+                    style: theme.textTheme.titleMedium,
+                  ),
+                  Text(
+                    "Bukit Raja, Klang",
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+            jobPostDetail["status"] == 1
+                ? Container(
+                    height: 32,
+                    decoration: BoxDecoration(color: Color(0xffDDFFE9).withOpacity(0.5), borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        "Completed",
+                        style: TextStyle(fontFamily: "Poppins", fontSize: 16, color: Color(0xff1ED760)),
+                      ),
+                    ),
+                  )
+                : Container(
+                    height: 32,
+                    decoration: BoxDecoration(color: Color(0xff007BFF).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                    child: Center(
+                      child: Text(
+                        "Employed",
+                        style: TextStyle(fontFamily: "Poppins", fontSize: 16, color: Color(0xff007BFF)),
+                      ),
+                    ),
+                  )
+          ],
+        ),
       ),
     );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
-      },
-    );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Home:
-        return AppRoutes.homeClientPage;
-      case BottomBarEnum.Messages:
-        return "/";
-      case BottomBarEnum.Jobs:
-        return "/";
-      case BottomBarEnum.Notifications:
-        return "/";
-      case BottomBarEnum.Settings:
-        return "/";
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.homeClientPage:
-        return HomeClientPage();
-      default:
-        return DefaultWidget();
-    }
-  }
-
-  /// Navigates to the homeClientContainerScreen when the action is triggered.
-  onTapTxtPost(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.homeClientContainerScreen);
-  }
-
-  /// Navigates to the postClientOneScreen when the action is triggered.
-  onTapBtnUserone(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.previewPostPage);
   }
 }
