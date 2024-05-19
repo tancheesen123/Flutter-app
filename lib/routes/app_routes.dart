@@ -19,6 +19,7 @@ import '../presentation/Client/post_list_page/post_list_page.dart';
 import '../presentation/Client/NewJobPost_page/newJobPostScreen.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/Freelancer/notification_screen/notification.dart';
+import '../presentation/loading_screen/loading_screen.dart';
 
 class AppRoutes {
   //Client Routes
@@ -77,6 +78,8 @@ class AppRoutes {
 
   static const String notificationScreen = '/notification_screen';
 
+  static const String loadingScreen = '/loading_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -98,6 +101,7 @@ class AppRoutes {
       return ForgotPasswordTwoScreen(email: email ?? '');
     },
     checkSession: (context) => CheckSession(),
+    loadingScreen: (context) => LoadingScreen(),
 
     //Client
     homeClientContainerScreen: (context) => HomeClientContainerScreen(),
