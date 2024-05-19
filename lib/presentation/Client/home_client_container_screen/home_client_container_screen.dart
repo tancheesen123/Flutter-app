@@ -1,30 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:workwise/presentation/Client/post_list_page/post_list_page.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
-import '../home_client_page/home_client_page.dart'; // ignore_for_file: must_be_immutable
+import '../home_client_page/home_client_page.dart';
 
-// ignore_for_file: must_be_immutable
-class HomeClientContainerScreen extends StatelessWidget {
+class HomeClientContainerScreen extends StatefulWidget {
   HomeClientContainerScreen({Key? key})
       : super(
           key: key,
         );
 
-  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  @override
+  State<HomeClientContainerScreen> createState() => _HomeClientContainerScreenState();
+}
+
+class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
+  Widget currentScreen = HomeClientPage();
+  int currentNavBarIndex = 0;
+
+  void setScreen(Widget screen) {
+    setState(() {
+      currentScreen = screen;
+    });
+  }
+
+  void setNavBarIndex(int index) {
+    setState(() {
+      currentNavBarIndex = index;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Navigator(
-          key: navigatorKey,
-          initialRoute: AppRoutes.homeClientPage,
-          onGenerateRoute: (routeSetting) => PageRouteBuilder(
-            pageBuilder: (ctx, ani, ani1) => getCurrentPage(routeSetting.name!),
-            transitionDuration: Duration(seconds: 0),
-          ),
+        body: currentScreen,
+        // Navigator(
+        //   key: navigatorKey,
+        // initialRoute: AppRoutes.homeClientPage,
+        //   onGenerateRoute: (routeSetting) => PageRouteBuilder(
+        //     pageBuilder: (ctx, ani, ani1) => getCurrentPage(routeSetting.name!),
+        //     transitionDuration: Duration(seconds: 0),
+        //   ),
+        // ),
+
+        // bottomNavigationBar: _buildBottomBar(context),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: true,
+          currentIndex: currentNavBarIndex,
+          items: [
+            BottomNavigationBarItem(
+              label: "Home",
+              icon: SvgPicture.asset(
+                ImageConstant.imgNavHome,
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+              ),
+              activeIcon: SvgPicture.asset(
+                ImageConstant.imgNavHome,
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Messages",
+              icon: SvgPicture.asset(
+                ImageConstant.imgNavMessages,
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+              ),
+              activeIcon: SvgPicture.asset(
+                ImageConstant.imgNavMessages,
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "My Jobs",
+              icon: SvgPicture.asset(
+                ImageConstant.imgPhBagFill,
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+              ),
+              activeIcon: SvgPicture.asset(
+                ImageConstant.imgPhBagFill,
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Notifications",
+              icon: SvgPicture.asset(
+                ImageConstant.imgHome,
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+              ),
+              activeIcon: SvgPicture.asset(
+                ImageConstant.imgHome,
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+              ),
+            ),
+            BottomNavigationBarItem(
+              label: "Settings",
+              icon: SvgPicture.asset(
+                ImageConstant.imgNavSettings,
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+              ),
+              activeIcon: SvgPicture.asset(
+                ImageConstant.imgNavSettings,
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+              ),
+            ),
+          ],
+          onTap: (value) {
+            switch (value) {
+              case 0:
+                setScreen(HomeClientPage());
+                setNavBarIndex(value);
+                break;
+              case 1:
+                setScreen(HomeClientPage());
+                setNavBarIndex(value);
+                break;
+              case 2:
+                setScreen(PostListScreen());
+                setNavBarIndex(value);
+                break;
+              case 3:
+                setScreen(HomeClientPage());
+                setNavBarIndex(value);
+                break;
+              case 4:
+                setScreen(HomeClientPage());
+                setNavBarIndex(value);
+                break;
+              default:
+            }
+          },
         ),
-        bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -33,8 +142,7 @@ class HomeClientContainerScreen extends StatelessWidget {
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(
       onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
+        Navigator.pushNamed(context, getCurrentRoute(type));
       },
     );
   }
@@ -46,7 +154,7 @@ class HomeClientContainerScreen extends StatelessWidget {
         return AppRoutes.homeContainerScreen;
       // Remove the case for BottomBarEnum.Messages
       case BottomBarEnum.Jobs:
-        return "/";
+        return AppRoutes.postListPage;
       case BottomBarEnum.Notifications:
         return "/";
       case BottomBarEnum.Settings:
