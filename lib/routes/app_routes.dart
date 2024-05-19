@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:workwise/presentation/Client/success_post_client_screen/success_post_client_screen.dart';
+import 'package:workwise/presentation/Client/success_post_client.dart';
 import 'package:workwise/presentation/Freelancer/new_settings/settings_container_screen/settings_container_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_two_screen/forgot_password_two_screen.dart';
@@ -16,9 +16,12 @@ import '../presentation/Freelancer/settings_screen/settings_screen.dart';
 import '../presentation/Freelancer/change_password_screen/change_password_screen.dart';
 import '../presentation/Freelancer/sign_up_verification_screen/sign_up_verification_screen.dart';
 import '../presentation/Freelancer/check_session.dart';
+
+// Client import
+import 'package:workwise/presentation/Client/success_post_client.dart';
 import '../presentation/Client/home_client_container_screen/home_client_container_screen.dart';
 import '../presentation/Client/post_list_page/post_list_page.dart';
-import '../presentation/Client/NewJobPost_page/newJobPostScreen.dart';
+import 'package:workwise/presentation/Client/new_post_client.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/Freelancer/notification_screen/notification.dart';
 
@@ -27,11 +30,13 @@ class AppRoutes {
   static const String homeClientContainerScreen =
       '/home_client_container_screen';
 
+  static const String homeClientContainerScreen =
+      '/home_client_container_screen';
   static const String homeClientPage = '/home_client_page';
 
   static const String postListPage = '/post_list_page';
 
-  static const String newJobPostPage = '/NewJobPost_page';
+  static const String newPostPage = '/preview_post_screen';
 
   static const String newPostClientScreen = '/new_post_client_screen';
 
@@ -50,6 +55,8 @@ class AppRoutes {
 
   static const String selectJobPreferenceScreen =
       '/select_job_preference_screen';
+  static const String selectJobPreferenceScreen =
+      '/select_job_preference_screen';
 
   static const String homeContainerScreen = '/home_container_screen';
 
@@ -65,6 +72,8 @@ class AppRoutes {
 
   static const String profileScreen = '/profile_screen';
 
+  static const String myjobApplicationsContainerScreen =
+      '/myjob_applications_container_screen';
   static const String myjobApplicationsContainerScreen =
       '/myjob_applications_container_screen';
 
@@ -94,6 +103,10 @@ class AppRoutes {
     profileScreen: (context) => ProfileScreen(),
     myjobApplicationsContainerScreen: (context) =>
         MyjobApplicationsContainerScreen(),
+    myjobApplicationsContainerScreen: (context) =>
+        MyjobApplicationsContainerScreen(),
+    myjobApplicationsContainerScreen: (context) =>
+        MyjobApplicationsContainerScreen(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
@@ -111,11 +124,10 @@ class AppRoutes {
     //Client
     homeClientContainerScreen: (context) => HomeClientContainerScreen(),
     postListPage: (context) => PostListScreen(),
-    newJobPostPage: (context) => newJobPostScreen(),
+    newPostPage: (context) => NewPostScreen(),
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
 
     initialRoute: (context) => CheckSession()
-    // initialRoute: (context) => ApplyJobScreen()
   };
 }
