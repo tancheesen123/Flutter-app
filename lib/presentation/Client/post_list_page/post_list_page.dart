@@ -16,15 +16,60 @@ class PostListScreen extends StatelessWidget {
   TextEditingController searchTextFieldController = TextEditingController();
 
   List<Map<String, dynamic>> jobPost = [
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 1},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2},
-    {"company": "Chagee MY", "jobTitle": "Warehouse Crew", "Location": "Bukit Raja, Klang", "status": 2}
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 1
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    },
+    {
+      "company": "Chagee MY",
+      "jobTitle": "Warehouse Crew",
+      "Location": "Bukit Raja, Klang",
+      "status": 2
+    }
   ];
 
   @override
@@ -73,8 +118,12 @@ class PostListScreen extends StatelessWidget {
                             hintText: "Search here...",
                             hintStyle: TextStyle(fontWeight: FontWeight.w300),
                             contentPadding: EdgeInsets.all(8),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: BorderSide.none),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                    width: 1, color: Color(0xff007BFF)))),
                       ),
                     )),
                     SizedBox(
@@ -83,12 +132,14 @@ class PostListScreen extends StatelessWidget {
                     ElevatedButton(
                         onPressed: () {},
                         style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.white),
                           elevation: MaterialStateProperty.all<double>(0.5),
                         ),
                         child: SvgPicture.asset(
                           ImageConstant.imgGoBtn,
-                          colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(
+                              Color(0xff007BFF), BlendMode.srcIn),
                         )),
                     SizedBox(
                       width: 10,
@@ -173,21 +224,31 @@ class JobPostContainer extends StatelessWidget {
             jobPostDetail["status"] == 1
                 ? Container(
                     height: 32,
-                    decoration: BoxDecoration(color: Color(0xffDDFFE9).withOpacity(0.5), borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                        color: Color(0xffDDFFE9).withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: Text(
                         "Completed",
-                        style: TextStyle(fontFamily: "Poppins", fontSize: 16, color: Color(0xff1ED760)),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            color: Color(0xff1ED760)),
                       ),
                     ),
                   )
                 : Container(
                     height: 32,
-                    decoration: BoxDecoration(color: Color(0xff007BFF).withOpacity(0.2), borderRadius: BorderRadius.circular(10)),
+                    decoration: BoxDecoration(
+                        color: Color(0xff007BFF).withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(10)),
                     child: Center(
                       child: Text(
                         "Employed",
-                        style: TextStyle(fontFamily: "Poppins", fontSize: 16, color: Color(0xff007BFF)),
+                        style: TextStyle(
+                            fontFamily: "Poppins",
+                            fontSize: 16,
+                            color: Color(0xff007BFF)),
                       ),
                     ),
                   )
