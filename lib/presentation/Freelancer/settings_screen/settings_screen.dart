@@ -1,16 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Freelancer/profile_screen/profile_screen.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
-import '../../../widgets/custom_bottom_bar.dart';
 import '../../../widgets/custom_switch.dart';
-import '../myjob_applications_page/myjob_applications_page.dart';
 import '../../log_in_screen/log_in_screen.dart'; // ignore_for_file: must_be_immutable
 import '../change_password_screen/change_password_screen.dart';
 
-// ignore_for_file: must_be_immutable
 class SettingsScreen extends StatefulWidget {
   SettingsScreen({Key? key})
       : super(
@@ -42,22 +40,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 _buildAccountColumnGgdarkmod(context),
                 SizedBox(height: 31.v),
                 _buildLogout(context),
-                // Container(
-                //   height: 48.v,
-                //   width: double.maxFinite,
-                //   decoration: BoxDecoration(
-                //     gradient: LinearGradient(
-                //       begin: Alignment(0, 0),
-                //       end: Alignment(0, 1),
-                //       colors: [theme.colorScheme.onPrimary, appTheme.gray40011],
-                //     ),
-                //   ),
-                // )
               ],
             ),
           ),
         ),
-        // bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -99,32 +85,54 @@ class _SettingsScreenState extends State<SettingsScreen> {
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 1.h),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomImageView(
-                        imagePath: ImageConstant.imgIconamoonProfile,
-                        height: 20.adaptSize,
-                        width: 20.adaptSize,
-                        margin: EdgeInsets.only(top: 2.v),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (BuildContext context) {
+                          return ProfileScreen();
+                        },
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 12.h),
-                        child: Text(
-                          "Edit Profile",
-                          style: theme.textTheme.titleMedium,
+                    );
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 1.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.imgIconamoonProfile,
+                          height: 20.adaptSize,
+                          width: 20.adaptSize,
+                          margin: EdgeInsets.only(top: 2.v),
                         ),
-                      ),
-                      Spacer(),
-                      CustomImageView(
-                        imagePath: ImageConstant.imgArrowRight,
-                        height: 20.v,
-                        width: 25.h,
-                        margin: EdgeInsets.only(top: 2.v),
-                      )
-                    ],
+                        Padding(
+                          padding: EdgeInsets.only(left: 12.h),
+                          child: Text(
+                            "Edit Profile",
+                            style: theme.textTheme.titleMedium,
+                          ),
+                        ),
+                        Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return ProfileScreen();
+                                },
+                              ),
+                            );
+                          },
+                          child: CustomImageView(
+                            imagePath: ImageConstant.imgArrowRight,
+                            height: 20.v,
+                            width: 25.h,
+                            margin: EdgeInsets.only(top: 2.v),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 24.v),
@@ -141,12 +149,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding: EdgeInsets.only(right: 1.h),
                   child: GestureDetector(
                     onTap: () {
-                      // Handle onTap action here
-                      // For example, navigate to a new screen
-                      Navigator.push(
-                        context,
+                      Navigator.of(context, rootNavigator: true).push(
                         MaterialPageRoute(
-                            builder: (context) => ChangePasswordScreen()),
+                          builder: (BuildContext context) {
+                            return ChangePasswordScreen();
+                          },
+                        ),
                       );
                     },
                     child: _buildPassword(
@@ -155,7 +163,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       changePasswordText: "Change Password",
                     ),
                   ),
-                )
+                ),
               ],
             ),
           )
