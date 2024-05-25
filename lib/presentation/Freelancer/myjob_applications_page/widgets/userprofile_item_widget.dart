@@ -4,13 +4,15 @@ import '../../../../theme/custom_button_style.dart';
 import '../../../../widgets/custom_elevated_button.dart'; // ignore: must_be_immutable
 
 class UserprofileItemWidget extends StatelessWidget {
-  const UserprofileItemWidget({Key? key})
+  final Map<String, dynamic> data;
+  const UserprofileItemWidget({Key? key, required this.data})
       : super(
           key: key,
         );
 
   @override
   Widget build(BuildContext context) {
+    String location = data['location'];
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 20.h,
@@ -40,7 +42,7 @@ class UserprofileItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Chagee MY",
+                      "$location",
                       style: theme.textTheme.bodySmall,
                     ),
                     Text(
