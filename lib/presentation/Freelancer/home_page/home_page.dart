@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import '../../../core/app_export.dart';
@@ -7,6 +9,8 @@ import '../../../widgets/custom_search_view.dart';
 import 'widgets/userprofile1_item_widget.dart';
 import 'widgets/userprofile_item_widget.dart';
 import '../profile_screen/profile_screen.dart';
+import 'package:workwise/Controller/ApplyJobController.dart';
+
 // ignore_for_file: must_be_immutable
 // ignore_for_file: must_be_immutable
 
@@ -23,6 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
+  final ApplyJobController _jobPostController = Get.put(ApplyJobController());
 
   late Future<String> _usernameFuture;
   String? _username;
@@ -95,11 +100,14 @@ class _HomePageState extends State<HomePage> {
                 ),
                 floatingActionButton: ElevatedButton(
                   onPressed: () async {
-                    String userEmail = await getUserEmail();
-                    // Now you can use the userEmail variable here
-                    print('User email: $_username');
+                    await _jobPostController.getCandidates("a2");
+                    // Print candidates' data to console
+                    for (var candidate in _jobPostController.candidates) {
+                      print(
+                          'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
+                    }
                   },
-                  child: Icon(Icons.add),
+                  child: Text('Fetch Candidates'),
                 ),
               ),
             );
@@ -471,5 +479,14 @@ class _HomePageState extends State<HomePage> {
     }
 
     return '';
+  }
+
+  Future<List<DocumentSnapshot>> _getCandidates(String jobPostId) async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('jobPost')
+        .doc(jobPostId)
+        .collection('candidate')
+        .get();
+    return snapshot.docs;
   }
 }

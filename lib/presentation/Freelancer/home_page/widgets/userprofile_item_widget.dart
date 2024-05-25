@@ -48,14 +48,24 @@ class UserprofileItemWidget extends StatelessWidget {
                 return GestureDetector(
                   onTap: () {
                     print('Post ID: $postId');
-                    Navigator.push(
-                      context,
+
+                    Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(
-                        builder: (context) => ApplyJobScreen(
-                          postId: postId,
-                        ),
+                        builder: (BuildContext context) {
+                          return ApplyJobScreen(
+                            postId: postId,
+                          );
+                        },
                       ),
                     );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => ApplyJobScreen(
+                    //       postId: postId,
+                    //     ),
+                    //   ),
+                    // );
                   },
                   child: SizedBox(
                     child: Align(
