@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ApplyJobController extends GetxController {
-  static ApplyJobController instance = Get.find();
+class MyJobController extends GetxController {
+  static MyJobController instance = Get.find();
   DateTime? lastEmailSentTime;
 
   final email = TextEditingController();
