@@ -98,8 +98,6 @@ class AppRoutes {
         MyjobApplicationsContainerScreen(),
     myjobApplicationsContainerScreen: (context) =>
         MyjobApplicationsContainerScreen(),
-    myjobApplicationsContainerScreen: (context) =>
-        MyjobApplicationsContainerScreen(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
