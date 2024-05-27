@@ -1,8 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_search_view.dart';
@@ -10,11 +13,8 @@ import 'widgets/userprofile1_item_widget.dart';
 import 'widgets/userprofile_item_widget.dart';
 import '../profile_screen/profile_screen.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
+import 'package:workwise/Controller/HomePageController.dart';
 
-// ignore_for_file: must_be_immutable
-// ignore_for_file: must_be_immutable
-
-// ignore_for_file: must_be_immutable
 class HomePage extends StatefulWidget {
   HomePage({Key? key})
       : super(
@@ -28,6 +28,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   TextEditingController searchController = TextEditingController();
   final ApplyJobController _jobPostController = Get.put(ApplyJobController());
+  final HomePageController _homePageController = Get.put(HomePageController(
+    firestore: FirebaseFirestore.instance,
+    firebaseAuth: FirebaseAuth.instance,
+  ));
 
   late Future<String> _usernameFuture;
   String? _username;
@@ -40,145 +44,137 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<String>(
-        future: _loadUsername(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error fetching email: ${snapshot.error}');
-          } else {
-            if (_username == null) {
-              _username = snapshot.data;
-            }
-            return SafeArea(
-              child: Scaffold(
-                resizeToAvoidBottomInset: false,
-                body: Container(
-                  width: double.maxFinite,
-                  padding: EdgeInsets.symmetric(vertical: 13.v),
-                  decoration: AppDecoration.fillGray,
-                  child: Column(
-                    children: [
-                      SizedBox(height: 19.v),
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              _buildWelcomeBackSection(context),
-                              SizedBox(height: 3.v),
-                              _buildSearchBoxSection(context),
-                              SizedBox(height: 24.v),
-                              _buildFeaturedJobSection(context),
-                              SizedBox(height: 20.v),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 20.h),
-                                child: _buildRecentPostSection(
-                                  context,
-                                  recentPostText: "Recent Post",
-                                  showAllText: "Show All",
-                                ),
-                              ),
-                              SizedBox(
-                                height: 380.v,
-                                width: double.maxFinite,
-                                child: Stack(
-                                  alignment: Alignment.topCenter,
-                                  children: [
-                                    // _buildSlack(context),
-                                    _buildUserProfile(context)
-                                  ],
-                                ),
-                              )
-                            ],
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Obx(() {
+          return Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.symmetric(vertical: 13.v),
+            decoration: AppDecoration.fillGray,
+            child: Column(
+              children: [
+                SizedBox(height: 19.v),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        _buildWelcomeBackSection(context),
+                        SizedBox(height: 3.v),
+                        _buildSearchBoxSection(context),
+                        SizedBox(height: 24.v),
+                        _buildFeaturedJobSection(context),
+                        SizedBox(height: 20.v),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20.h),
+                          child: _buildRecentPostSection(
+                            context,
+                            recentPostText: "Recent Post",
+                            showAllText: "Show All",
                           ),
                         ),
-                      )
-                    ],
+                        SizedBox(
+                          height: 380.v,
+                          width: double.maxFinite,
+                          child: Stack(
+                            alignment: Alignment.topCenter,
+                            children: [_buildUserProfile(context)],
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                  //button
-                ),
-                floatingActionButton: ElevatedButton(
-                  onPressed: () async {
-                    await _jobPostController.getCandidates("a2");
-                    // Print candidates' data to console
-                    for (var candidate in _jobPostController.candidates) {
-                      print(
-                          'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
-                    }
-                  },
-                  child: Text('Fetch Candidates'),
-                ),
-              ),
-            );
-          }
-        });
-  }
-
-  /// Section Widget
-  Widget _buildWelcomeBackSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: 32.h,
-        right: 20.h,
-      ),
-      child: GestureDetector(
-        onTap: () {
-          Navigator.of(context, rootNavigator: true)
-              .pushNamed(AppRoutes.profileScreen);
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Welcome Back!",
-                  style: CustomTextStyles.titleSmallGray50001,
-                ),
-                SizedBox(height: 10.v),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "  ",
-                      ),
-                      TextSpan(
-                        text: "$_username 👋",
-                        style: CustomTextStyles.titleLargeOnPrimary,
-                      )
-                    ],
-                  ),
-                  textAlign: TextAlign.left,
-                ),
+                )
               ],
             ),
-            Container(
-              height: 44.adaptSize,
-              width: 44.adaptSize,
-              margin: EdgeInsets.only(
-                top: 7.v,
-                bottom: 26.v,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  22.h,
-                ),
-                image: DecorationImage(
-                  image: AssetImage(
-                    ImageConstant.imgRectangle382,
-                  ),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            )
-          ],
+          );
+        }),
+        floatingActionButton: ElevatedButton(
+          onPressed: () async {
+            await _jobPostController.getCandidates("a2");
+            for (var candidate in _jobPostController.candidates) {
+              print(
+                  'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
+            }
+          },
+          child: Text('Fetch Candidates'),
         ),
       ),
     );
   }
+
+  /// Section Widget
+  Widget _buildWelcomeBackSection(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(
+      left: 32.h,
+      right: 20.h,
+    ),
+    child: GestureDetector(
+      onTap: () {
+        Navigator.of(context, rootNavigator: true)
+            .pushNamed(AppRoutes.profileScreen);
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Welcome Back!",
+                style: CustomTextStyles.titleSmallGray50001,
+              ),
+              SizedBox(height: 10.v),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "  ",
+                    ),
+                    TextSpan(
+                      text: "${_homePageController.username.value} 👋",
+                      style: CustomTextStyles.titleLargeOnPrimary,
+                    )
+                  ],
+                ),
+                textAlign: TextAlign.left,
+              ),
+            ],
+          ),
+          Container(
+            height: 44.adaptSize,
+            width: 44.adaptSize,
+            margin: EdgeInsets.only(top: 7.v, bottom: 26.v),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle, // Set shape to circle
+            ),
+            child: ClipOval( // Use ClipOval to clip the image into a circle
+              child: _homePageController.profileImageUrl.value.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: _homePageController.profileImageUrl.value,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        child: Container(color: Colors.grey),
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    )
+                  : Shimmer.fromColors(
+                      child: Container(color: Colors.grey),
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                    ),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
+}
+
 
   /// Section Widget
   Widget _buildSearchBoxSection(BuildContext context) {
@@ -425,27 +421,6 @@ class _HomePageState extends State<HomePage> {
     return prefs.getString('username') ?? '';
   }
 
-  // Future<String> getUsername() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? userEmail = prefs.getString('userEmail');
-  //   final snapshot = await FirebaseFirestore.instance
-  //       .collection('user')
-  //       .where('email', isEqualTo: userEmail)
-  //       .get();
-
-  //   if (snapshot.docs.isNotEmpty) {
-  //     final userData = snapshot.docs.first.data();
-  //     final String username = userData['username'];
-  //     // final email2 = userData[
-  //     //     'email']; // Accessing the 'roleType' field from the document data
-  //     // print("This is role type123: $roleType");
-  //     // print("This is email123: $email2");
-  //     return username;
-  //   } else {
-  //     print("No user found with email: $userEmail");
-  //     throw Exception("No user found with email: $userEmail");
-  //   }
-  // }
 
   Future<String> _loadUsername() async {
     final prefs = await SharedPreferences.getInstance();
