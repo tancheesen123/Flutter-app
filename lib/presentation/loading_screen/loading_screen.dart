@@ -18,13 +18,13 @@ class LoadingScreen extends StatelessWidget {
 
           // Position the loading indicator below the logo with some padding
           Positioned(
-            bottom: 350.0, // Adjust padding as needed
+            bottom: 300.0, // Adjust padding as needed
             right: 0.0,
             left: 0.0,
             child: Center(
               child: LoadingAnimationWidget.discreteCircle(
                   color: Colors.black,
-                  size: 40,
+                  size: 50,
                   secondRingColor: Colors.black,
                   thirdRingColor: Colors.black),
             ),
