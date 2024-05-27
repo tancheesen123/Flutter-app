@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart';
 import '../../applyjob/apply_job_page.dart'; // ignore: must_be_immutable
@@ -16,7 +17,7 @@ class UserprofileItemWidget extends StatelessWidget {
       future: fetchData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return _buildShimmerLoading();
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
@@ -155,6 +156,33 @@ class UserprofileItemWidget extends StatelessWidget {
           );
         }
       },
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return SizedBox(
+      width: 370.h,
+      height: 150.h, // Set the height to match the actual content
+      child: ListView.builder(
+        padding: EdgeInsets.only(left: 20.h),
+        scrollDirection: Axis.horizontal,
+        itemCount: 5, // Adjust the number of shimmer loading items
+        itemBuilder: (context, index) {
+          return Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              width: 250.h, // Match the width of the actual item
+              height: 150.h, // Match the height of the actual item
+              margin: EdgeInsets.symmetric(horizontal: 10.h),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20.h), // Match the border radius
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
