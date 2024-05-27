@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_search_view.dart';
@@ -150,14 +151,22 @@ class _HomePageState extends State<HomePage> {
               shape: BoxShape.circle, // Set shape to circle
             ),
             child: ClipOval( // Use ClipOval to clip the image into a circle
-              child: CachedNetworkImage(
-                imageUrl: _homePageController.profileImageUrl.value.isNotEmpty
-                    ? _homePageController.profileImageUrl.value
-                    : 'https://via.placeholder.com/150',
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
-              ),
+              child: _homePageController.profileImageUrl.value.isNotEmpty
+                  ? CachedNetworkImage(
+                      imageUrl: _homePageController.profileImageUrl.value,
+                      placeholder: (context, url) => Shimmer.fromColors(
+                        child: Container(color: Colors.grey),
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                      ),
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      fit: BoxFit.cover,
+                    )
+                  : Shimmer.fromColors(
+                      child: Container(color: Colors.grey),
+                      baseColor: Colors.grey[300]!,
+                      highlightColor: Colors.grey[100]!,
+                    ),
             ),
           )
         ],
