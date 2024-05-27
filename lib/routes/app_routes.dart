@@ -23,6 +23,7 @@ import '../presentation/Client/post_list_page/post_list_page.dart';
 import 'package:workwise/presentation/Client/new_post_client.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/Freelancer/notification_screen/notification.dart';
+import '../presentation/loading_screen/loading_screen.dart';
 
 class AppRoutes {
   //Client Routes
@@ -85,6 +86,8 @@ class AppRoutes {
   static const String notificationScreen = '/notification_screen';
   static const String applyJobScreen = '/apply_job_page';
 
+  static const String loadingScreen = '/loading_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -94,8 +97,6 @@ class AppRoutes {
     searchTabContainerScreen: (context) => SearchTabContainerScreen(),
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
-    myjobApplicationsContainerScreen: (context) =>
-        MyjobApplicationsContainerScreen(),
     myjobApplicationsContainerScreen: (context) =>
         MyjobApplicationsContainerScreen(),
     homePage: (context) => HomePage(),
@@ -110,6 +111,7 @@ class AppRoutes {
     },
     checkSession: (context) => CheckSession(),
     applyJobScreen: (context) => ApplyJobScreen(),
+    loadingScreen: (context) => LoadingScreen(),
 
     //Client
     homeClientContainerScreen: (context) => HomeClientContainerScreen(),
