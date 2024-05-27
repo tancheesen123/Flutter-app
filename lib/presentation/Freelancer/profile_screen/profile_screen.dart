@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/app_export.dart';
@@ -12,6 +16,7 @@ import '../../../widgets/custom_elevated_button.dart';
 import '../../../widgets/custom_text_form_field.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:flutter_holo_date_picker/flutter_holo_date_picker.dart';
+import 'package:workwise/presentation/loading_screen/loading_screen.dart';
 // ignore_for_file: must_be_immutable
 
 class ProfileScreen extends StatefulWidget {
@@ -22,15 +27,19 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  late Future<void> _userDataFuture;
+
   @override
   void initState() {
     super.initState();
-    _getUserData();
+    _userDataFuture = _getUserData();
   }
 
   String? username;
+  String? profileImageUrl;
   String? selectedGender;
   String? selectedNationality;
+  bool _isUpdating = false;
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController dateOfBirthController = TextEditingController();
@@ -41,11 +50,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<String> genderdropdownItemList = ["Male", "Female"];
   List<String> nationalityDropDownList = ["Malaysian", "Non-Malaysian"];
 
+  final ImagePicker _picker = ImagePicker();
+  XFile? _image;
+
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _userDataFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting || _isUpdating) {
+          return LoadingScreen();
+        } else {
+          // Data and image are loaded, show profile screen
+          return _buildProfileScreen(context);
+        }
+      },
+    );
+  }
+
+  Widget _buildProfileScreen(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         appBar: _buildAppBar(context),
         body: Stack(
           children: [
@@ -64,30 +90,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.imgRectangle382,
-                            height: 80.adaptSize,
-                            width: 80.adaptSize,
-                            radius: BorderRadius.circular(40.h),
-                            alignment: Alignment.center,
+                          GestureDetector(
+                            onTap: _pickImage,
+                            child: CircleAvatar(
+                              radius: 40.h,
+                              backgroundImage: _image != null
+                                  ? FileImage(File(_image!.path))
+                                  : profileImageUrl != null
+                                      ? CachedNetworkImageProvider(
+                                          profileImageUrl!)
+                                      : AssetImage(
+                                              ImageConstant.imgRectangle382)
+                                          as ImageProvider<Object>,
+                            ),
                           ),
                           Align(
                             alignment: Alignment.bottomRight,
-                            child: Container(
-                              height: 19.adaptSize,
-                              width: 19.adaptSize,
-                              margin: EdgeInsets.only(right: 6.h),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 5.h, vertical: 6.v),
-                              decoration:
-                                  AppDecoration.outlineGray5001.copyWith(
-                                borderRadius: BorderRadiusStyle.roundedBorder9,
-                              ),
-                              child: CustomImageView(
-                                imagePath: ImageConstant.imgFill244,
-                                height: 5.v,
-                                width: 6.h,
-                                alignment: Alignment.centerLeft,
+                            child: GestureDetector(
+                              onTap: _pickImage,
+                              child: Container(
+                                height: 19.adaptSize,
+                                width: 19.adaptSize,
+                                margin: EdgeInsets.only(right: 6.h),
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 5.h, vertical: 6.v),
+                                decoration:
+                                    AppDecoration.outlineGray5001.copyWith(
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder9,
+                                ),
+                                child: CustomImageView(
+                                  imagePath: ImageConstant.imgFill244,
+                                  height: 5.v,
+                                  width: 6.h,
+                                  alignment: Alignment.centerLeft,
+                                ),
                               ),
                             ),
                           )
@@ -103,10 +140,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     _buildEmailColumn(context),
                     SizedBox(height: 24.v),
                     _buildDateOfBirthColumn(context),
-                    SizedBox(height: 25.v),
-                    _buildGenderColumn(context),
-                    SizedBox(height: 5.v),
-                    _buildStackCloseOne(context),
                     SizedBox(height: 29.v),
                     Align(
                       alignment: Alignment.centerLeft,
@@ -126,7 +159,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             horizontal: 21.h, vertical: 19.v),
                         textStyle: TextStyle(color: Color(0xFF1A1D1E)),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 25.v),
+                    _buildGenderColumn(context),
+                    SizedBox(height: 5.v),
+                    _buildStackCloseOne(context),
                   ],
                 ),
               ),
@@ -404,125 +441,192 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 userData['gender'].toString().substring(1)
             : genderdropdownItemList[0];
         selectedNationality = userData['Nationality'] ?? '';
+        profileImageUrl = userData['profileImageUrl'];
       });
     } catch (e) {
       print('Error retrieving user data: $e');
     }
   }
 
-  void _updateUserData(BuildContext context) {
-    RegExp digitRegex = RegExp(r'^[0-9]+$');
-
-    if (nameController.text.isEmpty) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Name cannot be empty"),
-      ).show(context);
-      return;
-    } else if (dateOfBirthController.text.isEmpty) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Date of birth cannot be empty"),
-      ).show(context);
-      return;
-    } else if (identityNumberController.text.isEmpty) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Identity number cannot be empty"),
-      ).show(context);
-      return;
-    } else if (identityNumberController.text.length != 12) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Identity number must be 12 digits long"),
-      ).show(context);
-      return;
-    } else if (identityNumberController.text.contains('-')) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Do not include - in your identity number"),
-      ).show(context);
-      return;
-    } else if (selectedGender == null) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Gender cannot be empty"),
-      ).show(context);
-      return;
-    } else if (!digitRegex.hasMatch(identityNumberController.text)) {
-      ElegantNotification.error(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text("Error"),
-        description: Text("Identity number must contain only digits."),
-      ).show(context);
-      return;
+  Future<String?> _uploadImage(File imageFile) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        Reference storageReference = FirebaseStorage.instance
+            .ref()
+            .child('profile_pictures/${user.uid}');
+        UploadTask uploadTask = storageReference.putFile(imageFile);
+        TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() {});
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        return downloadUrl;
+      }
+    } catch (e) {
+      print("Error uploading image: $e");
     }
+    return null;
+  }
 
-    // Reference to the Firestore collection
-    CollectionReference user = firestore.collection('user');
+  void _updateUserData(BuildContext context) async {
+  if (_isUpdating) {
+    return;
+  }
 
-    // Update the document with new data
-    user.doc(FirebaseAuth.instance.currentUser!.email).update({
+  setState(() {
+    _isUpdating = true;
+  });
+  RegExp digitRegex = RegExp(r'^[0-9]+$');
+
+  if (nameController.text.isEmpty) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Name cannot be empty"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (dateOfBirthController.text.isEmpty) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Date of birth cannot be empty"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (identityNumberController.text.isEmpty) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Identity number cannot be empty"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (identityNumberController.text.length != 12) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Identity number must be 12 digits long"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (identityNumberController.text.contains('-')) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Do not include - in your identity number"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (selectedGender == null) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Gender cannot be empty"),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  } else if (!digitRegex.hasMatch(identityNumberController.text)) {
+    ElegantNotification.error(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text("Error"),
+      description: Text("Identity number must contain only digits."),
+    ).show(context);
+    setState(() {
+      _isUpdating = false;
+    });
+    return;
+  }
+
+  // Reference to the Firestore collection
+  CollectionReference user = firestore.collection('user');
+
+  String? imageUrl;
+  if (_image != null) {
+    imageUrl = await _uploadImage(File(_image!.path));
+  }
+
+  try {
+    await user.doc(FirebaseAuth.instance.currentUser!.email).update({
       'username': nameController.text,
       'dateOfBirth': dateOfBirthController.text,
       'IdentityNum': identityNumberController.text.toString(),
       'gender': selectedGender,
       'Nationality': selectedNationality,
-    }).then((value) async {
-      // Handle success
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setString('username', nameController.text);
-      print("User data updated successfully!");
-      setState(() {
-        username = nameController.text;
-      });
-
-      // Show success notification
-      ElegantNotification.success(
-        width: 360,
-        isDismissable: false,
-        animation: AnimationType.fromTop,
-        title: Text('Profile Updated'),
-        description: Text('Your profile has been updated'),
-        onDismiss: () {},
-        onNotificationPressed: () {},
-        shadow: BoxShadow(
-          color: Colors.green.withOpacity(0.2),
-          spreadRadius: 2,
-          blurRadius: 5,
-          offset: const Offset(0, 4),
-        ),
-      ).show(context);
-    }).catchError((error) {
-      // Handle error
-      print("Failed to update user data: $error");
-
-      // Show error notification
-      ElegantNotification.error(
-        title: Text("Update Failed"),
-        description: Text("Failed to update profile. Please try again."),
-      ).show(context);
+      if (imageUrl != null) 'profileImageUrl': imageUrl,
     });
+
+    // Handle success
+    print("User data updated successfully!");
+    setState(() {
+      username = nameController.text;
+    });
+
+    // Show success notification
+    ElegantNotification.success(
+      width: 360,
+      isDismissable: false,
+      animation: AnimationType.fromTop,
+      title: Text('Profile Updated'),
+      description: Text('Your profile has been updated'),
+      onDismiss: () {},
+      onNotificationPressed: () {},
+      shadow: BoxShadow(
+        color: Colors.green.withOpacity(0.2),
+        spreadRadius: 2,
+        blurRadius: 5,
+        offset: const Offset(0, 4),
+      ),
+    ).show(context);
+  } catch (error) {
+    // Handle error
+    print("Failed to update user data: $error");
+
+    // Show error notification
+    ElegantNotification.error(
+      title: Text("Update Failed"),
+      description: Text("Failed to update profile. Please try again."),
+    ).show(context);
+  } finally {
+    setState(() {
+      _isUpdating = false;
+    });
+  }
+}
+
+
+  void _pickImage() async {
+    final pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        _image = pickedImage;
+      });
+    }
   }
 
   /// Navigates back to the previous screen.
