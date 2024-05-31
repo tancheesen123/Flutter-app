@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/Controller/UserController.dart';
 
 class MyJobController extends GetxController {
   static MyJobController instance = Get.find();
+  final UserController userController = Get.put(UserController());
   DateTime? lastEmailSentTime;
 
   final email = TextEditingController();
@@ -42,57 +45,101 @@ class MyJobController extends GetxController {
     candidates.value = candidatesList;
   }
 
-  // Future<void> addCandidate(
-  //     String jobPostId, Map<String, dynamic> candidateData) async {
-  //   String label = candidateData["label"];
-  //   await _firestore
-  //       .collection('jobPost')
-  //       .doc(jobPostId)
-  //       .collection('candidate')
-  //       .doc(label) // Use the new label here
-  //       .set(
-  //           candidateData); // Use set instead of add to set data with specified document ID
-  //   // Fetch the updated list of candidates
-  //   await getCandidates(jobPostId);
+  // Future<List<Map<String, dynamic>>> fetchData() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String email = prefs.getString('userEmail') ?? '';
+  //   print("Thii semail $email");
+  //   List<Map<String, dynamic>> dataList = [];
+  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+  //       .collection('user')
+  //       .doc(email)
+  //       .collection("Application")
+  //       .get();
+
+  //   querySnapshot.docs.forEach((doc) async {
+  //     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+  //     String postRefPath = data['postRefPath'];
+  //     if (postRefPath != null) {
+  //       List<String> pathParts = postRefPath.split('/');
+  //       if (pathParts.length == 2) {
+  //         String collection = pathParts[0];
+  //         String documentId = pathParts[1];
+  //         DocumentSnapshot postDoc = await FirebaseFirestore.instance
+  //             .collection(collection)
+  //             .doc(documentId)
+  //             .get();
+  //         Map<String, dynamic> postData =
+  //             postDoc.data() as Map<String, dynamic>;
+  //         // dataList.add({
+  //         //   ...data,
+  //         //   ...postData,
+  //         // });
+  //         print("This is postdata $postData");
+  //         dataList.add(postData["description"]);
+  //       }
+  //     }
+
+  //     // dataList.add(data);
+  //   });
+  //   print("This is datalist $dataList");
+  //   // for (var data in dataList) {
+  //   //   print("postRefPath: ${data['postRefPath']}");
+  //   // }
+
+  //   return dataList;
   // }
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('userEmail') ?? '';
+    // String email = userController.getEmail();
+    // print("This email: $email");
+    List<Map<String, dynamic>> dataList = [];
 
-  Future<DocumentReference> addCandidate2(
-      String jobPostId, Map<String, dynamic> candidateData) async {
-    String label = candidateData["label"];
-    DocumentReference candidateRef = _firestore
-        .collection('jobPost')
-        .doc(jobPostId)
-        .collection('candidate')
-        .doc(label); // Use the new label here
-
-    await candidateRef.set(candidateData);
-
-    DocumentReference PostRef = _firestore
-        .collection('jobPost')
-        .doc(jobPostId); // Use the new label here
-
-    String postRefPath = PostRef.path;
-    // Store the reference path in another collection
-    String email =
-        candidateData['email']; // Assuming email is a field in candidateData
-    // if (email != null && email.isNotEmpty) {
-    await _firestore
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('user')
         .doc(email)
-        .collection(
-            "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-        .add({
-      'companyId': "a1",
-      'postRefPath': postRefPath,
-      'status': "pending",
-      // You can add other fields if needed
+        .collection("Application")
+        .get();
+
+    // Use Future.forEach to handle asynchronous operations correctly
+    await Future.forEach(querySnapshot.docs, (doc) async {
+      Map<String, dynamic> data =
+          (doc as DocumentSnapshot).data() as Map<String, dynamic>;
+      String postRefPath = data['postRefPath'];
+      String applicationStatus = data['status'];
+      if (postRefPath != null) {
+        List<String> pathParts = postRefPath.split('/');
+        if (pathParts.length == 2) {
+          String collection = pathParts[0];
+          String documentId = pathParts[1];
+          DocumentSnapshot postDoc = await FirebaseFirestore.instance
+              .collection(collection)
+              .doc(documentId)
+              .get();
+
+          // Check if postDoc.data() is not null before casting
+          if (postDoc.data() != null) {
+            Map<String, dynamic> postData =
+                postDoc.data() as Map<String, dynamic>;
+            print("This is postData: $postData");
+
+            dataList.add({
+              'statusApplication': applicationStatus,
+              'status': postData['status'],
+              'description': postData['description'],
+              'location': postData['location'],
+              'postId': postData['postId'],
+              'title': postData['title'],
+              'workingHours': postData['workingHours'],
+              'budget': postData['budget'],
+            });
+          } else {
+            print("postDoc.data() is null for documentId: $documentId");
+          }
+        }
+      }
     });
-    // }
-
-    // Fetch the updated list of candidates
-    await getCandidates(jobPostId);
-
-    // Return the reference to the added document
-    return candidateRef;
+    print("This is dataList: $dataList");
+    return dataList;
   }
 }

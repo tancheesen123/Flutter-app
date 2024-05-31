@@ -9,6 +9,7 @@ import '../presentation/Freelancer/applyjob/apply_job_page.dart';
 import '../presentation/log_in_screen/log_in_screen.dart';
 import '../presentation/Freelancer/sign_up_screen/sign_up_screen.dart';
 import '../presentation/Freelancer/myjob_applications_container_screen/myjob_applications_container_screen.dart';
+import '../presentation/Freelancer/myjob_applications_page/myjob_applications_page.dart';
 import '../presentation/Freelancer/profile_screen/profile_screen.dart';
 import '../presentation/Freelancer/search_tab_container_screen/search_tab_container_screen.dart';
 import '../presentation/Freelancer/settings_screen/settings_screen.dart';
@@ -99,6 +100,7 @@ class AppRoutes {
     profileScreen: (context) => ProfileScreen(),
     myjobApplicationsContainerScreen: (context) =>
         MyjobApplicationsContainerScreen(),
+    myjobApplicationsPage: (context) => MyjobApplicationsPage(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),

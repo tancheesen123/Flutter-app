@@ -7,9 +7,9 @@ class UserController extends GetxController {
   static UserController instance = Get.find();
   DateTime? lastEmailSentTime;
 
-  final email = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var candidates = <Map<String, dynamic>>[].obs;
+  var email = ''.obs;
 
   Future<Map<String, dynamic>?> getUserInformation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -22,5 +22,13 @@ class UserController extends GetxController {
     } else {
       return null;
     }
+  }
+
+  void updateEmail(String newEmail) {
+    email.value = newEmail;
+  }
+
+  String getEmail() {
+    return email.value;
   }
 }
