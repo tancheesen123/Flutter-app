@@ -18,8 +18,6 @@ class SearchTabContainerScreen extends StatefulWidget {
       SearchTabContainerScreenState();
 }
 // ignore_for_file: must_be_immutable
-
-// ignore_for_file: must_be_immutable
 class SearchTabContainerScreenState extends State<SearchTabContainerScreen>
     with TickerProviderStateMixin {
   TextEditingController searchController = TextEditingController();
