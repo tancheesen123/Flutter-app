@@ -29,6 +29,11 @@ dependencies:
   image_picker: ^1.1.1
   loading_animation_widget: ^1.2.1
   shimmer: ^3.0.0
+  firebase_messaging: ^14.9.4
+  googleapis: ^13.1.0
+  googleapis_auth: ^1.6.0
+  http: ^1.2.1
+  flutter_local_notifications: ^17.1.2
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
@@ -37,6 +42,7 @@ flutter:
   assets: 
     - assets/
     - assets/images/
+    - assets/config/flutter-mango-firebase-adminsdk-bj9c2-dbc3986369.json
   fonts: 
     - family: Poppins
       fonts: 

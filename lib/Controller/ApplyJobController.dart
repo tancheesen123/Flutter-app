@@ -3,9 +3,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/Controller/UserController.dart';
+import 'package:workwise/Controller/NotificationController.dart';
 
 class ApplyJobController extends GetxController {
   static ApplyJobController instance = Get.find();
+  final UserController userController = Get.put(UserController());
+  final NotificationController notificationController =
+      Get.put(NotificationController());
+
   DateTime? lastEmailSentTime;
 
   final storageRef = FirebaseStorage.instance.ref();
@@ -88,24 +94,31 @@ class ApplyJobController extends GetxController {
         .limit(
             1) // Limit the query to 1 document, as we only need to check if any document exists
         .get();
+    String token = await userController.getDeviceToken();
+    notificationController.sendNotification(
+        "e9yUxAGoQPupQeBRzqtDya:APA91bGwekEDOD3t-1ss8Xsyl0FLkG7GXsHPvGUZPNUgU7ypCKJ0YvDShKheHTvOc3HMjFPDGM3LaY_bv7Nf8F6B7zAWk7CqSNaaFUqwkotk8HYdOYV9xwaRhNLJv9I_FsWvx7VPmrpY");
 
-    if (querySnapshot.docs.isNotEmpty) {
-      print('Document with the same postRefPath already exists');
-      return false; // or you can throw an exception, depending on your requirements
-    } else {
-      await _firestore
-          .collection('user')
-          .doc(email)
-          .collection(
-              "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-          .add({
-        'companyId': "a1",
-        'postRefPath': postRefPath,
-        'status': "pending",
-      });
-      // Fetch the updated list of candidates
-      await getCandidates(jobPostId);
-    }
+    // if (querySnapshot.docs.isNotEmpty) {
+    //   print('Document with the same postRefPath already exists');
+    //   return false; // or you can throw an exception, depending on your requirements
+    // } else {
+    //   await _firestore
+    //       .collection('user')
+    //       .doc(email)
+    //       .collection(
+    //           "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
+    //       .add({
+    //     'companyId': "a1",
+    //     'postRefPath': postRefPath,
+    //     'status': "pending",
+    //   });
+    //   // Fetch the updated list of candidates
+    //   await getCandidates(jobPostId);
+
+    //   String token = await userController.getDeviceToken();
+    //   notificationController.sendNotification(
+    //       "New Application", "You have a new application", token);
+    // }
 
     // Return the reference to the added document
     return true;
