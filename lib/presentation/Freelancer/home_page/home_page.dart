@@ -6,6 +6,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:workwise/presentation/Freelancer/settings_screen/settings_screen.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_search_view.dart';
@@ -178,33 +179,107 @@ class _HomePageState extends State<HomePage> {
 
   /// Section Widget
   Widget _buildSearchBoxSection(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.h),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            child: CustomSearchView(
-              controller: searchController,
-              hintText: "Search here...",
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 15.h),
-            child: CustomIconButton(
-              height: 54.adaptSize,
-              width: 54.adaptSize,
-              padding: EdgeInsets.all(17.h),
-              decoration: IconButtonStyleHelper.fillPrimary,
-              child: CustomImageView(
-                imagePath: ImageConstant.imgUser,
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 20.h),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: SizedBox(
+            height: 54.adaptSize, // Adjust the height as needed
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true)
+                  .pushNamed(AppRoutes.searchTabContainerScreen);
+              },
+              style: ButtonStyle(
+                backgroundColor: WidgetStateProperty.all(Colors.white),
+                padding: WidgetStateProperty.all(
+                  EdgeInsets.symmetric(vertical: 10.h),
+                ),
+                shape: WidgetStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15.h),
+                  ),
+                ),
+              ),
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 15.0),
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.grey.shade600,
+                    ),
+                  ),
+                  SizedBox(width: 8), 
+                  Text(
+                    "Search here...",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ),
-          )
-        ],
-      ),
-    );
-  }
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 15.h),
+          child: CustomIconButton(
+            height: 54.adaptSize,
+            width: 54.adaptSize,
+            padding: EdgeInsets.all(17.h),
+            decoration: IconButtonStyleHelper.fillPrimary,
+            child: CustomImageView(
+              imagePath: ImageConstant.imgUser,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+// Widget _buildSearchBoxSection(BuildContext context) {
+//     return Padding(
+//       padding: EdgeInsets.symmetric(horizontal: 20.h),
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Expanded(
+//             child: CustomSearchView(
+//               controller: searchController,
+//               hintText: "Search here...",
+//               onTap: () {
+//               // Navigate to the new page
+//               Get.to(() => SettingsScreen());
+//             },
+              
+//             ),
+//           ),
+//           Padding(
+//             padding: EdgeInsets.only(left: 15.h),
+//             child: CustomIconButton(
+//               height: 54.adaptSize,
+//               width: 54.adaptSize,
+//               padding: EdgeInsets.all(17.h),
+//               decoration: IconButtonStyleHelper.fillPrimary,
+//               child: CustomImageView(
+//                 imagePath: ImageConstant.imgUser,
+//               ),
+//             ),
+//           )
+//         ],
+//       ),
+//     );
+//   }
+
+
+
 
   /// Section Widget
   Widget _buildFeaturedJobSection(BuildContext context) {
