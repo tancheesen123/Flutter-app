@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,6 +15,7 @@ import 'widgets/userprofile_item_widget.dart';
 import '../profile_screen/profile_screen.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/HomePageController.dart';
+import 'package:workwise/widgets/firebase_api.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key})
@@ -105,76 +107,76 @@ class _HomePageState extends State<HomePage> {
 
   /// Section Widget
   Widget _buildWelcomeBackSection(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.only(
-      left: 32.h,
-      right: 20.h,
-    ),
-    child: GestureDetector(
-      onTap: () {
-        Navigator.of(context, rootNavigator: true)
-            .pushNamed(AppRoutes.profileScreen);
-      },
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Welcome Back!",
-                style: CustomTextStyles.titleSmallGray50001,
-              ),
-              SizedBox(height: 10.v),
-              RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "  ",
-                    ),
-                    TextSpan(
-                      text: "${_homePageController.username.value} 👋",
-                      style: CustomTextStyles.titleLargeOnPrimary,
-                    )
-                  ],
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 32.h,
+        right: 20.h,
+      ),
+      child: GestureDetector(
+        onTap: () {
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.profileScreen);
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Welcome Back!",
+                  style: CustomTextStyles.titleSmallGray50001,
                 ),
-                textAlign: TextAlign.left,
-              ),
-            ],
-          ),
-          Container(
-            height: 44.adaptSize,
-            width: 44.adaptSize,
-            margin: EdgeInsets.only(top: 7.v, bottom: 26.v),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle, // Set shape to circle
+                SizedBox(height: 10.v),
+                RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "  ",
+                      ),
+                      TextSpan(
+                        text: "${_homePageController.username.value} 👋",
+                        style: CustomTextStyles.titleLargeOnPrimary,
+                      )
+                    ],
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ],
             ),
-            child: ClipOval( // Use ClipOval to clip the image into a circle
-              child: _homePageController.profileImageUrl.value.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: _homePageController.profileImageUrl.value,
-                      placeholder: (context, url) => Shimmer.fromColors(
+            Container(
+              height: 44.adaptSize,
+              width: 44.adaptSize,
+              margin: EdgeInsets.only(top: 7.v, bottom: 26.v),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, // Set shape to circle
+              ),
+              child: ClipOval(
+                // Use ClipOval to clip the image into a circle
+                child: _homePageController.profileImageUrl.value.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: _homePageController.profileImageUrl.value,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          child: Container(color: Colors.grey),
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                        ),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        fit: BoxFit.cover,
+                      )
+                    : Shimmer.fromColors(
                         child: Container(color: Colors.grey),
                         baseColor: Colors.grey[300]!,
                         highlightColor: Colors.grey[100]!,
                       ),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                      fit: BoxFit.cover,
-                    )
-                  : Shimmer.fromColors(
-                      child: Container(color: Colors.grey),
-                      baseColor: Colors.grey[300]!,
-                      highlightColor: Colors.grey[100]!,
-                    ),
-            ),
-          )
-        ],
+              ),
+            )
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   /// Section Widget
   Widget _buildSearchBoxSection(BuildContext context) {
@@ -420,7 +422,6 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('username') ?? '';
   }
-
 
   Future<String> _loadUsername() async {
     final prefs = await SharedPreferences.getInstance();
