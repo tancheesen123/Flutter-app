@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../../../../core/app_export.dart';
 import '../../../../theme/custom_button_style.dart';
 import '../../../../widgets/custom_elevated_button.dart'; // ignore: must_be_immutable
+import 'package:workwise/Controller/UserController.dart';
 
-class UserprofileItemWidget extends StatelessWidget {
+class UserprofileItemWidget extends StatefulWidget {
   final Map<String, dynamic> data;
   const UserprofileItemWidget({Key? key, required this.data})
       : super(
@@ -11,8 +14,22 @@ class UserprofileItemWidget extends StatelessWidget {
         );
 
   @override
+  State<UserprofileItemWidget> createState() => _UserprofileItemWidgetState();
+}
+
+class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
+  final UserController userController = Get.put(UserController());
+  @override
   Widget build(BuildContext context) {
-    String location = data['location'];
+    // String postRefPath = data['postRefPath'];
+    String email = userController.getEmail();
+    String location = widget.data['location'];
+    print("Locationasd: $location");
+    String title = widget.data['title'];
+    String status = widget.data['statusApplication'];
+    int workingHours = widget.data['workingHours'];
+    int budget = widget.data['budget'];
+
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 20.h,
@@ -42,16 +59,19 @@ class UserprofileItemWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "$location",
+                      "123",
+                      // "$CompanyId",
                       style: theme.textTheme.bodySmall,
                     ),
                     Text(
-                      "Tea Barista",
+                      "$title",
+                      // "123",
                       style: theme.textTheme.titleMedium,
                     ),
                     SizedBox(height: 1.v),
                     Text(
-                      "Intermark Mall, KL",
+                      // "$location",
+                      "$location",
                       style: theme.textTheme.bodySmall,
                     )
                   ],
@@ -80,9 +100,16 @@ class UserprofileItemWidget extends StatelessWidget {
               children: [
                 CustomElevatedButton(
                   width: 135.h,
-                  text: "Pending",
-                  buttonStyle: CustomButtonStyles.fillOrangeA,
-                  buttonTextStyle: CustomTextStyles.titleMediumOrangeA200,
+                  text: "$status",
+                  // text: "123",
+                  buttonStyle: status == 'Pending'
+                      ? CustomButtonStyles.fillGray
+                      : status == 'Reject'
+                          ? CustomButtonStyles
+                              .fillOrangeA // Change to appropriate color for reject status
+                          : CustomButtonStyles
+                              .fillPrimary, // Change to appropriate color for accept status
+                  buttonTextStyle: CustomTextStyles.titleSmallBlack900,
                 ),
                 Padding(
                   padding: EdgeInsets.only(
@@ -90,7 +117,8 @@ class UserprofileItemWidget extends StatelessWidget {
                     bottom: 2.v,
                   ),
                   child: Text(
-                    "RM81/9 hours",
+                    "RM$budget/$workingHours hours",
+                    // "RMhours",
                     style: CustomTextStyles.titleMediumBluegray900,
                   ),
                 )

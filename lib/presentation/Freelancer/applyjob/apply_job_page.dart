@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:elegant_notification/resources/arrays.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/app_export.dart';
@@ -10,6 +12,7 @@ import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/UserController.dart'; // Import the JobPost model
 import 'descriptionMenu.dart';
 import 'companyMenu.dart';
+import "../myjob_applications_page/myjob_applications_page.dart";
 
 class ApplyJobScreen extends StatefulWidget {
   final String? postId;
@@ -257,11 +260,44 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                           // await applyJobController.addCandidate(
                           //     "$postId", candidateData);
 
-                          DocumentReference addedCandidateRef =
-                              await applyJobController.addCandidate2(
-                                  "$postId", candidateData);
-                          print(
-                              "Reference to the added candidate document: ${addedCandidateRef.path}");
+                          bool addedCandidateRef = await applyJobController
+                              .addCandidate2("$postId", candidateData);
+
+                          // If candidate added successfully, navigate to specific page
+                          if (addedCandidateRef) {
+                            ElegantNotification.success(
+                              width: 360,
+                              isDismissable: false,
+                              animation: AnimationType.fromTop,
+                              title: Text('Successful Apply'),
+                              description:
+                                  Text("You successful Apply to this Job"),
+                              onDismiss: () {},
+                              onNotificationPressed: () {},
+                              shadow: BoxShadow(
+                                color: Colors.green.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 4),
+                              ),
+                            ).show(context);
+                          } else {
+                            ElegantNotification.error(
+                              width: 360,
+                              isDismissable: false,
+                              animation: AnimationType.fromTop,
+                              title: Text('Failed Apply'),
+                              description: Text("Already apply to this job"),
+                              onDismiss: () {},
+                              onNotificationPressed: () {},
+                              shadow: BoxShadow(
+                                color: Colors.red.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 4),
+                              ),
+                            ).show(context);
+                          }
                         },
                       ),
                     ),
