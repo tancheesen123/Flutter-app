@@ -1,3 +1,5 @@
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,7 +12,8 @@ import '../../core/app_export.dart';
 import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/custom_elevated_button.dart';
 import '../../widgets/custom_icon_button.dart';
-import '../../widgets/custom_text_form_field.dart'; // ignore_for_file: must_be_immutable
+import '../../widgets/custom_text_form_field.dart';
+import 'package:workwise/Controller/UserController.dart'; // ignore_for_file: must_be_immutable
 
 class LogInScreen extends StatefulWidget {
   const LogInScreen({Key? key}) : super(key: key);
@@ -32,6 +35,7 @@ class _LogInScreenState extends State<LogInScreen> {
   Map<String, dynamic>? _userData;
   String welcome = "Facebook";
 
+  final UserController userController = Get.put(UserController());
   @override
   void initState() {
     super.initState();
@@ -436,6 +440,7 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<void> storeUserEmail(String email) async {
+    userController.updateEmail(email);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('userEmail', email);
   }
