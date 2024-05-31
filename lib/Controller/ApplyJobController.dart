@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ApplyJobController extends GetxController {
   static ApplyJobController instance = Get.find();
   DateTime? lastEmailSentTime;
+
+  final storageRef = FirebaseStorage.instance.ref();
 
   final email = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -56,7 +59,7 @@ class ApplyJobController extends GetxController {
   //   await getCandidates(jobPostId);
   // }
 
-  Future<DocumentReference> addCandidate2(
+  Future<bool> addCandidate2(
       String jobPostId, Map<String, dynamic> candidateData) async {
     String label = candidateData["label"];
     DocumentReference candidateRef = _firestore
@@ -72,27 +75,39 @@ class ApplyJobController extends GetxController {
         .doc(jobPostId); // Use the new label here
 
     String postRefPath = PostRef.path;
+
     // Store the reference path in another collection
     String email =
         candidateData['email']; // Assuming email is a field in candidateData
     // if (email != null && email.isNotEmpty) {
-    await _firestore
+    QuerySnapshot querySnapshot = await _firestore
         .collection('user')
         .doc(email)
-        .collection(
-            "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-        .add({
-      'companyId': "a1",
-      'postRefPath': postRefPath,
-      'status': "pending",
-      // You can add other fields if needed
-    });
-    // }
+        .collection("Application")
+        .where('postRefPath', isEqualTo: postRefPath)
+        .limit(
+            1) // Limit the query to 1 document, as we only need to check if any document exists
+        .get();
 
-    // Fetch the updated list of candidates
-    await getCandidates(jobPostId);
+    if (querySnapshot.docs.isNotEmpty) {
+      print('Document with the same postRefPath already exists');
+      return false; // or you can throw an exception, depending on your requirements
+    } else {
+      await _firestore
+          .collection('user')
+          .doc(email)
+          .collection(
+              "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
+          .add({
+        'companyId': "a1",
+        'postRefPath': postRefPath,
+        'status': "pending",
+      });
+      // Fetch the updated list of candidates
+      await getCandidates(jobPostId);
+    }
 
     // Return the reference to the added document
-    return candidateRef;
+    return true;
   }
 }
