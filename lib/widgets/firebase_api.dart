@@ -56,8 +56,9 @@ class FirebaseApi {
   }
 
   Future<void> initLocalNotification() async {
+    const ios = DarwinInitializationSettings();
     const android = AndroidInitializationSettings('@mipmap/ic_launcher');
-    final settings = InitializationSettings(android: android);
+    final settings = InitializationSettings(android: android, iOS: ios);
     await localNotification.initialize(
       settings,
       onDidReceiveNotificationResponse: (NotificationResponse response) async {
