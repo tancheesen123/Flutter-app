@@ -30,7 +30,7 @@ class ApplyJobController extends GetxController {
     final doc = await docRef.get();
 
     if (doc.exists) {
-      print(doc.data());
+      // print(doc.data());
       return doc.data();
     } else {
       return null;
@@ -95,9 +95,9 @@ class ApplyJobController extends GetxController {
             1) // Limit the query to 1 document, as we only need to check if any document exists
         .get();
     String token = await userController.getDeviceToken();
-    // notificationController.sendNotification(token);
-    notificationController.sendNotification(
-        "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
+    notificationController.sendNotification(token);
+    // notificationController.sendNotification(
+    //     "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
 
     // if (querySnapshot.docs.isNotEmpty) {
     //   print('Document with the same postRefPath already exists');
