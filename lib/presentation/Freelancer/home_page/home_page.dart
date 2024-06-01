@@ -10,8 +10,8 @@ import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
 import '../../../widgets/custom_search_view.dart';
-import 'widgets/userprofile1_item_widget.dart';
-import 'widgets/userprofile_item_widget.dart';
+import 'widgets/recentPost_item_widget.dart';
+import 'widgets/featuredJob_item_widget.dart';
 import '../profile_screen/profile_screen.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/HomePageController.dart';
@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+
     _getUsername();
   }
 
@@ -67,22 +68,7 @@ class _HomePageState extends State<HomePage> {
                         SizedBox(height: 24.v),
                         _buildFeaturedJobSection(context),
                         SizedBox(height: 20.v),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20.h),
-                          child: _buildRecentPostSection(
-                            context,
-                            recentPostText: "Recent Post",
-                            showAllText: "Show All",
-                          ),
-                        ),
-                        SizedBox(
-                          height: 380.v,
-                          width: double.maxFinite,
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [_buildUserProfile(context)],
-                          ),
-                        )
+                        _buildRecentJobSection(context),
                       ],
                     ),
                   ),
@@ -91,16 +77,16 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }),
-        floatingActionButton: ElevatedButton(
-          onPressed: () async {
-            await _jobPostController.getCandidates("a2");
-            for (var candidate in _jobPostController.candidates) {
-              print(
-                  'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
-            }
-          },
-          child: Text('Fetch Candidates'),
-        ),
+        // floatingActionButton: ElevatedButton(
+        //   onPressed: () async {
+        //     await _jobPostController.getCandidates("a2");
+        //     for (var candidate in _jobPostController.candidates) {
+        //       print(
+        //           'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
+        //     }
+        //   },
+        //   child: Text('Fetch Candidates'),
+        // ),
       ),
     );
   }
@@ -225,129 +211,46 @@ class _HomePageState extends State<HomePage> {
           alignment: Alignment.centerLeft,
           child: SizedBox(
             height: 185.v,
-            child: UserprofileItemWidget(), // Remove 'return' keyword here
+            child: FeaturedJobItemWidget(), // Remove 'return' keyword here
           ),
         )
       ],
     );
   }
 
-  /// Section Widget
-  Widget _buildSlack(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: SizedBox(
-        height: 80.v,
-        width: 339.h,
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: EdgeInsets.only(left: 4.h),
-                padding: EdgeInsets.all(15.h),
-                decoration: AppDecoration.outlineErrorContainer.copyWith(
-                  borderRadius: BorderRadiusStyle.roundedBorder20,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomIconButton(
-                      height: 50.adaptSize,
-                      width: 50.adaptSize,
-                      padding: EdgeInsets.all(14.h),
-                      decoration: IconButtonStyleHelper.fillGray,
-                      child: CustomImageView(
-                        imagePath: ImageConstant.imgTelevision,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 20.h,
-                        top: 4.v,
-                        bottom: 7.v,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Visual Designer",
-                            style: CustomTextStyles
-                                .titleMediumSofiaProPrimaryContainer,
-                          ),
-                          SizedBox(height: 3.v),
-                          Text(
-                            "Full Time",
-                            style: CustomTextStyles.bodySmallSofiaProGray500,
-                          )
-                        ],
-                      ),
-                    ),
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        top: 15.v,
-                        right: 3.h,
-                        bottom: 17.v,
-                      ),
-                      child: Text(
-                        "4500/m",
-                        style: CustomTextStyles.labelLargeSofiaProGray500,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
-            // Align(
-            //   alignment: Alignment.topLeft,
-            //   child: Padding(
-            //     padding: EdgeInsets.only(top: 11.v),
-            //     child: Row(
-            //       children: [
-            //         Padding(
-            //           padding: EdgeInsets.only(bottom: 2.v),
-            //           child: Text(
-            //             "Home",
-            //             style: CustomTextStyles.bodySmallPrimary,
-            //           ),
-            //         ),
-            //         Padding(
-            //           padding: EdgeInsets.only(
-            //             left: 25.h,
-            //             top: 2.v,
-            //           ),
-            //           child: Text(
-            //             "Messages",
-            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-            //           ),
-            //         ),
-            //         Padding(
-            //           padding: EdgeInsets.only(
-            //             left: 24.h,
-            //             top: 2.v,
-            //           ),
-            //           child: Text(
-            //             "My Jobs",
-            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-            //           ),
-            //         ),
-            //         Padding(
-            //           padding: EdgeInsets.only(left: 25.h),
-            //           child: Text(
-            //             "Notifications",
-            //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // )
-          ],
+  Widget _buildRecentJobSection(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.h),
+          child: _buildRecentPostSection(
+            context,
+            recentPostText: "Recent Post",
+            showAllText: "Show All",
+          ),
         ),
-      ),
+        // SizedBox(
+        //   height: 380.v,
+        //   width: double.maxFinite,
+        //   child: Stack(
+        //     alignment: Alignment.topCenter,
+        //     children: [_buildUserProfile(context)],
+        //   ),
+        // )
+        Align(
+          alignment: Alignment.centerLeft,
+          child: SizedBox(
+            height: 450.v,
+            width: double.maxFinite,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                RecentPostItemWidget(),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 
@@ -367,7 +270,7 @@ class _HomePageState extends State<HomePage> {
           },
           itemCount: 8,
           itemBuilder: (context, index) {
-            return Userprofile1ItemWidget();
+            return RecentPostItemWidget();
           },
         ),
       ),
@@ -404,6 +307,125 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
+  /// Section Widget
+  // Widget _buildSlack(BuildContext context) {
+  //   return Align(
+  //     alignment: Alignment.bottomCenter,
+  //     child: SizedBox(
+  //       height: 80.v,
+  //       width: 339.h,
+  //       child: Stack(
+  //         alignment: Alignment.topLeft,
+  //         children: [
+  //           Align(
+  //             alignment: Alignment.center,
+  //             child: Container(
+  //               margin: EdgeInsets.only(left: 4.h),
+  //               padding: EdgeInsets.all(15.h),
+  //               decoration: AppDecoration.outlineErrorContainer.copyWith(
+  //                 borderRadius: BorderRadiusStyle.roundedBorder20,
+  //               ),
+  //               child: Row(
+  //                 mainAxisAlignment: MainAxisAlignment.center,
+  //                 crossAxisAlignment: CrossAxisAlignment.start,
+  //                 children: [
+  //                   CustomIconButton(
+  //                     height: 50.adaptSize,
+  //                     width: 50.adaptSize,
+  //                     padding: EdgeInsets.all(14.h),
+  //                     decoration: IconButtonStyleHelper.fillGray,
+  //                     child: CustomImageView(
+  //                       imagePath: ImageConstant.imgTelevision,
+  //                     ),
+  //                   ),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(
+  //                       left: 20.h,
+  //                       top: 4.v,
+  //                       bottom: 7.v,
+  //                     ),
+  //                     child: Column(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Text(
+  //                           "Visual Designer",
+  //                           style: CustomTextStyles
+  //                               .titleMediumSofiaProPrimaryContainer,
+  //                         ),
+  //                         SizedBox(height: 3.v),
+  //                         Text(
+  //                           "Full Time",
+  //                           style: CustomTextStyles.bodySmallSofiaProGray500,
+  //                         )
+  //                       ],
+  //                     ),
+  //                   ),
+  //                   Spacer(),
+  //                   Padding(
+  //                     padding: EdgeInsets.only(
+  //                       top: 15.v,
+  //                       right: 3.h,
+  //                       bottom: 17.v,
+  //                     ),
+  //                     child: Text(
+  //                       "4500/m",
+  //                       style: CustomTextStyles.labelLargeSofiaProGray500,
+  //                     ),
+  //                   )
+  //                 ],
+  //               ),
+  //             ),
+  //           ),
+  //           // Align(
+  //           //   alignment: Alignment.topLeft,
+  //           //   child: Padding(
+  //           //     padding: EdgeInsets.only(top: 11.v),
+  //           //     child: Row(
+  //           //       children: [
+  //           //         Padding(
+  //           //           padding: EdgeInsets.only(bottom: 2.v),
+  //           //           child: Text(
+  //           //             "Home",
+  //           //             style: CustomTextStyles.bodySmallPrimary,
+  //           //           ),
+  //           //         ),
+  //           //         Padding(
+  //           //           padding: EdgeInsets.only(
+  //           //             left: 25.h,
+  //           //             top: 2.v,
+  //           //           ),
+  //           //           child: Text(
+  //           //             "Messages",
+  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+  //           //           ),
+  //           //         ),
+  //           //         Padding(
+  //           //           padding: EdgeInsets.only(
+  //           //             left: 24.h,
+  //           //             top: 2.v,
+  //           //           ),
+  //           //           child: Text(
+  //           //             "My Jobs",
+  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+  //           //           ),
+  //           //         ),
+  //           //         Padding(
+  //           //           padding: EdgeInsets.only(left: 25.h),
+  //           //           child: Text(
+  //           //             "Notifications",
+  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
+  //           //           ),
+  //           //         )
+  //           //       ],
+  //           //     ),
+  //           //   ),
+  //           // )
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Future<List<Map<String, dynamic>>> fetchData() async {
     List<Map<String, dynamic>> dataList = [];
