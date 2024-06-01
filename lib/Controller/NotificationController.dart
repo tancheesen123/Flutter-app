@@ -53,7 +53,7 @@ class NotificationController extends GetxController {
         'token': deviceToken,
         'data': {}, // Add any custom data here
         'notification': {
-          'title': 'FCM Message',
+          'title': 'FCM Message NOTIFICATION!!!!!!!',
           'body': 'This is an FCM notification message!',
         },
       }

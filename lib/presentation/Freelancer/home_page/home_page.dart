@@ -206,7 +206,7 @@ class _HomePageState extends State<HomePage> {
             showAllText: "Show All",
           ),
         ),
-        SizedBox(height: 20.v),
+        SizedBox(height: 1.v),
         Align(
           alignment: Alignment.centerLeft,
           child: SizedBox(
@@ -229,6 +229,7 @@ class _HomePageState extends State<HomePage> {
             showAllText: "Show All",
           ),
         ),
+        SizedBox(height: 20.v),
         // SizedBox(
         //   height: 380.v,
         //   width: double.maxFinite,
