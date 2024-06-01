@@ -26,7 +26,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
     String email = userController.getEmail();
     String location = widget.data['location'];
     String postId = widget.data['postId'];
-    print("Locationasd: $location");
+    // print("Locationasd: $location");
     String title = widget.data['title'];
     String status = widget.data['statusApplication'];
     int workingHours = widget.data['workingHours'];

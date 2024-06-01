@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/routes/app_routes.dart';
-import 'package:workwise/widgets/firebase_api.dart';
+import 'package:workwise/Controller/FirebaseApiController.dart';
 import 'package:workwise/Controller/UserController.dart';
 
 class CheckSession extends StatefulWidget {
