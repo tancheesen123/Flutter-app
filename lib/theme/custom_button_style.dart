@@ -8,11 +8,11 @@ class CustomButtonStyles {
         backgroundColor: appTheme.gray6004c.withOpacity(0.5),
       );
   static ButtonStyle get fillPrimary => ElevatedButton.styleFrom(
-    backgroundColor: theme.colorScheme.primary.withOpacity(0.8),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(15.h),
-    ),
-  );
+        backgroundColor: theme.colorScheme.primary.withOpacity(0.8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.h),
+        ),
+      );
   static ButtonStyle get fillPrimaryTL12 => ElevatedButton.styleFrom(
         backgroundColor: theme.colorScheme.primary,
         shape: RoundedRectangleBorder(
@@ -50,10 +50,19 @@ class CustomButtonStyles {
         backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
         elevation: MaterialStateProperty.all<double>(0),
       );
-static ButtonStyle get fillOrangeA => ElevatedButton.styleFrom(
+  static ButtonStyle get fillOrangeA => ElevatedButton.styleFrom(
         backgroundColor: appTheme.orangeA200.withOpacity(0.2),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.h),
         ),
       );
+
+  static ButtonStyle get PendingOrange => TextButton.styleFrom(
+        backgroundColor: Color(0xFFF29339).withOpacity(0.2), // Background color with transparency
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // Adjust padding as needed
+      );
+
 }
