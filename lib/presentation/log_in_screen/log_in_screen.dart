@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
+import 'package:workwise/widgets/firebase_api.dart';
 import '../../core/app_export.dart';
 import '../../user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import '../../widgets/custom_elevated_button.dart';
@@ -344,6 +345,7 @@ class _LogInScreenState extends State<LogInScreen> {
               emailController.text, passwordController.text)
           .then((user) async {
         if (user != null) {
+          await FirebaseApi().initNotification();
           getRoleType(emailController.text.toLowerCase()).then((roleType) {
             if (roleType == 1) {
               Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
