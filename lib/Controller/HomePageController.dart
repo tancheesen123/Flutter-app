@@ -37,14 +37,25 @@ class HomePageController extends GetxController {
     });
   }
 
+  Future<List<Map<String, dynamic>>> fetchJobPostData() async {
+    List<Map<String, dynamic>> dataList = [];
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('jobPost').get();
+
+    querySnapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      dataList.add(data);
+    });
+
+    return dataList;
+  }
+
   Future<void> getUserData() async {
     try {
       final userEmail = firebaseAuth.currentUser?.email;
       if (userEmail != null) {
-        DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore
-            .collection('user')
-            .doc(userEmail)
-            .get();
+        DocumentSnapshot<Map<String, dynamic>> snapshot =
+            await firestore.collection('user').doc(userEmail).get();
 
         if (snapshot.exists) {
           Map<String, dynamic>? userData = snapshot.data();
@@ -53,9 +64,10 @@ class HomePageController extends GetxController {
 
           // Prefetch the profile image
           if (profileImageUrl.value.isNotEmpty) {
-            CachedNetworkImageProvider(profileImageUrl.value).resolve(ImageConfiguration());
+            CachedNetworkImageProvider(profileImageUrl.value)
+                .resolve(ImageConfiguration());
           }
-          
+
           // Set up real-time listener for user data changes
           _userDataSubscription = firestore
               .collection('user')
@@ -69,7 +81,8 @@ class HomePageController extends GetxController {
 
               // Prefetch the updated profile image
               if (profileImageUrl.value.isNotEmpty) {
-                CachedNetworkImageProvider(profileImageUrl.value).resolve(ImageConfiguration());
+                CachedNetworkImageProvider(profileImageUrl.value)
+                    .resolve(ImageConfiguration());
               }
             }
           });
