@@ -3,9 +3,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/Controller/UserController.dart';
+import 'package:workwise/Controller/NotificationController.dart';
 
 class ApplyJobController extends GetxController {
   static ApplyJobController instance = Get.find();
+  final UserController userController = Get.put(UserController());
+  final NotificationController notificationController =
+      Get.put(NotificationController());
+
   DateTime? lastEmailSentTime;
 
   final storageRef = FirebaseStorage.instance.ref();
@@ -88,6 +94,8 @@ class ApplyJobController extends GetxController {
         .limit(
             1) // Limit the query to 1 document, as we only need to check if any document exists
         .get();
+    // String token = await userController.getDeviceToken();
+    // notificationController.sendNotification(token);
 
     if (querySnapshot.docs.isNotEmpty) {
       print('Document with the same postRefPath already exists');
@@ -105,6 +113,9 @@ class ApplyJobController extends GetxController {
       });
       // Fetch the updated list of candidates
       await getCandidates(jobPostId);
+
+      String token = await userController.getDeviceToken();
+      notificationController.sendNotification(token);
     }
 
     // Return the reference to the added document
