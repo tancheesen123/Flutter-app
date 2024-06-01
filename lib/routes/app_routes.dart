@@ -16,6 +16,8 @@ import '../presentation/Freelancer/settings_screen/settings_screen.dart';
 import '../presentation/Freelancer/change_password_screen/change_password_screen.dart';
 import '../presentation/Freelancer/sign_up_verification_screen/sign_up_verification_screen.dart';
 import '../presentation/Freelancer/check_session.dart';
+import '../presentation/Freelancer/notification_screen/notification.dart';
+import '../presentation/Freelancer/notification_detail_screen/notification_detail.dart';
 
 // Client import
 import 'package:workwise/presentation/Client/success_post_client.dart';
@@ -23,7 +25,6 @@ import '../presentation/Client/home_client_container_screen/home_client_containe
 import '../presentation/Client/post_list_page/post_list_page.dart';
 import 'package:workwise/presentation/Client/new_post_client.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
-import '../presentation/Freelancer/notification_screen/notification.dart';
 import '../presentation/loading_screen/loading_screen.dart';
 
 class AppRoutes {
@@ -85,6 +86,9 @@ class AppRoutes {
   static const String checkSession = '/check_session';
 
   static const String notificationScreen = '/notification_screen';
+
+  static const String notificationDetailScreen = '/notification_detail_screen';
+
   static const String applyJobScreen = '/apply_job_page';
 
   static const String loadingScreen = '/loading_screen';
@@ -106,6 +110,7 @@ class AppRoutes {
     signUpVerificationScreen: (context) => SignUpVerificationScreen(),
     forgotPasswordOneScreen: (context) => ForgotPasswordOneScreen(),
     notificationScreen: (context) => NotificationScreen(),
+    notificationDetailScreen: (context) => NotificationDetailScreen(),
     //Scrum 16 - Forgot Password: Pass email arguments from screen one to screen two for resend purpose
     forgotPasswordTwoScreen: (context) {
       final email = ModalRoute.of(context)?.settings.arguments as String?;
