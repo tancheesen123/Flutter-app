@@ -30,9 +30,7 @@ class FirebaseApi {
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       final token = await _firebaseMessaging.getToken();
       print('FirebaseMessaging token: $token');
-      if (token != null) {
-        userController.addToken(token);
-      }
+      userController.addToken("$token");
 
       await initLocalNotification();
       await initPushNotification();
