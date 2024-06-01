@@ -114,19 +114,25 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  CustomElevatedButton(
-                    width: 135.h,
-                    text: "$status",
-                    // text: "123",
-                    buttonStyle: status == 'Pending'
-                        ? CustomButtonStyles.fillGray
-                        : status == 'Reject'
-                            ? CustomButtonStyles
-                                .fillOrangeA // Change to appropriate color for reject status
-                            : CustomButtonStyles
-                                .fillPrimary, // Change to appropriate color for accept status
-                    buttonTextStyle: CustomTextStyles.titleSmallBlack900,
-                  ),
+                  // CustomElevatedButton(
+                  //   width: 135.h,
+                  //   text: "$status",
+                  //   // text: "123",
+                  //   buttonStyle: status == 'Pending'
+                  //       ? buildCustomPendingBtn(context),
+                  //       : status == 'Reject'
+                  //           ? CustomButtonStyles
+                  //               .fillOrangeA // Change to appropriate color for reject status
+                  //           : CustomButtonStyles
+                  //               .fillPrimary, // Change to appropriate color for accept status
+                  //   buttonTextStyle: CustomTextStyles.titleSmallBlack900,
+                  // ),
+                  if (status == 'Pending')
+                    buildCustomPendingBtn(context)
+                  else if (status == 'Reject')
+                    buildCustomRejectBtn(context)
+                  else
+                    buildCustomPendingBtn(context),
                   Padding(
                     padding: EdgeInsets.only(
                       top: 4.v,
@@ -142,6 +148,56 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
               ),
             )
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildCustomPendingBtn(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        height: 50,
+        width: 150,
+        decoration: BoxDecoration(
+          color: Color(0xFFF29339).withOpacity(0.2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Pending',
+            style: TextStyle(
+              color: Color(0xFFF29339),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCustomRejectBtn(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        height: 50,
+        width: 150,
+        decoration: BoxDecoration(
+          color: Color(0xFFFF0021).withOpacity(0.2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Reject',
+            style: TextStyle(
+              color: Color(0xFFFF0021),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
