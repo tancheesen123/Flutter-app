@@ -10,6 +10,7 @@ class UserController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   var candidates = <Map<String, dynamic>>[].obs;
   var email = ''.obs;
+  var deviceToken = ''.obs;
 
   Future<Map<String, dynamic>?> getUserInformation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -24,11 +25,29 @@ class UserController extends GetxController {
     }
   }
 
+  Future<void> addToken(String token) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = prefs.getString('userEmail') ?? '';
+
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('user').doc(email.toLowerCase());
+
+    await documentReference.update({
+      'Token': token,
+    });
+
+    deviceToken.value = token;
+  }
+
   void updateEmail(String newEmail) {
     email.value = newEmail;
   }
 
   String getEmail() {
     return email.value;
+  }
+
+  String getDeviceToken() {
+    return deviceToken.value;
   }
 }
