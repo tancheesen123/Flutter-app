@@ -111,7 +111,10 @@ class CustomSearchView extends StatelessWidget {
                 right: 15.h,
               ),
               child: IconButton(
-                onPressed: () => controller!.clear(),
+                onPressed: () {
+                  controller!.clear(); // Clear the text
+                  onChanged?.call(''); // Trigger onChanged with empty string (SCRUM-10 Changes, any bugs arise can remove this line)
+                },
                 icon: Icon(
                   Icons.clear,
                   color: Colors.grey.shade600,
