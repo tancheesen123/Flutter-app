@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/routes/app_routes.dart';
+import 'package:workwise/widgets/firebase_api.dart';
+import 'package:workwise/Controller/UserController.dart';
 
 class CheckSession extends StatefulWidget {
   const CheckSession({Key? key}) : super(key: key);
@@ -11,6 +16,7 @@ class CheckSession extends StatefulWidget {
 }
 
 class _CheckSessionState extends State<CheckSession> {
+  final UserController userController = Get.put(UserController());
   bool sessionActive = false;
 
   @override
