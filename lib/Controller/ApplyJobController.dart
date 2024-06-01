@@ -111,7 +111,7 @@ class ApplyJobController extends GetxController {
           .add({
         'companyId': "a1",
         'postRefPath': postRefPath,
-        'status': "pending",
+        'status': "Pending",
       });
       // Fetch the updated list of candidates
       await getCandidates(jobPostId);
