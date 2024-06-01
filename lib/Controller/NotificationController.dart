@@ -53,8 +53,8 @@ class NotificationController extends GetxController {
         'token': deviceToken,
         'data': {}, // Add any custom data here
         'notification': {
-          'title': 'FCM Message NOTIFICATION!!!!!!!',
-          'body': 'This is an FCM notification message!',
+          'title': 'Test',
+          'body': 'https://www.google.com/search?q=linkin&rlz=1C1KNTJ_enMY1080MY1080&oq=linkin&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIMCAEQLhhDGIAEGIoFMgwIAhAAGAoYsQMYgAQyBwgDEAAYgAQyBwgEEAAYgAQyBwgFEAAYgAQyEggGEC4YChjHARixAxjRAxiABDIGCAcQBRhA0gEINDc4NGoxajeoAgCwAgA&sourceid=chrome&ie=UTF-8',
         },
       }
     };
