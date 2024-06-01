@@ -24,7 +24,7 @@ class MyJobController extends GetxController {
     final doc = await docRef.get();
 
     if (doc.exists) {
-      print(doc.data());
+      // print(doc.data());
       return doc.data();
     } else {
       return null;
@@ -121,7 +121,7 @@ class MyJobController extends GetxController {
           if (postDoc.data() != null) {
             Map<String, dynamic> postData =
                 postDoc.data() as Map<String, dynamic>;
-            print("This is postData: $postData");
+            // print("This is postData: $postData");
 
             dataList.add({
               'statusApplication': applicationStatus,
@@ -134,12 +134,12 @@ class MyJobController extends GetxController {
               'budget': postData['budget'],
             });
           } else {
-            print("postDoc.data() is null for documentId: $documentId");
+            // print("postDoc.data() is null for documentId: $documentId");
           }
         }
       }
     });
-    print("This is dataList: $dataList");
+    // print("This is dataList: $dataList");
     return dataList;
   }
 }

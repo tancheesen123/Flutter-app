@@ -5,8 +5,11 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:workwise/Controller/UserController.dart';
 
-class FirebaseApi {
+class FirebaseApiController extends GetxController {
+  static FirebaseApiController instance = Get.find();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
+  List<PendingNotificationRequest> _pendingNotificationRequests = [];
+  List<ActiveNotification> _activeNotificationRequests = [];
 
   final AndroidNotificationChannel androidChannel = AndroidNotificationChannel(
     'high_importance_channel',
@@ -67,6 +70,33 @@ class FirebaseApi {
         }
       },
     );
+  }
+
+  Future<void> loadPendingNotifications() async {
+    final List<PendingNotificationRequest> pendingNotificationRequests =
+        await localNotification.pendingNotificationRequests();
+    print("This is pendingNotificationRequests: $pendingNotificationRequests");
+
+    final List<ActiveNotification> activeNotifications =
+        await localNotification.getActiveNotifications();
+
+    print("This is activeNotifications: ${activeNotifications.length}");
+    for (var notification in activeNotifications) {
+      print('ActiveNotification ID: ${notification.id}');
+      print('ActiveNotification Title: ${notification.title}');
+      print('ActiveNotification Body: ${notification.body}');
+    }
+    _pendingNotificationRequests = pendingNotificationRequests;
+    _activeNotificationRequests = activeNotifications;
+  }
+
+  List<PendingNotificationRequest> get pendingNotificationRequests {
+    return _pendingNotificationRequests;
+  }
+
+  List<ActiveNotification> get activeNotificationRequests {
+    print("is the value empty? $_activeNotificationRequests");
+    return _activeNotificationRequests;
   }
 
   Future<void> initPushNotification() async {
