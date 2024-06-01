@@ -199,4 +199,6 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
       ),
     );
   }
+
+  
 }
