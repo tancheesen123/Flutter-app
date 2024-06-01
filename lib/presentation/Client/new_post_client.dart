@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:workwise/presentation/Client/preview_post_client.dart';
+import 'package:workwise/presentation/Freelancer/applyjob/companyMenu.dart';
 import '../../../core/app_export.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -12,14 +13,28 @@ class NewPostScreen extends StatefulWidget {
   State<NewPostScreen> createState() => _NewPostScreenState();
 }
 
-class _NewPostScreenState extends State<NewPostScreen> {
+class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateMixin {
   bool validToSubmit = false;
+  late TabController tabviewController;
 
   TextEditingController titleTextFieldController = TextEditingController();
   TextEditingController locationTextFieldController = TextEditingController();
   TextEditingController budgetTextFieldController = TextEditingController();
-  TextEditingController descriptionTextFieldController =
-      TextEditingController();
+  TextEditingController descriptionTextFieldController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    tabviewController = TabController(length: 2, vsync: this);
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    tabviewController.dispose();
+    super.dispose();
+  }
 
   void checkValidToSubmit() {
     if (titleTextFieldController.text.isNotEmpty &&
@@ -103,15 +118,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the job title",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -155,15 +165,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the location",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -212,15 +217,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter your budget",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -268,17 +268,11 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 filled: true,
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
-                                hintText:
-                                    "Describe the rules, requirement and detail about this job ",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintText: "Describe the rules, requirement and detail about this job ",
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -292,8 +286,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
         Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
                   color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -321,21 +314,16 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Colors.transparent),
+                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Cancel",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xffC2C2C2)),
+                                style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -356,25 +344,16 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                 : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor: MaterialStatePropertyAll(
-                                  validToSubmit
-                                      ? Color(0xff5598FF)
-                                      : Color(0xffF4F6F8)),
+                              backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Preview",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: validToSubmit
-                                        ? Colors.white
-                                        : Color(0xffC2C2C2)),
+                                style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -413,202 +392,172 @@ class _NewPostScreenState extends State<NewPostScreen> {
               height: screenSize.height * 0.95,
               child: Column(
                 children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(bottom: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color(0xffB3BAC3).withOpacity(0.25),
-                          spreadRadius: 0,
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Container(
-                          child: Center(
-                            child: SizedBox(
-                              width: 10,
-                              height: 20,
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(bottom: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color(0xffB3BAC3).withOpacity(0.25),
+                            spreadRadius: 0,
+                            blurRadius: 4,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Container(
+                            child: Center(
+                              child: SizedBox(
+                                height: 54,
+                              ),
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          child: Text(titleTextFieldController.text),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 20),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                          SizedBox(
+                            height: 82.v,
+                            width: 80.h,
+                            child: Stack(
+                              alignment: Alignment.bottomRight,
                               children: [
-                                Text('Chagee MY ',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500)),
-                                Text(
-                                  '-',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff6A6A6A)),
-                                ),
-                                Icon(
-                                  Icons.location_on_outlined,
-                                  size: 20,
-                                  color: Color(0xff6A6A6A),
-                                ),
-                                Text(
-                                  'Intermark Mall, KL',
-                                  style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff6A6A6A)),
+                                CustomImageView(
+                                  imagePath: ImageConstant.imgRectangle515,
+                                  height: 80.adaptSize,
+                                  width: 80.adaptSize,
+                                  radius: BorderRadius.circular(40.h),
+                                  alignment: Alignment.center,
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 28),
-                          child: Center(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.access_time,
-                                      color: Color(0xff6A6A6A),
-                                    ),
-                                    SizedBox(
-                                      width: 10,
-                                    ),
-                                    Text(
-                                      "Part Time",
-                                      style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
-                                          color: Color(0xff6A6A6A)),
-                                    )
-                                  ],
-                                ),
-                                Text(
-                                  "RM15/h",
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      color: Color(0xff6A6A6A)),
-                                )
-                              ],
+                          Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            child: Text(
+                              titleTextFieldController.text,
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                             ),
                           ),
-                        ),
-                        Container(
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      elevation: MaterialStatePropertyAll(0),
-                                      shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
-                                          RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15),
-                                      )),
-                                      backgroundColor: MaterialStatePropertyAll(
-                                          Color(0xff5598FF)),
-                                    ),
-                                    child: Padding(
-                                      padding: EdgeInsets.all(15),
-                                      child: Text(
-                                        "Description",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w600,
-                                            color: Colors.white),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                            child: Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Chagee MY ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                  Text(
+                                    '-',
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                  ),
+                                  Icon(
+                                    Icons.location_on_outlined,
+                                    size: 20,
+                                    color: Color(0xff6A6A6A),
+                                  ),
+                                  Text(
+                                    locationTextFieldController.text,
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 28),
+                            child: Center(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.access_time,
+                                        color: Color(0xff6A6A6A),
                                       ),
-                                    ),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      Text(
+                                        "Part Time",
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                      )
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    elevation: MaterialStatePropertyAll(0),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    )),
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Color(0xff5598FF)),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15),
-                                    child: Text(
-                                      "Company",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ButtonStyle(
-                                    elevation: MaterialStatePropertyAll(0),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(15),
-                                    )),
-                                    backgroundColor: MaterialStatePropertyAll(
-                                        Color(0xff5598FF)),
-                                  ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(15),
-                                    child: Text(
-                                      "Reviews",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 16,
-                                ),
+                                  Text(
+                                    "RM15/h",
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                          Container(
+                            height: 50.v,
+                            margin: EdgeInsets.only(left: 20.h),
+                            child: TabBar(
+                              dividerColor: Colors.transparent,
+                              controller: tabviewController,
+                              labelPadding: EdgeInsets.zero,
+                              labelColor: Colors.white,
+                              labelStyle: TextStyle(
+                                fontSize: 14.fSize,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                              ),
+                              unselectedLabelColor: Colors.black,
+                              unselectedLabelStyle: TextStyle(
+                                fontSize: 14.fSize,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                              ),
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: BoxDecoration(
+                                color: const Color(0xFF007BFF),
+                                borderRadius: BorderRadius.circular(12.h),
+                              ),
+                              tabs: [
+                                Tab(child: Text("Description")),
+                                Tab(child: Text("Company")),
                               ],
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(
+                              child: Container(
+                            child: TabBarView(
+                              controller: tabviewController,
+                              children: [
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Job Descriptions",
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                        ),
+                                        Text(descriptionTextFieldController.text)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // CompanyMenuPage(),
+                                Container()
+                              ],
+                            ),
+                          ))
+                        ],
+                      ),
                     ),
                   ),
-                  Spacer(),
+                  // Spacer(),
                   Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                         boxShadow: [
                           BoxShadow(
                             color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -624,8 +573,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
                         child: Container(
                           child: Center(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -635,24 +583,16 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         )),
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.transparent),
+                                        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
+                                        padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Edit",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xffC2C2C2)),
+                                          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
                                         ),
                                       ),
                                     ),
@@ -663,28 +603,26 @@ class _NewPostScreenState extends State<NewPostScreen> {
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        submitJobPost();
+                                        submitJobPost().then(
+                                          (success) {
+                                            if (success) {
+                                              Navigator.pushNamed(context, AppRoutes.successPostClientScreen);
+                                            }
+                                          },
+                                        );
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         )),
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Color(0xff5598FF)),
+                                        backgroundColor: MaterialStatePropertyAll(Color(0xff5598FF)),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
+                                        padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Post",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
+                                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -704,7 +642,7 @@ class _NewPostScreenState extends State<NewPostScreen> {
     );
   }
 
-  Future<void> submitJobPost() async {
+  Future<bool> submitJobPost() async {
     // DatabaseReference ref = FirebaseDatabase.instance.ref("jobPost/");
     Map<String, dynamic> data = {
       "title": titleTextFieldController.text,
@@ -713,8 +651,10 @@ class _NewPostScreenState extends State<NewPostScreen> {
       "description": descriptionTextFieldController.text,
     };
 
-    FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
-      print("Successfully add new post");
+    await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
+      return true;
     });
+
+    return true;
   }
 }
