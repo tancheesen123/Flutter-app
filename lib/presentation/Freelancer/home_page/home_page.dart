@@ -15,7 +15,7 @@ import 'widgets/featuredJob_item_widget.dart';
 import '../profile_screen/profile_screen.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/HomePageController.dart';
-import 'package:workwise/widgets/firebase_api.dart';
+import 'package:workwise/Controller/FirebaseApiController.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key})
