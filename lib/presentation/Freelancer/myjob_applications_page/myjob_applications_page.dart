@@ -51,8 +51,8 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
                   itemCount: dataList.length,
                   itemBuilder: (context, index) {
                     // Pass data to UserprofileItemWidget
-                    print("adasdadsa");
-                    print(dataList[index]);
+                    // print("adasdadsa");
+                    // print(dataList[index]);
                     return UserprofileItemWidget(data: dataList[index]);
                   },
                 ),
