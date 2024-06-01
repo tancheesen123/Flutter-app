@@ -1,20 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart';
-import '../../applyjob/apply_job_page.dart'; // ignore: must_be_immutable
+import '../../applyjob/apply_job_page.dart';
+import 'package:workwise/Controller/HomePageController.dart'; // ignore: must_be_immutable
 
-class UserprofileItemWidget extends StatelessWidget {
-  const UserprofileItemWidget({Key? key})
+class FeaturedJobItemWidget extends StatefulWidget {
+  const FeaturedJobItemWidget({Key? key})
       : super(
           key: key,
         );
 
   @override
+  State<FeaturedJobItemWidget> createState() => _FeaturedJobItemWidgetState();
+}
+
+class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
+  final HomePageController _homePageController = Get.put(HomePageController(
+    firestore: FirebaseFirestore.instance,
+    firebaseAuth: FirebaseAuth.instance,
+  ));
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
-      future: fetchData(),
+      future: _homePageController.fetchJobPostData(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return _buildShimmerLoading();
@@ -177,25 +190,13 @@ class UserprofileItemWidget extends StatelessWidget {
               margin: EdgeInsets.symmetric(horizontal: 10.h),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(20.h), // Match the border radius
+                borderRadius:
+                    BorderRadius.circular(20.h), // Match the border radius
               ),
             ),
           );
         },
       ),
     );
-  }
-
-  Future<List<Map<String, dynamic>>> fetchData() async {
-    List<Map<String, dynamic>> dataList = [];
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('jobPost').get();
-
-    querySnapshot.docs.forEach((doc) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      dataList.add(data);
-    });
-
-    return dataList;
   }
 }
