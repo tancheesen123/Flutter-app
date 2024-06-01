@@ -32,11 +32,47 @@ class SuccessPostClientScreen extends StatelessWidget {
                 "Successfully Posted",
                 style: theme.textTheme.bodyLarge,
               ),
-              SizedBox(height: 5.v)
+              SizedBox(height: 5.v),
+              Spacer(),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Container(
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, AppRoutes.postListPage);
+                              },
+                              style: ButtonStyle(
+                                elevation: MaterialStatePropertyAll(0),
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                )),
+                                backgroundColor: MaterialStatePropertyAll(Color(0xffEEEEEE)),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 14),
+                                child: Text(
+                                  "Back to Post",
+                                  style: TextStyle(fontWeight: FontWeight.w600, color: Color(0XFF636363)),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              )
             ],
           ),
         ),
-        bottomNavigationBar: _buildBackToPost(context),
+        // bottomNavigationBar: _buildBackToPost(context),
       ),
     );
   }
