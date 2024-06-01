@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:workwise/presentation/Freelancer/applyjob/apply_job_page.dart';
 import '../../../../core/app_export.dart';
 import '../../../../theme/custom_button_style.dart';
 import '../../../../widgets/custom_elevated_button.dart'; // ignore: must_be_immutable
@@ -24,108 +25,124 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
     // String postRefPath = data['postRefPath'];
     String email = userController.getEmail();
     String location = widget.data['location'];
+    String postId = widget.data['postId'];
     print("Locationasd: $location");
     String title = widget.data['title'];
     String status = widget.data['statusApplication'];
     int workingHours = widget.data['workingHours'];
     int budget = widget.data['budget'];
 
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 20.h,
-        vertical: 18.v,
-      ),
-      decoration: AppDecoration.outlineGray.copyWith(
-        borderRadius: BorderRadiusStyle.roundedBorder12,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CustomImageView(
-                imagePath: ImageConstant.imgRectangle5162,
-                height: 50.adaptSize,
-                width: 50.adaptSize,
-                radius: BorderRadius.circular(
-                  15.h,
-                ),
-                margin: EdgeInsets.symmetric(vertical: 3.v),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 20.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "123",
-                      // "$CompanyId",
-                      style: theme.textTheme.bodySmall,
-                    ),
-                    Text(
-                      "$title",
-                      // "123",
-                      style: theme.textTheme.titleMedium,
-                    ),
-                    SizedBox(height: 1.v),
-                    Text(
-                      // "$location",
-                      "$location",
-                      style: theme.textTheme.bodySmall,
-                    )
-                  ],
-                ),
-              ),
-              Spacer(),
-              CustomImageView(
-                imagePath: ImageConstant.imgNotification,
-                height: 18.v,
-                width: 20.h,
-                margin: EdgeInsets.only(
-                  top: 3.v,
-                  bottom: 35.v,
-                ),
-              )
-            ],
+    return GestureDetector(
+      onTap: () {
+        print('Post ID: $postId');
+
+        Navigator.of(context, rootNavigator: true).push(
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return ApplyJobScreen(
+                postId: postId,
+              );
+            },
           ),
-          SizedBox(height: 14.v),
-          Padding(
-            padding: EdgeInsets.only(
-              left: 4.h,
-              right: 7.h,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        );
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 20.h,
+          vertical: 18.v,
+        ),
+        decoration: AppDecoration.outlineGray.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder12,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CustomElevatedButton(
-                  width: 135.h,
-                  text: "$status",
-                  // text: "123",
-                  buttonStyle: status == 'Pending'
-                      ? CustomButtonStyles.fillGray
-                      : status == 'Reject'
-                          ? CustomButtonStyles
-                              .fillOrangeA // Change to appropriate color for reject status
-                          : CustomButtonStyles
-                              .fillPrimary, // Change to appropriate color for accept status
-                  buttonTextStyle: CustomTextStyles.titleSmallBlack900,
+                CustomImageView(
+                  imagePath: ImageConstant.imgRectangle5162,
+                  height: 50.adaptSize,
+                  width: 50.adaptSize,
+                  radius: BorderRadius.circular(
+                    15.h,
+                  ),
+                  margin: EdgeInsets.symmetric(vertical: 3.v),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                    top: 4.v,
-                    bottom: 2.v,
+                  padding: EdgeInsets.only(left: 20.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "123",
+                        // "$CompanyId",
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      Text(
+                        "$title",
+                        // "123",
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      SizedBox(height: 1.v),
+                      Text(
+                        // "$location",
+                        "$location",
+                        style: theme.textTheme.bodySmall,
+                      )
+                    ],
                   ),
-                  child: Text(
-                    "RM$budget/$workingHours hours",
-                    // "RMhours",
-                    style: CustomTextStyles.titleMediumBluegray900,
+                ),
+                Spacer(),
+                CustomImageView(
+                  imagePath: ImageConstant.imgNotification,
+                  height: 18.v,
+                  width: 20.h,
+                  margin: EdgeInsets.only(
+                    top: 3.v,
+                    bottom: 35.v,
                   ),
                 )
               ],
             ),
-          )
-        ],
+            SizedBox(height: 14.v),
+            Padding(
+              padding: EdgeInsets.only(
+                left: 4.h,
+                right: 7.h,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CustomElevatedButton(
+                    width: 135.h,
+                    text: "$status",
+                    // text: "123",
+                    buttonStyle: status == 'Pending'
+                        ? CustomButtonStyles.fillGray
+                        : status == 'Reject'
+                            ? CustomButtonStyles
+                                .fillOrangeA // Change to appropriate color for reject status
+                            : CustomButtonStyles
+                                .fillPrimary, // Change to appropriate color for accept status
+                    buttonTextStyle: CustomTextStyles.titleSmallBlack900,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: 4.v,
+                      bottom: 2.v,
+                    ),
+                    child: Text(
+                      "RM$budget/$workingHours hours",
+                      // "RMhours",
+                      style: CustomTextStyles.titleMediumBluegray900,
+                    ),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
