@@ -125,27 +125,74 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
   Widget _buildShimmerLoading() {
     return SizedBox(
       width: 370.h,
-      height: 150.h, // Set the height to match the actual content
-      child: ListView.builder(
-        padding: EdgeInsets.only(left: 20.h),
-        scrollDirection: Axis.horizontal,
-        itemCount: 5, // Adjust the number of shimmer loading items
-        itemBuilder: (context, index) {
-          return Shimmer.fromColors(
-            baseColor: Colors.grey[300]!,
-            highlightColor: Colors.grey[100]!,
-            child: Container(
-              width: 250.h, // Match the width of the actual item
-              height: 150.h, // Match the height of the actual item
-              margin: EdgeInsets.symmetric(horizontal: 10.h),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius:
-                    BorderRadius.circular(20.h), // Match the border radius
-              ),
-            ),
-          );
-        },
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 1.0),
+        child: Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: ListView.separated(
+            shrinkWrap: true,
+            separatorBuilder: (context, index) {
+              return SizedBox(
+                height: 10,
+              );
+            },
+            itemCount: 5, // Set the desired number of shimmer items
+            itemBuilder: (context, index) {
+              return Align(
+                alignment: Alignment.topCenter,
+                child: Container(
+                  padding: EdgeInsets.all(15.h),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadiusStyle.roundedBorder20,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 50.adaptSize,
+                        width: 50.adaptSize,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(15.h),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20.h, bottom: 4.v),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 20.v,
+                              width: 150.h,
+                              color: Colors.grey[300],
+                            ),
+                            SizedBox(height: 2.v),
+                            Container(
+                              height: 14.v,
+                              width: 100.h,
+                              color: Colors.grey[300],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(top: 15.v, bottom: 16.v),
+                        child: Container(
+                          height: 20.v,
+                          width: 80.h,
+                          color: Colors.grey[300],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
