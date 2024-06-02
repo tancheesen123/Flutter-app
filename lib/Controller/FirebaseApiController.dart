@@ -108,7 +108,7 @@ class FirebaseApiController extends GetxController {
 
     FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
     FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+    //FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
 
     FirebaseMessaging.onMessage.listen((message) {
       final notification = message.notification;
