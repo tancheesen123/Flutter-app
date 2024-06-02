@@ -1,22 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:workwise/presentation/Freelancer/settings_screen/settings_screen.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_icon_button.dart';
-import '../../../widgets/custom_search_view.dart';
 import 'widgets/recentPost_item_widget.dart';
 import 'widgets/featuredJob_item_widget.dart';
-import '../profile_screen/profile_screen.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/HomePageController.dart';
-import 'package:workwise/Controller/FirebaseApiController.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key})
@@ -229,46 +223,6 @@ class _HomePageState extends State<HomePage> {
     ),
   );
 }
-
-
-
-// Widget _buildSearchBoxSection(BuildContext context) {
-//     return Padding(
-//       padding: EdgeInsets.symmetric(horizontal: 20.h),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.center,
-//         children: [
-//           Expanded(
-//             child: CustomSearchView(
-//               controller: searchController,
-//               hintText: "Search here...",
-//               onTap: () {
-//               // Navigate to the new page
-//               Get.to(() => SettingsScreen());
-//             },
-              
-//             ),
-//           ),
-//           Padding(
-//             padding: EdgeInsets.only(left: 15.h),
-//             child: CustomIconButton(
-//               height: 54.adaptSize,
-//               width: 54.adaptSize,
-//               padding: EdgeInsets.all(17.h),
-//               decoration: IconButtonStyleHelper.fillPrimary,
-//               child: CustomImageView(
-//                 imagePath: ImageConstant.imgUser,
-//               ),
-//             ),
-//           )
-//         ],
-//       ),
-//     );
-//   }
-
-
-
-
   /// Section Widget
   Widget _buildFeaturedJobSection(BuildContext context) {
     return Column(
@@ -384,124 +338,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Section Widget
-  // Widget _buildSlack(BuildContext context) {
-  //   return Align(
-  //     alignment: Alignment.bottomCenter,
-  //     child: SizedBox(
-  //       height: 80.v,
-  //       width: 339.h,
-  //       child: Stack(
-  //         alignment: Alignment.topLeft,
-  //         children: [
-  //           Align(
-  //             alignment: Alignment.center,
-  //             child: Container(
-  //               margin: EdgeInsets.only(left: 4.h),
-  //               padding: EdgeInsets.all(15.h),
-  //               decoration: AppDecoration.outlineErrorContainer.copyWith(
-  //                 borderRadius: BorderRadiusStyle.roundedBorder20,
-  //               ),
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.center,
-  //                 crossAxisAlignment: CrossAxisAlignment.start,
-  //                 children: [
-  //                   CustomIconButton(
-  //                     height: 50.adaptSize,
-  //                     width: 50.adaptSize,
-  //                     padding: EdgeInsets.all(14.h),
-  //                     decoration: IconButtonStyleHelper.fillGray,
-  //                     child: CustomImageView(
-  //                       imagePath: ImageConstant.imgTelevision,
-  //                     ),
-  //                   ),
-  //                   Padding(
-  //                     padding: EdgeInsets.only(
-  //                       left: 20.h,
-  //                       top: 4.v,
-  //                       bottom: 7.v,
-  //                     ),
-  //                     child: Column(
-  //                       crossAxisAlignment: CrossAxisAlignment.start,
-  //                       children: [
-  //                         Text(
-  //                           "Visual Designer",
-  //                           style: CustomTextStyles
-  //                               .titleMediumSofiaProPrimaryContainer,
-  //                         ),
-  //                         SizedBox(height: 3.v),
-  //                         Text(
-  //                           "Full Time",
-  //                           style: CustomTextStyles.bodySmallSofiaProGray500,
-  //                         )
-  //                       ],
-  //                     ),
-  //                   ),
-  //                   Spacer(),
-  //                   Padding(
-  //                     padding: EdgeInsets.only(
-  //                       top: 15.v,
-  //                       right: 3.h,
-  //                       bottom: 17.v,
-  //                     ),
-  //                     child: Text(
-  //                       "4500/m",
-  //                       style: CustomTextStyles.labelLargeSofiaProGray500,
-  //                     ),
-  //                   )
-  //                 ],
-  //               ),
-  //             ),
-  //           ),
-  //           // Align(
-  //           //   alignment: Alignment.topLeft,
-  //           //   child: Padding(
-  //           //     padding: EdgeInsets.only(top: 11.v),
-  //           //     child: Row(
-  //           //       children: [
-  //           //         Padding(
-  //           //           padding: EdgeInsets.only(bottom: 2.v),
-  //           //           child: Text(
-  //           //             "Home",
-  //           //             style: CustomTextStyles.bodySmallPrimary,
-  //           //           ),
-  //           //         ),
-  //           //         Padding(
-  //           //           padding: EdgeInsets.only(
-  //           //             left: 25.h,
-  //           //             top: 2.v,
-  //           //           ),
-  //           //           child: Text(
-  //           //             "Messages",
-  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-  //           //           ),
-  //           //         ),
-  //           //         Padding(
-  //           //           padding: EdgeInsets.only(
-  //           //             left: 24.h,
-  //           //             top: 2.v,
-  //           //           ),
-  //           //           child: Text(
-  //           //             "My Jobs",
-  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-  //           //           ),
-  //           //         ),
-  //           //         Padding(
-  //           //           padding: EdgeInsets.only(left: 25.h),
-  //           //           child: Text(
-  //           //             "Notifications",
-  //           //             style: CustomTextStyles.bodySmallOnPrimaryContainer,
-  //           //           ),
-  //           //         )
-  //           //       ],
-  //           //     ),
-  //           //   ),
-  //           // )
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  // }
+  
 
   Future<List<Map<String, dynamic>>> fetchData() async {
     List<Map<String, dynamic>> dataList = [];
