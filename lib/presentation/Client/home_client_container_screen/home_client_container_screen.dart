@@ -5,6 +5,8 @@ import 'package:workwise/presentation/Client/post_list_page/post_list_page.dart'
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import '../home_client_page/home_client_page.dart';
+import '../../Freelancer/notification_screen/notification.dart';
+import '../../Freelancer/settings_screen/settings_screen.dart';
 
 class HomeClientContainerScreen extends StatefulWidget {
   HomeClientContainerScreen({Key? key})
@@ -13,7 +15,8 @@ class HomeClientContainerScreen extends StatefulWidget {
         );
 
   @override
-  State<HomeClientContainerScreen> createState() => _HomeClientContainerScreenState();
+  State<HomeClientContainerScreen> createState() =>
+      _HomeClientContainerScreenState();
 }
 
 class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
@@ -56,55 +59,52 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
               label: "Home",
               icon: SvgPicture.asset(
                 ImageConstant.imgNavHome,
-                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgNavHome,
-                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
             BottomNavigationBarItem(
-              label: "Messages",
-              icon: SvgPicture.asset(
-                ImageConstant.imgNavMessages,
-                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
-              ),
-              activeIcon: SvgPicture.asset(
-                ImageConstant.imgNavMessages,
-                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: "My Jobs",
+              label: "My Posts",
               icon: SvgPicture.asset(
                 ImageConstant.imgPhBagFill,
-                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgPhBagFill,
-                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
             BottomNavigationBarItem(
               label: "Notifications",
               icon: SvgPicture.asset(
                 ImageConstant.imgHome,
-                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgHome,
-                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
             BottomNavigationBarItem(
               label: "Settings",
               icon: SvgPicture.asset(
                 ImageConstant.imgNavSettings,
-                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgNavSettings,
-                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter:
+                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
           ],
@@ -115,19 +115,15 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
                 setNavBarIndex(value);
                 break;
               case 1:
-                setScreen(HomeClientPage());
-                setNavBarIndex(value);
-                break;
-              case 2:
                 setScreen(PostListScreen());
                 setNavBarIndex(value);
                 break;
-              case 3:
-                setScreen(HomeClientPage());
+              case 2:
+                setScreen(NotificationScreen());
                 setNavBarIndex(value);
                 break;
-              case 4:
-                setScreen(HomeClientPage());
+              case 3:
+                setScreen(SettingsScreen());
                 setNavBarIndex(value);
                 break;
               default:
@@ -156,7 +152,7 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
       case BottomBarEnum.Jobs:
         return AppRoutes.postListPage;
       case BottomBarEnum.Notifications:
-        return "/";
+        return AppRoutes.notificationScreen;
       case BottomBarEnum.Settings:
         return AppRoutes.settingsScreen;
       default:
