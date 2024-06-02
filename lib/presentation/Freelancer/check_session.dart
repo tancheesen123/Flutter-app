@@ -32,7 +32,17 @@ class _CheckSessionState extends State<CheckSession> {
     });
     print('Is session active? $sessionActive');
     if (sessionActive) {
-      Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+      userController.getUserInformation().then((value) {
+        if (value != null) {
+          print("this is roletpye");
+          print(value['roleType']);
+          if (value['roleType'] == 2) {
+            Navigator.pushNamed(context, AppRoutes.homeClientContainerScreen);
+          } else {
+            Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
+          }
+        }
+      });
     } else {
       Navigator.pushNamed(context, AppRoutes.logInScreen);
     }
