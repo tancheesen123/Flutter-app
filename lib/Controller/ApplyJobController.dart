@@ -96,8 +96,8 @@ class ApplyJobController extends GetxController {
         .get();
     // String token = await userController.getDeviceToken();
     // notificationController.sendNotification(token);
-    notificationController.sendNotification(
-        "fb2pjgTVQoeYc-4vmw_5LF:APA91bEaKC0KLdSSTEEmqNXwULw1zWdUArGqUxDFFQfdLMD7gT-irqRZNY54sYRPUFmlOVzSw-WPjxfNmVNUaQZ3JD8Dw070Kd6NcynOlUaJoNf3vu4ft0phIpLK4-TX0ah4upaUzXHu");
+    // notificationController.sendNotification(
+    //     "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
 
     if (querySnapshot.docs.isNotEmpty) {
       print('Document with the same postRefPath already exists');
@@ -116,8 +116,10 @@ class ApplyJobController extends GetxController {
       // Fetch the updated list of candidates
       await getCandidates(jobPostId);
 
-      String token = await userController.getDeviceToken();
-      notificationController.sendNotification(token);
+      // String token = await userController.getDeviceToken();
+      // notificationController.sendNotification(token);
+      notificationController.sendNotification(
+          "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
     }
 
     // Return the reference to the added document
