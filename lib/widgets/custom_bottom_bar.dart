@@ -77,7 +77,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   padding: EdgeInsets.only(top: 2.v),
                   child: Text(
                     bottomMenuList[index].title ?? "",
-                    style: CustomTextStyles.bodySmallOnPrimaryContainer.copyWith(
+                    style:
+                        CustomTextStyles.bodySmallOnPrimaryContainer.copyWith(
                       color: theme.colorScheme.onPrimaryContainer,
                     ),
                   ),
@@ -98,7 +99,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
                   padding: EdgeInsets.only(top: 1.v),
                   child: Text(
                     bottomMenuList[index].title ?? "",
-                    style: CustomTextStyles.bodySmallSecondaryContainer.copyWith(
+                    style:
+                        CustomTextStyles.bodySmallSecondaryContainer.copyWith(
                       color: Color(0xFF007BFF),
                     ),
                   ),
@@ -121,7 +123,11 @@ class CustomBottomBarState extends State<CustomBottomBar> {
 
 // ignore_for_file: must_be_immutable
 class BottomMenuModel {
-  BottomMenuModel({required this.icon, required this.activeIcon, this.title, required this.type});
+  BottomMenuModel(
+      {required this.icon,
+      required this.activeIcon,
+      this.title,
+      required this.type});
 
   String icon;
 
