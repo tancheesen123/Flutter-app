@@ -26,11 +26,11 @@ import '../presentation/Client/post_list_page/post_list_page.dart';
 import 'package:workwise/presentation/Client/new_post_client.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/loading_screen/loading_screen.dart';
+import '../presentation/Client/client_profile_screen/client_profile_screen.dart';
 
 class AppRoutes {
   //Client Routes
-  static const String homeClientContainerScreen =
-      '/home_client_container_screen';
+  static const String homeClientContainerScreen = '/home_client_container_screen';
 
   static const String homeClientPage = '/home_client_page';
 
@@ -53,8 +53,7 @@ class AppRoutes {
 
   static const String selectJobCategoryScreen = '/select_job_category_screen';
 
-  static const String selectJobPreferenceScreen =
-      '/select_job_preference_screen';
+  static const String selectJobPreferenceScreen = '/select_job_preference_screen';
 
   static const String homeContainerScreen = '/home_container_screen';
 
@@ -70,8 +69,7 @@ class AppRoutes {
 
   static const String profileScreen = '/profile_screen';
 
-  static const String myjobApplicationsContainerScreen =
-      '/myjob_applications_container_screen';
+  static const String myjobApplicationsContainerScreen = '/myjob_applications_container_screen';
 
   static const String myjobApplicationsPage = '/myjob_applications_page';
 
@@ -93,6 +91,8 @@ class AppRoutes {
 
   static const String loadingScreen = '/loading_screen';
 
+  static const String clientProfileScreen = '/client_profile_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -102,8 +102,7 @@ class AppRoutes {
     searchTabContainerScreen: (context) => SearchTabContainerScreen(),
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
-    myjobApplicationsContainerScreen: (context) =>
-        MyjobApplicationsContainerScreen(),
+    myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
     myjobApplicationsPage: (context) => MyjobApplicationsPage(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
@@ -126,6 +125,7 @@ class AppRoutes {
     newPostPage: (context) => NewPostScreen(),
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
+    clientProfileScreen: (context) => ClientProfileScreen(),
 
     initialRoute: (context) => CheckSession()
   };
