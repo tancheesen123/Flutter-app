@@ -27,6 +27,7 @@ import 'package:workwise/presentation/Client/new_post_client.dart';
 import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/loading_screen/loading_screen.dart';
 import '../presentation/Client/client_profile_screen/client_profile_screen.dart';
+import '../presentation/Client/client_settings_screen/client_settings_screen.dart';
 
 class AppRoutes {
   //Client Routes
@@ -96,6 +97,8 @@ class AppRoutes {
 
   static const String clientProfileScreen = '/client_profile_screen';
 
+  static const String clientSettingsScreen = '/client_settings_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -105,8 +108,7 @@ class AppRoutes {
     searchTabContainerScreen: (context) => SearchTabContainerScreen(),
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
-    myjobApplicationsContainerScreen: (context) =>
-        MyjobApplicationsContainerScreen(),
+    myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
     myjobApplicationsPage: (context) => MyjobApplicationsPage(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
@@ -130,6 +132,7 @@ class AppRoutes {
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
     clientProfileScreen: (context) => ClientProfileScreen(),
+    clientSettingsScreen: (context) => ClientSettingsScreen(),
 
     // initialRoute: (context) => CheckSession()
     initialRoute: (context) => CheckSession()
