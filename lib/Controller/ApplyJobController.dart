@@ -96,31 +96,31 @@ class ApplyJobController extends GetxController {
         .get();
     // String token = await userController.getDeviceToken();
     // notificationController.sendNotification(token);
-    // notificationController.sendNotification(
-    //     "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
+    notificationController.sendNotification(
+        "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
 
-    if (querySnapshot.docs.isNotEmpty) {
-      print('Document with the same postRefPath already exists');
-      return false; // or you can throw an exception, depending on your requirements
-    } else {
-      await _firestore
-          .collection('user')
-          .doc(email)
-          .collection(
-              "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-          .add({
-        'companyId': "a1",
-        'postRefPath': postRefPath,
-        'status': "Pending",
-      });
-      // Fetch the updated list of candidates
-      await getCandidates(jobPostId);
+    // if (querySnapshot.docs.isNotEmpty) {
+    //   print('Document with the same postRefPath already exists');
+    //   return false; // or you can throw an exception, depending on your requirements
+    // } else {
+    //   await _firestore
+    //       .collection('user')
+    //       .doc(email)
+    //       .collection(
+    //           "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
+    //       .add({
+    //     'companyId': "a1",
+    //     'postRefPath': postRefPath,
+    //     'status': "Pending",
+    //   });
+    //   // Fetch the updated list of candidates
+    //   await getCandidates(jobPostId);
 
-      // String token = await userController.getDeviceToken();
-      // notificationController.sendNotification(token);
-      notificationController.sendNotification(
-          "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
-    }
+    //   // String token = await userController.getDeviceToken();
+    //   // notificationController.sendNotification(token);
+    //   notificationController.sendNotification(
+    //       "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
+    // }
 
     // Return the reference to the added document
     return true;
