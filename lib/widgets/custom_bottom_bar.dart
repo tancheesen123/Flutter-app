@@ -74,9 +74,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       child: FutureBuilder<List<Map<String, dynamic>>>(
         future: _notificationsFuture,
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
-          } else if (snapshot.hasError) {
+          if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             final notifications = snapshot.data!;
