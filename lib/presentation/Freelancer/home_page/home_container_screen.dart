@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:workwise/presentation/Freelancer/notification_screen/notification.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
@@ -7,6 +9,7 @@ import 'home_page.dart';
 import '../profile_screen/profile_screen.dart';
 import '../settings_screen/settings_screen.dart';
 import '../myjob_applications_page/myjob_applications_page.dart'; // ignore_for_file: must_be_immutable
+import 'package:workwise/Controller/NotificationController.dart';
 
 // ignore_for_file: must_be_immutable
 class HomeContainerScreen extends StatefulWidget {
@@ -17,6 +20,10 @@ class HomeContainerScreen extends StatefulWidget {
 }
 
 class _HomeContainerScreenState extends State<HomeContainerScreen> {
+  final NotificationController notificationController =
+      Get.put(NotificationController());
+  GlobalKey<CustomBottomBarState> bottomBarKey =
+      GlobalKey<CustomBottomBarState>();
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
   bool _showNavigationBar = true; // Initial state
 
@@ -32,7 +39,8 @@ class _HomeContainerScreenState extends State<HomeContainerScreen> {
             transitionDuration: Duration(seconds: 0),
           ),
         ),
-        bottomNavigationBar: _shouldShowBottomBar(context) ? _buildBottomBar(context) : null,
+        bottomNavigationBar:
+            _shouldShowBottomBar(context) ? _buildBottomBar(context) : null,
       ),
     );
   }
