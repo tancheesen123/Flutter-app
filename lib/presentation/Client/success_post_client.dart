@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Client/home_client_container_screen/home_client_container_screen.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_elevated_button.dart';
 
@@ -45,7 +46,14 @@ class SuccessPostClientScreen extends StatelessWidget {
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.postListPage);
+                                // Navigator.pushAndRemoveUntil(context, AppRoutes.homeClientContainerScreen);
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute<dynamic>(
+                                    builder: (BuildContext context) => HomeClientContainerScreen(),
+                                  ),
+                                  (route) => false,
+                                );
                               },
                               style: ButtonStyle(
                                 elevation: MaterialStatePropertyAll(0),
@@ -72,7 +80,6 @@ class SuccessPostClientScreen extends StatelessWidget {
             ],
           ),
         ),
-        // bottomNavigationBar: _buildBackToPost(context),
       ),
     );
   }
