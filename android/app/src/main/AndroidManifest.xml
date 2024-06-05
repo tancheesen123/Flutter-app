@@ -9,7 +9,7 @@
         
 
     <application
-        android:label="workwise"
+        android:label="WorkWise"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
