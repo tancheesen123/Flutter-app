@@ -1,339 +1,351 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:elegant_notification/elegant_notification.dart';
-import 'package:elegant_notification/resources/arrays.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import '../../../core/app_export.dart';
-import '../../../widgets/app_bar/appbar_leading_image.dart';
-import '../../../widgets/app_bar/appbar_title.dart';
-import '../../../widgets/app_bar/custom_app_bar.dart';
-import '../../../widgets/custom_elevated_button.dart';
-import 'package:workwise/Controller/ApplyJobController.dart';
-import 'package:workwise/Controller/UserController.dart'; // Import the JobPost model
-import "../myjob_applications_page/myjob_applications_page.dart";
+import 'package:url_launcher/url_launcher.dart';
+import 'package:workwise/Controller/NotificationController.dart';
+import 'package:workwise/core/app_export.dart';
+import 'package:workwise/theme/app_decoration.dart';
+import 'package:workwise/theme/custom_text_style.dart';
+import 'package:workwise/theme/theme_helper.dart';
+import 'package:workwise/widgets/app_bar/appbar_title.dart';
+import 'package:workwise/widgets/app_bar/custom_app_bar.dart';
+import 'package:workwise/Controller/FirebaseApiController.dart';
 
 class NotificationDetailScreen extends StatefulWidget {
-  final String? postId;
-
-  NotificationDetailScreen({Key? key, this.postId}) : super(key: key);
+  NotificationDetailScreen({Key? key}) : super(key: key);
 
   @override
-  State<NotificationDetailScreen> createState() =>
+  _NotificationDetailScreenState createState() =>
       _NotificationDetailScreenState();
 }
 
-class _NotificationDetailScreenState extends State<NotificationDetailScreen>
-    with TickerProviderStateMixin {
-  late TabController tabviewController;
-  final ApplyJobController applyJobController = Get.put(ApplyJobController());
-  final UserController userController = Get.put(UserController());
-  String? postId;
+class _NotificationDetailScreenState extends State<NotificationDetailScreen> {
+  final FirebaseApiController firebaseApiController =
+      Get.put(FirebaseApiController());
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  TextEditingController dateController = TextEditingController();
+  TextEditingController durationController = TextEditingController();
+  TextEditingController duration1Controller = TextEditingController();
+  List<PendingNotificationRequest> _pendingNotificationRequests = [];
+  List<ActiveNotification> _activeNotificationRequests = [];
+
   @override
   void initState() {
     super.initState();
-    tabviewController = TabController(length: 2, vsync: this);
-    postId = widget.postId;
+    _loadPendingNotifications();
+    _handleNotificationAppLaunch();
   }
 
-  @override
-  void dispose() {
-    tabviewController.dispose();
-    super.dispose();
+  Future<void> _loadPendingNotifications() async {
+    // Load pending notifications
+    await firebaseApiController.loadPendingNotifications();
+
+    // Get the pending notifications
+    // List<PendingNotificationRequest> pendingNotifications =
+    //     FirebaseApi().pendingNotificationRequests;
+
+    List<ActiveNotification> activeNotificationRequests =
+        await firebaseApiController.activeNotificationRequests;
+    print("This is  active $activeNotificationRequests");
+    // Update the state
+    // setState(() {
+    //   _pendingNotificationRequests = pendingNotifications;
+    // });
+
+    setState(() {
+      _activeNotificationRequests = activeNotificationRequests;
+    });
+  }
+
+  Future<void> _handleNotificationAppLaunch() async {
+    final NotificationAppLaunchDetails? notificationAppLaunchDetails =
+        await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+    if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+      // Handle notification launch here
+      print('App launched by tapping on a notification!');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     return SafeArea(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: _buildAppBar(context),
-        body: FutureBuilder(
-          future: Future.wait([
-            applyJobController.getJobPostData(widget.postId!),
-            userController.getUserInformation(),
-            // Add your second future here
-            // FutureOperation2()
-          ]),
-          builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text("Error loading job details"));
-            } else if (!snapshot.hasData || snapshot.data == null) {
-              return Center(child: Text("Job post not found"));
-            } else {
-              final data = snapshot.data!;
-              Map<String, dynamic> jobPostData = data[0];
-              Map<String, dynamic> userData = data[1];
-              // Add your logic to handle the data from the second future
-              // var secondFutureData = data[1];
-              return Stack(
-                children: [
-                  SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        top: 5.v, bottom: 80.v), // Added bottom padding
-                    child: Form(
-                      key: GlobalKey<FormState>(),
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 82.v,
-                            width: 80.h,
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle515,
-                                  height: 80.adaptSize,
-                                  width: 80.adaptSize,
-                                  radius: BorderRadius.circular(40.h),
-                                  alignment: Alignment.center,
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
-                                    height: 19.adaptSize,
-                                    width: 19.adaptSize,
-                                    margin: EdgeInsets.only(right: 6.h),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.h, vertical: 6.v),
-                                    decoration:
-                                        AppDecoration.outlineGray5001.copyWith(
-                                      borderRadius:
-                                          BorderRadiusStyle.roundedBorder9,
-                                    ),
-                                    child: CustomImageView(
-                                      imagePath: ImageConstant.imgFill244,
-                                      height: 5.v,
-                                      width: 6.h,
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 10.v),
-                          Text(
-                            jobPostData['title'] ?? "Job Title",
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          ),
-                          SizedBox(height: 20.v),
-                          RichText(
-                            text: TextSpan(
-                              text: "Chargee MY -",
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    size: 24.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: jobPostData['location'] ?? "Location",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 20.v),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.access_time,
-                                    size: 24.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: jobPostData['status'] ?? "status",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                TextSpan(
-                                  text:
-                                      "                   RM${jobPostData['budget'] ?? "123"}/${jobPostData['workingHours'] ?? "123"}h  ",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: 15.v),
-                          Container(
-                            height: 50.v,
-                            width: screenWidth - 30.h,
-                            margin: EdgeInsets.only(left: 20.h),
-                            child: TabBar(
-                              dividerColor: Colors.transparent,
-                              controller: tabviewController,
-                              labelPadding: EdgeInsets.zero,
-                              labelColor: Colors.white,
-                              labelStyle: TextStyle(
-                                fontSize: 14.fSize,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
-                              ),
-                              unselectedLabelColor: Colors.black,
-                              unselectedLabelStyle: TextStyle(
-                                fontSize: 14.fSize,
-                                fontFamily: 'Poppins',
-                                fontWeight: FontWeight.w500,
-                              ),
-                              indicatorSize: TabBarIndicatorSize.tab,
-                              indicator: BoxDecoration(
-                                color: const Color(0xFF007BFF),
-                                borderRadius: BorderRadius.circular(12.h),
-                              ),
-                              tabs: [
-                                Tab(child: Text("Description")),
-                                Tab(child: Text("Company")),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: 557.v,
-                            child: TabBarView(
-                              controller: tabviewController,
-                              children: [],
-                            ),
-                          ),
-                        ],
-                      ),
+        backgroundColor: appTheme.gray50,
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+          child: Container(
+            width: double.maxFinite,
+            decoration: AppDecoration.fillGray,
+            child: Column(
+              children: [
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 30),
+                    child: Text(
+                      "Mark All as Read",
+                      style: CustomTextStyles.labelLargeGray700,
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.5),
-                          topRight: Radius.circular(30.5),
-                        ),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 20.h, vertical: 12.v),
-                      child: CustomElevatedButton(
-                        height: 48.v,
-                        text: "Apply",
-                        buttonTextStyle:
-                            CustomTextStyles.titleSmallWhiteA700SemiBold,
-                        onPressed: () async {
-                          // await applyJobController.getCandidates("$postId");
-                          // // Print candidates' data to console
-                          // for (var candidate in applyJobController.candidates) {
-                          //   print(
-                          //       'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
-                          // }
-                          // print("clicked");
-                          // print('Post ID in NotificationDetailScreen: $postId');
-                          // String username =
-                          //     await applyJobController.loadUsername();
-                          // print("Loaded Username: $username");
-                          // // Add the logic to save the form data
-
-                          Map<String, dynamic> candidateData = {
-                            'label': "${userData["email"]}",
-                            'name': "${userData["username"]}",
-                            'email': "${userData["email"]}",
-                            'status': "pending",
-                          };
-
-                          // await applyJobController.addCandidate(
-                          //     "$postId", candidateData);
-
-                          bool addedCandidateRef = await applyJobController
-                              .addCandidate2("$postId", candidateData);
-
-                          // If candidate added successfully, navigate to specific page
-                          if (addedCandidateRef) {
-                            ElegantNotification.success(
-                              width: 360,
-                              isDismissable: false,
-                              animation: AnimationType.fromTop,
-                              title: Text('Successful Apply'),
-                              description:
-                                  Text("You successful Apply to this Job"),
-                              onDismiss: () {},
-                              onNotificationPressed: () {},
-                              shadow: BoxShadow(
-                                color: Colors.green.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 4),
-                              ),
-                            ).show(context);
-                          } else {
-                            ElegantNotification.error(
-                              width: 360,
-                              isDismissable: false,
-                              animation: AnimationType.fromTop,
-                              title: Text('Failed Apply'),
-                              description: Text("Already apply to this job"),
-                              onDismiss: () {},
-                              onNotificationPressed: () {},
-                              shadow: BoxShadow(
-                                color: Colors.red.withOpacity(0.2),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                                offset: const Offset(0, 4),
-                              ),
-                            ).show(context);
-                          }
-                        },
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-          },
+                ),
+                SizedBox(height: 25),
+                FutureBuilder<Widget>(
+                  future: _buildPendingNotifications(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      return snapshot.data ?? Container();
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
+  }
+// PreferredSizeWidget _buildAppBar(BuildContext context) {
+//   return CustomAppBar(
+//     centerTitle: true,
+//     title: AppbarTitle(
+//       text: "Notification",
+//     ),
+//   );
+// }
+
+// Widget _buildDivider() {
+//   return Divider(
+//     color: appTheme.gray6007f,
+//     indent: 29.h,
+//     endIndent: 30.h,
+//     thickness: 0.5,
+//   );
+// }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return SafeArea(
+  //     child: Scaffold(
+  //       appBar: _buildAppBar(context),
+  //       backgroundColor: appTheme.gray50,
+  //       resizeToAvoidBottomInset: false,
+  //       body: SingleChildScrollView(
+  //         child: Container(
+  //           width: double.maxFinite,
+  //           decoration: AppDecoration.fillGray,
+  //           child: Column(
+  //             children: [
+  //               SizedBox(height: 20),
+  //               Align(
+  //                 alignment: Alignment.centerRight,
+  //                 child: Padding(
+  //                   padding: EdgeInsets.only(right: 30),
+  //                   child: Text(
+  //                     "Mark All as Read",
+  //                     style: CustomTextStyles.labelLargeGray700,
+  //                   ),
+  //                 ),
+  //               ),
+  //               SizedBox(height: 25),
+  //               FutureBuilder<Widget>(
+  //                 future: _buildPendingNotifications(),
+  //                 builder: (context, snapshot) {
+  //                   if (snapshot.connectionState == ConnectionState.waiting) {
+  //                     return CircularProgressIndicator();
+  //                   } else if (snapshot.hasError) {
+  //                     return Text('Error: ${snapshot.error}');
+  //                   } else {
+  //                     return snapshot.data ?? Container();
+  //                   }
+  //                 },
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Future<Widget> _buildPendingNotifications() async {
+    List<ActiveNotification> activeNotificationRequests =
+        await firebaseApiController.activeNotificationRequests;
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: activeNotificationRequests.length,
+      itemBuilder: (context, index) {
+        final notification = activeNotificationRequests[index];
+
+        return InkWell(
+          onTap: () {
+            // Show a dialog to display the notification ID, title, and body
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Notification Details'),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('ID: ${notification.id}'),
+                      SizedBox(height: 8),
+                      Text('Title: ${notification.title}'),
+                      SizedBox(height: 8),
+                      _buildBodyText(notification.body ?? "No body"),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      child: Text('Close'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: Column(
+            children: [
+              Container(
+                width: 321,
+                margin: EdgeInsets.only(left: 29, right: 24),
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: "${notification.id} ",
+                        style: CustomTextStyles.bodyMediumOnPrimary_1
+                            .copyWith(fontSize: 15.0),
+                      ),
+                      TextSpan(
+                        text: "${notification.title}",
+                        style: CustomTextStyles.titleSmallOnPrimary
+                            .copyWith(fontSize: 15.0),
+                      ),
+                      TextSpan(
+                        text: "${notification.body}",
+                        style: CustomTextStyles.bodyMediumOnPrimary_1
+                            .copyWith(fontSize: 15.0),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(height: 4),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 29),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "10 min ago",
+                        style: CustomTextStyles.labelLargeOnPrimary,
+                      ),
+                      Container(
+                        height: 8,
+                        width: 8,
+                        margin: EdgeInsets.only(left: 6, top: 4, bottom: 7),
+                        decoration: BoxDecoration(
+                          color: appTheme.indigo600,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20),
+              _buildDivider(),
+              SizedBox(height: 20),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBodyText(String body) {
+    final RegExp linkRegExp = RegExp(r'http[s]?:\/\/[^\s]+');
+    final Iterable<RegExpMatch> matches = linkRegExp.allMatches(body);
+
+    if (matches.isEmpty) {
+      return Text(body);
+    }
+
+    List<TextSpan> textSpans = [];
+    int lastMatchEnd = 0;
+
+    for (final match in matches) {
+      if (match.start != lastMatchEnd) {
+        textSpans
+            .add(TextSpan(text: body.substring(lastMatchEnd, match.start)));
+      }
+      final String linkText = match.group(0)!;
+      textSpans.add(
+        TextSpan(
+          text: linkText,
+          style: TextStyle(
+              color: Colors.blue, decoration: TextDecoration.underline),
+          recognizer: TapGestureRecognizer()
+            ..onTap = () => _launchURL(linkText),
+        ),
+      );
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd != body.length) {
+      textSpans.add(TextSpan(text: body.substring(lastMatchEnd)));
+    }
+
+    return RichText(
+      text: TextSpan(
+        style: CustomTextStyles.bodyMediumOnPrimary_1.copyWith(fontSize: 15.0),
+        children: textSpans,
+      ),
+    );
+  }
+
+  void _launchURL(String url) async {
+    Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 60.v,
-      leadingWidth: 30.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgArrowLeft,
-        margin: EdgeInsets.only(
-          left: 20.h,
-          top: 20.v,
-          bottom: 19.v,
-        ),
-        onTap: () {
-          onTapArrowleftone(context);
-        },
-      ),
       centerTitle: true,
       title: AppbarTitle(
-        text: "",
-        margin: EdgeInsets.only(
-          top: 39.v,
-          bottom: 15.v,
-        ),
+        text: "Notification",
       ),
-      styleType: Style.bgFill,
     );
   }
 
-  void onTapArrowleftone(BuildContext context) {
-    Navigator.pop(context);
+  Widget _buildDivider() {
+    return Divider(
+      color: appTheme.gray6007f,
+      indent: 29.h,
+      endIndent: 30.h,
+      thickness: 0.5,
+    );
   }
 }
