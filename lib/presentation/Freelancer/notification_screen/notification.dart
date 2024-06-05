@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,6 +13,8 @@ import 'package:workwise/theme/theme_helper.dart';
 import 'package:workwise/widgets/app_bar/appbar_title.dart';
 import 'package:workwise/widgets/app_bar/custom_app_bar.dart';
 import 'package:workwise/Controller/FirebaseApiController.dart';
+import 'package:workwise/Controller/NotificationController.dart';
+import '../../../widgets/custom_bottom_bar.dart';
 
 class NotificationScreen extends StatefulWidget {
   NotificationScreen({Key? key}) : super(key: key);
@@ -20,8 +24,14 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+  GlobalKey<CustomBottomBarState> bottomBarKey =
+      GlobalKey<CustomBottomBarState>();
+  Future<List<Map<String, dynamic>>>? _notificationsFuture;
+
   final FirebaseApiController firebaseApiController =
       Get.put(FirebaseApiController());
+  final NotificationController notificationController =
+      Get.put(NotificationController());
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -34,8 +44,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
     super.initState();
+    _notificationsFuture = notificationController.fetchNotifications();
     _loadPendingNotifications();
     _handleNotificationAppLaunch();
+  }
+
+  void _refreshNotifications() {
+    setState(() {
+      _notificationsFuture = notificationController.fetchNotifications();
+    });
   }
 
   Future<void> _loadPendingNotifications() async {
@@ -57,6 +74,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
     setState(() {
       _activeNotificationRequests = activeNotificationRequests;
     });
+  }
+
+  void callRefreshActiveNotifications() {
+    bottomBarKey.currentState?.refreshActiveNotifications();
   }
 
   Future<void> _handleNotificationAppLaunch() async {
@@ -93,15 +114,163 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 ),
                 SizedBox(height: 25),
-                FutureBuilder<Widget>(
-                  future: _buildPendingNotifications(),
+                FutureBuilder<List<Map<String, dynamic>>>(
+                  future: _notificationsFuture,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       return Text('Error: ${snapshot.error}');
                     } else {
-                      return snapshot.data ?? Container();
+                      final notifications = snapshot.data!;
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: notifications.length,
+                        itemBuilder: (context, index) {
+                          final notification = notifications[index];
+                          print("This is notificationasdasda, $notification");
+                          final String jsonString =
+                              notification['notification'];
+                          final String status = notification['status'];
+                          final String idNotification = notification['id'];
+                          final Map<String, dynamic> decodedNotification =
+                              jsonDecode(jsonString);
+
+                          final String token =
+                              decodedNotification['message']['token'];
+                          final String title = decodedNotification['message']
+                              ['notification']['title'];
+                          final String body = decodedNotification['message']
+                              ['notification']['body'];
+
+                          final String time =
+                              notification['timestamp']?.toDate().toString() ??
+                                  'No timestamp';
+                          return InkWell(
+                            onTap: () {
+                              // Show a dialog to display the notification ID, title, and body
+                              notificationController
+                                  .updateStatus(idNotification);
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: Text('Notification Details'),
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(idNotification),
+                                        SizedBox(height: 8),
+                                        _buildBodyText(body ?? "No body"),
+                                        SizedBox(height: 8),
+                                        Text(notification['timestamp']
+                                                ?.toDate()
+                                                .toString() ??
+                                            'No timestamp'),
+                                      ],
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        child: Text('Close'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                          _refreshNotifications();
+                                          callRefreshActiveNotifications();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: 321,
+                                  margin: EdgeInsets.only(left: 29, right: 24),
+                                  child: RichText(
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: "ID: $idNotification\n\n",
+                                          style: status == "active"
+                                              ? CustomTextStyles
+                                                  .titleSmallOnPrimary
+                                                  .copyWith(fontSize: 15.0)
+                                              : CustomTextStyles
+                                                  .titleSmallGray50001
+                                                  .copyWith(fontSize: 15.0),
+                                        ),
+                                        TextSpan(
+                                          text: "Title: $title\n\n",
+                                          style: status == "active"
+                                              ? CustomTextStyles
+                                                  .titleSmallOnPrimary
+                                                  .copyWith(fontSize: 15.0)
+                                              : CustomTextStyles
+                                                  .titleSmallGray50001
+                                                  .copyWith(fontSize: 15.0),
+                                        ),
+                                        TextSpan(
+                                          text: "Body: $body",
+                                          style: status == "active"
+                                              ? CustomTextStyles
+                                                  .bodyMediumOnPrimary_1
+                                                  .copyWith(fontSize: 15.0)
+                                              : CustomTextStyles
+                                                  .bodyMediumGray50001
+                                                  .copyWith(fontSize: 15.0),
+                                        ),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(height: 4),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 29),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "$time",
+                                          style: status == "active"
+                                              ? CustomTextStyles
+                                                  .labelLargeOnPrimary
+                                              : CustomTextStyles
+                                                  .labelLargeGray50001,
+                                        ),
+                                        if (status ==
+                                            "active") // Conditionally include the Container
+                                          Container(
+                                            height: 8,
+                                            width: 8,
+                                            margin: EdgeInsets.only(
+                                                left: 6, top: 4, bottom: 7),
+                                            decoration: BoxDecoration(
+                                              color: appTheme.indigo600,
+                                              borderRadius:
+                                                  BorderRadius.circular(4),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: 20),
+                                _buildDivider(),
+                                SizedBox(height: 20),
+                              ],
+                            ),
+                          );
+                        },
+                      );
                     }
                   },
                 ),
@@ -175,110 +344,110 @@ class _NotificationScreenState extends State<NotificationScreen> {
   //   );
   // }
 
-  Future<Widget> _buildPendingNotifications() async {
-    List<ActiveNotification> activeNotificationRequests =
-        await firebaseApiController.activeNotificationRequests;
+  // Future<Widget> _buildPendingNotifications() async {
+  //   List<ActiveNotification> activeNotificationRequests =
+  //       await firebaseApiController.activeNotificationRequests;
 
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: NeverScrollableScrollPhysics(),
-      itemCount: activeNotificationRequests.length,
-      itemBuilder: (context, index) {
-        final notification = activeNotificationRequests[index];
+  //   return ListView.builder(
+  //     shrinkWrap: true,
+  //     physics: NeverScrollableScrollPhysics(),
+  //     itemCount: activeNotificationRequests.length,
+  //     itemBuilder: (context, index) {
+  //       final notification = activeNotificationRequests[index];
 
-        return InkWell(
-          onTap: () {
-            // Show a dialog to display the notification ID, title, and body
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Text('Notification Details'),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('ID: ${notification.id}'),
-                      SizedBox(height: 8),
-                      Text('Title: ${notification.title}'),
-                      SizedBox(height: 8),
-                      _buildBodyText(notification.body ?? "No body"),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      child: Text('Close'),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                );
-              },
-            );
-          },
-          child: Column(
-            children: [
-              Container(
-                width: 321,
-                margin: EdgeInsets.only(left: 29, right: 24),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "${notification.id} ",
-                        style: CustomTextStyles.bodyMediumOnPrimary_1
-                            .copyWith(fontSize: 15.0),
-                      ),
-                      TextSpan(
-                        text: "${notification.title}",
-                        style: CustomTextStyles.titleSmallOnPrimary
-                            .copyWith(fontSize: 15.0),
-                      ),
-                      TextSpan(
-                        text: "${notification.body}",
-                        style: CustomTextStyles.bodyMediumOnPrimary_1
-                            .copyWith(fontSize: 15.0),
-                      ),
-                    ],
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              SizedBox(height: 4),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 29),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "10 min ago",
-                        style: CustomTextStyles.labelLargeOnPrimary,
-                      ),
-                      Container(
-                        height: 8,
-                        width: 8,
-                        margin: EdgeInsets.only(left: 6, top: 4, bottom: 7),
-                        decoration: BoxDecoration(
-                          color: appTheme.indigo600,
-                          borderRadius: BorderRadius.circular(4),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 20),
-              _buildDivider(),
-              SizedBox(height: 20),
-            ],
-          ),
-        );
-      },
-    );
-  }
+  //       return InkWell(
+  //         onTap: () {
+  //           // Show a dialog to display the notification ID, title, and body
+  //           showDialog(
+  //             context: context,
+  //             builder: (BuildContext context) {
+  //               return AlertDialog(
+  //                 title: Text('Notification Details'),
+  //                 content: Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text('ID: ${notification.id}'),
+  //                     SizedBox(height: 8),
+  //                     Text('Title: ${notification.title}'),
+  //                     SizedBox(height: 8),
+  //                     _buildBodyText(notification.body ?? "No body"),
+  //                   ],
+  //                 ),
+  //                 actions: [
+  //                   TextButton(
+  //                     child: Text('Close'),
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                   ),
+  //                 ],
+  //               );
+  //             },
+  //           );
+  //         },
+  //         child: Column(
+  //           children: [
+  //             Container(
+  //               width: 321,
+  //               margin: EdgeInsets.only(left: 29, right: 24),
+  //               child: RichText(
+  //                 text: TextSpan(
+  //                   children: [
+  //                     TextSpan(
+  //                       text: "${notification.id} ",
+  //                       style: CustomTextStyles.bodyMediumOnPrimary_1
+  //                           .copyWith(fontSize: 15.0),
+  //                     ),
+  //                     TextSpan(
+  //                       text: "${notification.title}",
+  //                       style: CustomTextStyles.titleSmallOnPrimary
+  //                           .copyWith(fontSize: 15.0),
+  //                     ),
+  //                     TextSpan(
+  //                       text: "${notification.body}",
+  //                       style: CustomTextStyles.bodyMediumOnPrimary_1
+  //                           .copyWith(fontSize: 15.0),
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 textAlign: TextAlign.left,
+  //               ),
+  //             ),
+  //             SizedBox(height: 4),
+  //             Align(
+  //               alignment: Alignment.centerLeft,
+  //               child: Padding(
+  //                 padding: EdgeInsets.only(left: 29),
+  //                 child: Row(
+  //                   crossAxisAlignment: CrossAxisAlignment.start,
+  //                   children: [
+  //                     Text(
+  //                       "10 min ago",
+  //                       style: CustomTextStyles.labelLargeOnPrimary,
+  //                     ),
+  //                     Container(
+  //                       height: 8,
+  //                       width: 8,
+  //                       margin: EdgeInsets.only(left: 6, top: 4, bottom: 7),
+  //                       decoration: BoxDecoration(
+  //                         color: appTheme.indigo600,
+  //                         borderRadius: BorderRadius.circular(4),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //             SizedBox(height: 20),
+  //             _buildDivider(),
+  //             SizedBox(height: 20),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   Widget _buildBodyText(String body) {
     final RegExp linkRegExp = RegExp(r'http[s]?:\/\/[^\s]+');
