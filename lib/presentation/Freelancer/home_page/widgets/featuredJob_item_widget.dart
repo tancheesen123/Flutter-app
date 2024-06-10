@@ -50,25 +50,23 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                 // String jobTitle = data['JobTitle'];
                 // int salary = data['SalaryPerHours'];
 
-                /////////////
-                String status = data['status'];
-                int budget = data['budget'];
-                String description = data['description'];
-                String location = data['location'];
-                String postId = data['postId'];
-                String title = data['title'];
-                int workingHours = data['workingHours'];
+                // /////////////
+                // String status = data['status'];
+                // int budget = data['budget'];
+                // String description = data['description'];
+                // String location = data['location'];
+                // String postId = data['postId'];
+                // String title = data['title'];
+                // int workingHours = data['workingHours'];
 
                 return GestureDetector(
                   onTap: () {
-                    print('Post ID: $postId');
+                    // print('Post ID: $postId');
 
                     Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(
                         builder: (BuildContext context) {
-                          return ApplyJobScreen(
-                            postId: postId,
-                          );
+                          return ApplyJobScreen(postId: data['postId']);
                         },
                       ),
                     );
@@ -130,12 +128,12 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                             ),
                             SizedBox(height: 3.v),
                             Text(
-                              "$title",
+                              "${data['title']}",
                               style: theme.textTheme.bodySmall,
                             ),
                             SizedBox(height: 11.v),
                             Text(
-                              "$title",
+                              "${data['title']}",
                               style: theme.textTheme.titleMedium,
                             ),
                             SizedBox(height: 8.v),
@@ -144,14 +142,14 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 1.v),
                                   child: Text(
-                                    "RM$budget/$workingHours",
+                                    "RM${data['budget']}/${data['workinghours']}",
                                     style: CustomTextStyles.labelLargeGray900,
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 60.h),
                                   child: Text(
-                                    "$location",
+                                    "${data['location']}",
                                     style: theme.textTheme.bodySmall,
                                   ),
                                 )
@@ -199,6 +197,4 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
       ),
     );
   }
-
-  
 }

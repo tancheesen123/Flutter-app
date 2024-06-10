@@ -52,7 +52,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
         appBar: _buildAppBar(context),
         body: FutureBuilder(
           future: Future.wait([
-            applyJobController.getJobPostData(widget.postId!),
+            applyJobController.getJobPostData(widget.postId ?? ""),
             userController.getUserInformation(),
             // Add your second future here
             // FutureOperation2()
