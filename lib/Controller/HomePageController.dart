@@ -39,14 +39,15 @@ class HomePageController extends GetxController {
 
   Future<List<Map<String, dynamic>>> fetchJobPostData() async {
     List<Map<String, dynamic>> dataList = [];
-    QuerySnapshot querySnapshot =
+    var querySnapshot =
         await FirebaseFirestore.instance.collection('jobPost').get();
 
     querySnapshot.docs.forEach((doc) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      data['postId'] = doc.id;
       dataList.add(data);
     });
-
+    print("This is querySnapShoot $querySnapshot[0]");
     return dataList;
   }
 
