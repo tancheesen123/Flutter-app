@@ -77,7 +77,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
           if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            final notifications = snapshot.data!;
+            final notifications = snapshot.data ?? [];
             final hasNotifications = notifications.isNotEmpty;
             final notificationLenght = notifications.length;
 
