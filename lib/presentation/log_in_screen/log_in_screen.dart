@@ -339,7 +339,7 @@ class _LogInScreenState extends State<LogInScreen> {
               Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
             } else if (roleType == 2) {
               String uid = user.providerData[0].uid as String;
-              storeClientDetail(uid);
+              await storeClientDetail(uid);
               Navigator.pushNamed(context, AppRoutes.homeClientContainerScreen);
             }
           }).catchError((error) {
