@@ -72,14 +72,11 @@ class ApplyJobController extends GetxController {
         .collection('jobPost')
         .doc(jobPostId)
         .collection('candidate')
-        .doc(label); // Use the new label here
+        .doc(label);
 
     await candidateRef.set(candidateData);
 
-    DocumentReference PostRef = _firestore
-        .collection('jobPost')
-        .doc(jobPostId); // Use the new label here
-
+    DocumentReference PostRef = _firestore.collection('jobPost').doc(jobPostId);
     String postRefPath = PostRef.path;
 
     // Store the reference path in another collection
@@ -96,33 +93,60 @@ class ApplyJobController extends GetxController {
         .get();
     // String token = await userController.getDeviceToken();
     // notificationController.sendNotification(token);
-    notificationController.sendNotification(
-        "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
+    // notificationController.sendNotification(
+    //     "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
 
-    // if (querySnapshot.docs.isNotEmpty) {
-    //   print('Document with the same postRefPath already exists');
-    //   return false; // or you can throw an exception, depending on your requirements
-    // } else {
-    //   await _firestore
-    //       .collection('user')
-    //       .doc(email)
-    //       .collection(
-    //           "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-    //       .add({
-    //     'companyId': "a1",
-    //     'postRefPath': postRefPath,
-    //     'status': "Pending",
-    //   });
-    //   // Fetch the updated list of candidates
-    //   await getCandidates(jobPostId);
+    if (querySnapshot.docs.isNotEmpty) {
+      print('Document with the same postRefPath already exists');
+      return false; // or you can throw an exception, depending on your requirements
+    } else {
+      await _firestore
+          .collection('user')
+          .doc(email)
+          .collection(
+              "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
+          .add({
+        'postRefPath': postRefPath,
+        'status': "Pending",
+      });
+      // Fetch the updated list of candidates
+      await getCandidates(jobPostId);
+      // String token = await userController.getDeviceToken();
+      // notificationController.sendNotification(token);
+      var test = await getJobPostData(jobPostId);
+      DocumentSnapshot companyData = await getCompanyData(test!['company']);
+      DocumentSnapshot userData = await getUserData(companyData["user"]);
 
-    //   // String token = await userController.getDeviceToken();
-    //   // notificationController.sendNotification(token);
-    //   notificationController.sendNotification(
-    //       "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
-    // }
+      print("This is the Token: ${userData["Token"]}");
+      notificationController.sendNotification(
+          "${userData["Token"]}",
+          "Congrates! You have a new application",
+          "You have a new application for the job ${companyData["name"]}");
+    }
 
     // Return the reference to the added document
     return true;
+  }
+
+  Future<DocumentSnapshot> getCompanyData(DocumentReference companyRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot companySnapshot = await companyRef.get();
+      return companySnapshot;
+    } catch (e) {
+      print('Error fetching company document: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserData(DocumentReference userRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot userSnapshot = await userRef.get();
+      return userSnapshot;
+    } catch (e) {
+      print('Error fetching userSnapshot document: $e');
+      rethrow;
+    }
   }
 }
