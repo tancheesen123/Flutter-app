@@ -45,49 +45,6 @@ class MyJobController extends GetxController {
     candidates.value = candidatesList;
   }
 
-  // Future<List<Map<String, dynamic>>> fetchData() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String email = prefs.getString('userEmail') ?? '';
-  //   print("Thii semail $email");
-  //   List<Map<String, dynamic>> dataList = [];
-  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //       .collection('user')
-  //       .doc(email)
-  //       .collection("Application")
-  //       .get();
-
-  //   querySnapshot.docs.forEach((doc) async {
-  //     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  //     String postRefPath = data['postRefPath'];
-  //     if (postRefPath != null) {
-  //       List<String> pathParts = postRefPath.split('/');
-  //       if (pathParts.length == 2) {
-  //         String collection = pathParts[0];
-  //         String documentId = pathParts[1];
-  //         DocumentSnapshot postDoc = await FirebaseFirestore.instance
-  //             .collection(collection)
-  //             .doc(documentId)
-  //             .get();
-  //         Map<String, dynamic> postData =
-  //             postDoc.data() as Map<String, dynamic>;
-  //         // dataList.add({
-  //         //   ...data,
-  //         //   ...postData,
-  //         // });
-  //         print("This is postdata $postData");
-  //         dataList.add(postData["description"]);
-  //       }
-  //     }
-
-  //     // dataList.add(data);
-  //   });
-  //   print("This is datalist $dataList");
-  //   // for (var data in dataList) {
-  //   //   print("postRefPath: ${data['postRefPath']}");
-  //   // }
-
-  //   return dataList;
-  // }
   Future<List<Map<String, dynamic>>> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('userEmail') ?? '';
@@ -121,6 +78,8 @@ class MyJobController extends GetxController {
           if (postDoc.data() != null) {
             Map<String, dynamic> postData =
                 postDoc.data() as Map<String, dynamic>;
+
+            postData['postId'] = doc.id;
             // print("This is postData: $postData");
 
             dataList.add({
@@ -128,7 +87,7 @@ class MyJobController extends GetxController {
               'status': postData['status'],
               'description': postData['description'],
               'location': postData['location'],
-              'postId': postData['postId'],
+              'postId': documentId,
               'title': postData['title'],
               'workingHours': postData['workingHours'],
               'budget': postData['budget'],
@@ -139,7 +98,7 @@ class MyJobController extends GetxController {
         }
       }
     });
-    // print("This is dataList: $dataList");
+    print("This is dataList: $dataList");
     return dataList;
   }
 }
