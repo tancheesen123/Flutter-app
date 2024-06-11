@@ -219,14 +219,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(idNotification),
-                                            SizedBox(height: 8),
+                                            Text(body ?? "No body"),
                                             _buildBodyText(body ?? "No body"),
-                                            SizedBox(height: 8),
-                                            Text(notification['timestamp']
-                                                    ?.toDate()
-                                                    .toString() ??
-                                                'No timestamp'),
+                                            // SizedBox(height: 8),
+                                            // Text(notification['timestamp']
+                                            //         ?.toDate()
+                                            //         .toString() ??
+                                            //     'No timestamp'),
                                           ],
                                         ),
                                         actions: [
@@ -252,8 +251,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                       child: RichText(
                                         text: TextSpan(
                                           children: [
+                                            // TextSpan(
+                                            //   text: "ID: $idNotification\n\n",
+                                            //   style: status == "active"
+                                            //       ? CustomTextStyles
+                                            //           .titleSmallOnPrimary
+                                            //           .copyWith(fontSize: 15.0)
+                                            //       : CustomTextStyles
+                                            //           .titleSmallGray50001
+                                            //           .copyWith(fontSize: 15.0),
+                                            // ),
                                             TextSpan(
-                                              text: "ID: $idNotification\n\n",
+                                              text: "$title\n",
                                               style: status == "active"
                                                   ? CustomTextStyles
                                                       .titleSmallOnPrimary
@@ -262,26 +271,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                                       .titleSmallGray50001
                                                       .copyWith(fontSize: 15.0),
                                             ),
-                                            TextSpan(
-                                              text: "Title: $title\n\n",
-                                              style: status == "active"
-                                                  ? CustomTextStyles
-                                                      .titleSmallOnPrimary
-                                                      .copyWith(fontSize: 15.0)
-                                                  : CustomTextStyles
-                                                      .titleSmallGray50001
-                                                      .copyWith(fontSize: 15.0),
-                                            ),
-                                            TextSpan(
-                                              text: "Body: $body",
-                                              style: status == "active"
-                                                  ? CustomTextStyles
-                                                      .bodyMediumOnPrimary_1
-                                                      .copyWith(fontSize: 15.0)
-                                                  : CustomTextStyles
-                                                      .bodyMediumGray50001
-                                                      .copyWith(fontSize: 15.0),
-                                            ),
+                                            // TextSpan(
+                                            //   text: "Body: $body",
+                                            //   style: status == "active"
+                                            //       ? CustomTextStyles
+                                            //           .bodyMediumOnPrimary_1
+                                            //           .copyWith(fontSize: 15.0)
+                                            //       : CustomTextStyles
+                                            //           .bodyMediumGray50001
+                                            //           .copyWith(fontSize: 15.0),
+                                            // ),
                                           ],
                                         ),
                                         textAlign: TextAlign.left,
@@ -321,9 +320,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: 10),
                                     _buildDivider(),
-                                    SizedBox(height: 20),
+                                    SizedBox(height: 10),
                                   ],
                                 ),
                               );
