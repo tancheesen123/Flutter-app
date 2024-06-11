@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/presentation/Client/preview_post_client.dart';
 import 'package:workwise/presentation/Freelancer/applyjob/companyMenu.dart';
 import '../../../core/app_export.dart';
@@ -13,16 +16,14 @@ class NewPostScreen extends StatefulWidget {
   State<NewPostScreen> createState() => _NewPostScreenState();
 }
 
-class _NewPostScreenState extends State<NewPostScreen>
-    with TickerProviderStateMixin {
+class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateMixin {
   bool validToSubmit = false;
   late TabController tabviewController;
 
   TextEditingController titleTextFieldController = TextEditingController();
   TextEditingController locationTextFieldController = TextEditingController();
   TextEditingController budgetTextFieldController = TextEditingController();
-  TextEditingController descriptionTextFieldController =
-      TextEditingController();
+  TextEditingController descriptionTextFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -120,15 +121,10 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the job title",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -172,15 +168,10 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the location",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -229,15 +220,10 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter your budget",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -285,17 +271,11 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 filled: true,
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
-                                hintText:
-                                    "Describe the rules, requirement and detail about this job ",
-                                hintStyle:
-                                    TextStyle(fontWeight: FontWeight.w300),
+                                hintText: "Describe the rules, requirement and detail about this job ",
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                        width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -309,8 +289,7 @@ class _NewPostScreenState extends State<NewPostScreen>
         Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
                   color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -331,28 +310,19 @@ class _NewPostScreenState extends State<NewPostScreen>
                       children: [
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: validToSubmit
-                                ? () {
-                                    // Future.delayed(Duration(seconds: 2)).then((value) => showBottomSheetSubmitted(context));
-                                  }
-                                : null,
+                            onPressed: validToSubmit ? () {} : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor:
-                                  MaterialStatePropertyAll(Colors.transparent),
+                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Cancel",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: Color(0xffC2C2C2)),
+                                style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -364,8 +334,6 @@ class _NewPostScreenState extends State<NewPostScreen>
                           child: ElevatedButton(
                             onPressed: validToSubmit
                                 ? () {
-                                    // Future.delayed(Duration(seconds: 2)).then((value) => showBottomSheetSubmitted(context));
-                                    // submitJobPost();
                                     showBottomSheetPreviewPost(
                                       context,
                                     );
@@ -373,25 +341,16 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor: MaterialStatePropertyAll(
-                                  validToSubmit
-                                      ? Color(0xff5598FF)
-                                      : Color(0xffF4F6F8)),
+                              backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Preview",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    color: validToSubmit
-                                        ? Colors.white
-                                        : Color(0xffC2C2C2)),
+                                style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -407,10 +366,6 @@ class _NewPostScreenState extends State<NewPostScreen>
   }
 
   Future showBottomSheetPreviewPost(BuildContext context) {
-    List<Map<String, String>> tabActions = [
-      {"title": "Description"}
-    ];
-
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -473,29 +428,21 @@ class _NewPostScreenState extends State<NewPostScreen>
                             margin: EdgeInsets.only(bottom: 20),
                             child: Text(
                               titleTextFieldController.text,
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
+                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
                             ),
                           ),
                           Container(
                             margin: EdgeInsets.only(bottom: 20),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 25, vertical: 20),
+                            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('Chagee MY ',
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w500)),
+                                  Text('Chagee MY ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                   Text(
                                     '-',
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff6A6A6A)),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
                                   ),
                                   Icon(
                                     Icons.location_on_outlined,
@@ -504,10 +451,7 @@ class _NewPostScreenState extends State<NewPostScreen>
                                   ),
                                   Text(
                                     locationTextFieldController.text,
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff6A6A6A)),
+                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
                                   ),
                                 ],
                               ),
@@ -518,8 +462,7 @@ class _NewPostScreenState extends State<NewPostScreen>
                             child: Center(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Row(
                                     children: [
@@ -532,19 +475,13 @@ class _NewPostScreenState extends State<NewPostScreen>
                                       ),
                                       Text(
                                         "Part Time",
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xff6A6A6A)),
+                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
                                       )
                                     ],
                                   ),
                                   Text(
                                     "RM15/h",
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff6A6A6A)),
+                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
                                   )
                                 ],
                               ),
@@ -589,17 +526,13 @@ class _NewPostScreenState extends State<NewPostScreen>
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
                                     child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Job Descriptions",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.w600),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                                         ),
-                                        Text(
-                                            descriptionTextFieldController.text)
+                                        Text(descriptionTextFieldController.text)
                                       ],
                                     ),
                                   ),
@@ -617,9 +550,7 @@ class _NewPostScreenState extends State<NewPostScreen>
                   Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                         boxShadow: [
                           BoxShadow(
                             color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -635,8 +566,7 @@ class _NewPostScreenState extends State<NewPostScreen>
                         child: Container(
                           child: Center(
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -646,24 +576,16 @@ class _NewPostScreenState extends State<NewPostScreen>
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         )),
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Colors.transparent),
+                                        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
+                                        padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Edit",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xffC2C2C2)),
+                                          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
                                         ),
                                       ),
                                     ),
@@ -677,34 +599,23 @@ class _NewPostScreenState extends State<NewPostScreen>
                                         submitJobPost().then(
                                           (success) {
                                             if (success) {
-                                              Navigator.pushNamed(
-                                                  context,
-                                                  AppRoutes
-                                                      .successPostClientScreen);
+                                              Navigator.pushNamed(context, AppRoutes.successPostClientScreen);
                                             }
                                           },
                                         );
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<
-                                                RoundedRectangleBorder>(
-                                            RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(15),
                                         )),
-                                        backgroundColor:
-                                            MaterialStatePropertyAll(
-                                                Color(0xff5598FF)),
+                                        backgroundColor: MaterialStatePropertyAll(Color(0xff5598FF)),
                                       ),
                                       child: Padding(
-                                        padding:
-                                            EdgeInsets.symmetric(vertical: 14),
+                                        padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Post",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
+                                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -725,21 +636,26 @@ class _NewPostScreenState extends State<NewPostScreen>
   }
 
   Future<bool> submitJobPost() async {
-    // DatabaseReference ref = FirebaseDatabase.instance.ref("jobPost/");
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
+    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
+
+    DocumentReference userRef = FirebaseFirestore.instance.collection("users").doc(clientUID);
+    DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
+
     Map<String, dynamic> data = {
       "title": titleTextFieldController.text,
       "location": locationTextFieldController.text,
       "budget": int.parse(budgetTextFieldController.text),
       "description": descriptionTextFieldController.text,
-      "status": "Part Time",
-      "workingHours": 20,
-      "postId": "A20",
+      // "status": "Part Time",
+      // "workingHours": 20,
+      "user": userRef,
+      "company": companyRef,
+      "postStatus": "OPEN"
     };
 
-    await FirebaseFirestore.instance
-        .collection("jobPost")
-        .add(data)
-        .then((value) {
+    await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
       return true;
     });
 
