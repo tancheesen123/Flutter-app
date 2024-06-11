@@ -85,15 +85,12 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
                 setScreen(HomeClientPage());
                 setNavBarIndex(value);
                 break;
+
               case 1:
-                setScreen(PostListScreen());
-                setNavBarIndex(value);
-                break;
-              case 2:
                 setScreen(NotificationScreen());
                 setNavBarIndex(value);
                 break;
-              case 3:
+              case 2:
                 setScreen(SettingsScreen());
                 setNavBarIndex(value);
                 break;
