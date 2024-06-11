@@ -39,7 +39,8 @@ class NotificationController extends GetxController {
     return credentials.accessToken.data;
   }
 
-  Future<void> sendNotification(String deviceToken) async {
+  Future<void> sendNotification(
+      String deviceToken, String title, String body) async {
     final String projectId = 'flutter-mango'; // Replace with your project ID
 
     // Get the OAuth token
@@ -53,9 +54,8 @@ class NotificationController extends GetxController {
         'token': deviceToken,
         'data': {}, // Add any custom data here
         'notification': {
-          'title': 'Test',
-          'body':
-              'https://www.google.com/search?q=linkin&rlz=1C1KNTJ_enMY1080MY1080&oq=linkin&gs_lcrp=EgZjaHJvbWUyBggAEEUYOTIMCAEQLhhDGIAEGIoFMgwIAhAAGAoYsQMYgAQyBwgDEAAYgAQyBwgEEAAYgAQyBwgFEAAYgAQyEggGEC4YChjHARixAxjRAxiABDIGCAcQBRhA0gEINDc4NGoxajeoAgCwAgA&sourceid=chrome&ie=UTF-8',
+          'title': title,
+          'body': body,
         },
       }
     };
