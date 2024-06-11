@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/widgets/custom_elevated_button.dart';
 import '../../../../core/app_export.dart'; // ignore: must_be_immutable
+import '../../post_insight_page/widgets/post_insight_item.dart';
+import '../../post_insight_page/post_insight_page.dart';
 
 class ViewhierarchyItemWidget extends StatefulWidget {
   const ViewhierarchyItemWidget({Key? key})
@@ -12,10 +15,12 @@ class ViewhierarchyItemWidget extends StatefulWidget {
         );
 
   @override
-  State<ViewhierarchyItemWidget> createState() => _ViewhierarchyItemWidgetState();
+  State<ViewhierarchyItemWidget> createState() =>
+      _ViewhierarchyItemWidgetState();
 }
 
-class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with TickerProviderStateMixin {
+class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
+    with TickerProviderStateMixin {
   List data = [];
   List<dynamic> jobPostList = [];
   bool refresh = false;
@@ -57,7 +62,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                       children: List.generate(jobPostList.length, (index) {
                       return InkWell(
                         onTap: () {
-                          showBottomSheetPreviewPost(context, jobPostList[index]);
+                          showBottomSheetPreviewPost(
+                              context, jobPostList[index]);
                         },
                         child: Container(
                           margin: EdgeInsets.only(bottom: 24),
@@ -120,15 +126,22 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
   Future getAllJobPost() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
+    final String? companyID =
+        jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-    DocumentReference companyRef = await FirebaseFirestore.instance.collection("company").doc(companyID);
-    return await FirebaseFirestore.instance.collection("jobPost").where("company", isEqualTo: companyRef).get().then((querySnapshot) {
+    DocumentReference companyRef =
+        await FirebaseFirestore.instance.collection("company").doc(companyID);
+    return await FirebaseFirestore.instance
+        .collection("jobPost")
+        .where("company", isEqualTo: companyRef)
+        .get()
+        .then((querySnapshot) {
       return querySnapshot.docs;
     });
   }
 
-  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail) {
+  Future showBottomSheetPreviewPost(
+      BuildContext context, dynamic jobPostDetail) {
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -187,69 +200,63 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                               ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 20),
-                            child: Text(
-                              jobPostDetail["title"],
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                            ),
+                          SizedBox(height: 10.v),
+                          Text(
+                            jobPostDetail['title'] ?? "Job Title",
+                            style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 20),
-                            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
-                            child: Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text('Chagee MY ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
-                                  Text(
-                                    '-',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
-                                  ),
-                                  Icon(
+                          SizedBox(height: 20.v),
+                          RichText(
+                            text: TextSpan(
+                              text: "Chargee MY -",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(
                                     Icons.location_on_outlined,
-                                    size: 20,
-                                    color: Color(0xff6A6A6A),
+                                    size: 24.0,
                                   ),
-                                  Text(
-                                    jobPostDetail["location"],
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
-                                  ),
-                                ],
-                              ),
+                                ),
+                                TextSpan(
+                                  text: jobPostDetail['location'] ?? "Location",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 28),
-                            child: Center(
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.access_time,
-                                        color: Color(0xff6A6A6A),
-                                      ),
-                                      SizedBox(
-                                        width: 10,
-                                      ),
-                                      Text(
-                                        "Part Time",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
-                                      )
-                                    ],
+                          SizedBox(height: 20.v),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                WidgetSpan(
+                                  child: Icon(
+                                    Icons.access_time,
+                                    size: 24.0,
                                   ),
-                                  Text(
-                                    "RM15/h",
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
-                                  )
-                                ],
-                              ),
+                                ),
+                                TextSpan(
+                                  text: jobPostDetail['status'] ?? "status",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                TextSpan(
+                                  text:
+                                      "                   RM${jobPostDetail['budget'] ?? "123"}/${jobPostDetail['workingHours'] ?? "123"}h  ",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                ),
+                              ],
                             ),
                           ),
+                          SizedBox(height: 15.v),
                           Container(
                             height: 50.v,
                             margin: EdgeInsets.only(left: 20.h),
@@ -276,7 +283,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                               ),
                               tabs: [
                                 Tab(child: Text("Description")),
-                                Tab(child: Text("Company")),
+                                Tab(child: Text("Insight")),
                               ],
                             ),
                           ),
@@ -288,20 +295,32 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                 SingleChildScrollView(
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Job Descriptions",
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                                        ),
-                                        Text(jobPostDetail["description"])
-                                      ],
+                                    child: SizedBox(
+                                      height: 200.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Job Descriptions",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostDetail["description"],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                                // CompanyMenuPage(),
-                                Container()
+                                PostInsightItemPage(),
                               ],
                             ),
                           ))
@@ -313,7 +332,9 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                   Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
                         boxShadow: [
                           BoxShadow(
                             color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -323,72 +344,114 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                           ),
                         ],
                       ),
-                      height: 100,
+                      height: 75,
                       child: Align(
-                        alignment: FractionalOffset.bottomCenter,
+                        alignment: Alignment.bottomCenter,
                         child: Container(
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      style: ButtonStyle(
-                                        elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
-                                        )),
-                                        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 14),
-                                        child: Text(
-                                          "Edit",
-                                          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        // submitJobPost().then(
-                                        //   (success) {
-                                        //     if (success) {
-                                        //       Navigator.pushNamed(context, AppRoutes.successPostClientScreen);
-                                        //     }
-                                        //   },
-                                        // );
-                                      },
-                                      style: ButtonStyle(
-                                        elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
-                                        )),
-                                        backgroundColor: MaterialStatePropertyAll(Color(0xff5598FF)),
-                                      ),
-                                      child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 14),
-                                        child: Text(
-                                          "Post",
-                                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(30.5),
+                              topRight: Radius.circular(30.5),
                             ),
                           ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.h,
+                            vertical: 12.v,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              SizedBox(
+                                  width: 80, // Set the desired width
+                                  child: CustomElevatedButton(
+                                    height: 48.v,
+                                    text: "Edit",
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleSmallWhiteA700SemiBold
+                                        .copyWith(
+                                      color: Colors
+                                          .black, // Set the text color to black
+                                    ),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    buttonStyle: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(
+                                          255,
+                                          255,
+                                          255,
+                                          255), // Set the background color here
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Set the border radius here
+                                        side: BorderSide(
+                                            color: Colors
+                                                .black), // Set the border color here
+                                      ),
+                                    ),
+                                  )),
+                              SizedBox(
+                                  width: 80, // Set the desired width
+                                  child: CustomElevatedButton(
+                                    height: 48.v,
+                                    text: "Insight",
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleSmallWhiteA700SemiBold
+                                        .copyWith(
+                                      color: Colors
+                                          .black, // Set the text color to black
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(
+                                        MaterialPageRoute(
+                                          builder: (BuildContext context) {
+                                            return PostInsightScreen(
+                                                postId: "a3");
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    buttonStyle: ElevatedButton.styleFrom(
+                                      backgroundColor: Color.fromARGB(
+                                          255,
+                                          255,
+                                          255,
+                                          255), // Set the background color here
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Set the border radius here
+                                        side: BorderSide(
+                                            color: Colors
+                                                .black), // Set the border color here
+                                      ),
+                                    ),
+                                  )),
+                              SizedBox(
+                                width: 150, // Set the desired width
+                                child: CustomElevatedButton(
+                                  height: 48.v,
+                                  text: "Candidate",
+                                  buttonTextStyle: CustomTextStyles
+                                      .titleSmallWhiteA700SemiBold,
+                                  onPressed: () async {
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                          return PostInsightScreen(
+                                              postId: "a3");
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ))
+                      )),
                 ],
               ),
             );
