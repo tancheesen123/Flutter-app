@@ -452,6 +452,7 @@ class _LogInScreenState extends State<LogInScreen> {
     await companyRef.get().then((DocumentSnapshot doc) {
       final data = doc.data() as Map<String, dynamic>;
 
+      data.remove("user");
       data.addAll({"id": id});
 
       String jsonCompanyDetail = json.encode(data);
