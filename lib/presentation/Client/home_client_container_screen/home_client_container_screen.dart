@@ -15,8 +15,7 @@ class HomeClientContainerScreen extends StatefulWidget {
         );
 
   @override
-  State<HomeClientContainerScreen> createState() =>
-      _HomeClientContainerScreenState();
+  State<HomeClientContainerScreen> createState() => _HomeClientContainerScreenState();
 }
 
 class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
@@ -39,17 +38,8 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: currentScreen,
-        // Navigator(
-        //   key: navigatorKey,
-        // initialRoute: AppRoutes.homeClientPage,
-        //   onGenerateRoute: (routeSetting) => PageRouteBuilder(
-        //     pageBuilder: (ctx, ani, ani1) => getCurrentPage(routeSetting.name!),
-        //     transitionDuration: Duration(seconds: 0),
-        //   ),
-        // ),
-
-        // bottomNavigationBar: _buildBottomBar(context),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: true,
@@ -59,52 +49,33 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
               label: "Home",
               icon: SvgPicture.asset(
                 ImageConstant.imgNavHome,
-                colorFilter:
-                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgNavHome,
-                colorFilter:
-                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: "My Posts",
-              icon: SvgPicture.asset(
-                ImageConstant.imgPhBagFill,
-                colorFilter:
-                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
-              ),
-              activeIcon: SvgPicture.asset(
-                ImageConstant.imgPhBagFill,
-                colorFilter:
-                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
             BottomNavigationBarItem(
               label: "Notifications",
               icon: SvgPicture.asset(
                 ImageConstant.imgHome,
-                colorFilter:
-                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgHome,
-                colorFilter:
-                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
             BottomNavigationBarItem(
               label: "Settings",
               icon: SvgPicture.asset(
                 ImageConstant.imgNavSettings,
-                colorFilter:
-                    ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xffA8A8AA), BlendMode.srcIn),
               ),
               activeIcon: SvgPicture.asset(
                 ImageConstant.imgNavSettings,
-                colorFilter:
-                    ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
+                colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
               ),
             ),
           ],
@@ -149,8 +120,8 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
       case BottomBarEnum.Home:
         return AppRoutes.homeContainerScreen;
       // Remove the case for BottomBarEnum.Messages
-      case BottomBarEnum.Jobs:
-        return AppRoutes.postListPage;
+      // case BottomBarEnum.Jobs:
+      //   return AppRoutes.postListPage;
       case BottomBarEnum.Notifications:
         return AppRoutes.notificationScreen;
       case BottomBarEnum.Settings:
