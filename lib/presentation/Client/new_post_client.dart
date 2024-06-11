@@ -24,6 +24,8 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
   TextEditingController locationTextFieldController = TextEditingController();
   TextEditingController budgetTextFieldController = TextEditingController();
   TextEditingController descriptionTextFieldController = TextEditingController();
+  TextEditingController titleMessageTextFieldController = TextEditingController();
+  TextEditingController bodyMessageTextFieldController = TextEditingController();
 
   @override
   void initState() {
@@ -43,7 +45,9 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
     if (titleTextFieldController.text.isNotEmpty &&
         locationTextFieldController.text.isNotEmpty &&
         budgetTextFieldController.text.isNotEmpty &&
-        descriptionTextFieldController.text.isNotEmpty) {
+        descriptionTextFieldController.text.isNotEmpty &&
+        titleMessageTextFieldController.text.isNotEmpty &&
+        bodyMessageTextFieldController.text.isNotEmpty) {
       setState(() {
         print("Hello");
         validToSubmit = true;
@@ -272,6 +276,108 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Describe the rules, requirement and detail about this job ",
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                contentPadding: EdgeInsets.all(8),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Text(
+                      "Write a message that will be shown when a freelancer get accepted.",
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 40),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Message title",
+                                style: theme.textTheme.titleMedium,
+                              )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xffB3BAC3).withOpacity(0.25),
+                                spreadRadius: 0,
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            controller: titleMessageTextFieldController,
+                            onChanged: (value) {
+                              checkValidToSubmit();
+                            },
+                            decoration: InputDecoration(
+                                filled: true,
+                                // focusColor: Colors.amber,
+                                fillColor: Colors.white,
+                                hintText: "Enter the message title",
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                contentPadding: EdgeInsets.all(8),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 40),
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: 10),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                  child: Text(
+                                "Message body",
+                                style: theme.textTheme.titleMedium,
+                              )),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xffB3BAC3).withOpacity(0.25),
+                                spreadRadius: 0,
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            maxLines: 10,
+                            controller: bodyMessageTextFieldController,
+                            onChanged: (value) {
+                              checkValidToSubmit();
+                            },
+                            decoration: InputDecoration(
+                                filled: true,
+                                // focusColor: Colors.amber,
+                                fillColor: Colors.white,
+                                hintText: "Enter the message body",
                                 hintStyle: TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
                                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
@@ -643,6 +749,13 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
     DocumentReference userRef = FirebaseFirestore.instance.collection("users").doc(clientUID);
     DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
 
+    Map<String, dynamic> notificationData = {
+      "notification": {
+        "title": titleMessageTextFieldController.text,
+        "body": bodyMessageTextFieldController.text,
+      }
+    };
+
     Map<String, dynamic> data = {
       "title": titleTextFieldController.text,
       "location": locationTextFieldController.text,
@@ -652,7 +765,8 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
       // "workingHours": 20,
       "user": userRef,
       "company": companyRef,
-      "postStatus": "OPEN"
+      "postStatus": "OPEN",
+      "Notification": json.encode(notificationData)
     };
 
     await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
