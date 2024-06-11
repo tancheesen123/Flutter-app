@@ -35,7 +35,6 @@ class _HomeClientPageState extends State<HomeClientPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          width: double.maxFinite,
           decoration: AppDecoration.fillGray,
           child: Column(
             children: [
