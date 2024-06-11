@@ -23,13 +23,14 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
   @override
   Widget build(BuildContext context) {
     // String postRefPath = data['postRefPath'];
+    print("this is widget data ${widget.data['postId']}");
     String email = userController.getEmail();
     String location = widget.data['location'];
     String postId = widget.data['postId'];
     // print("Locationasd: $location");
     String title = widget.data['title'];
     String status = widget.data['statusApplication'];
-    int workingHours = widget.data['workingHours'];
+    int workingHours = 12;
     int budget = widget.data['budget'];
 
     return GestureDetector(
