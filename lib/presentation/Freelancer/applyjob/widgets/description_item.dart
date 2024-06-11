@@ -24,32 +24,29 @@ class _DescriptionItemWidgetState extends State<DescriptionItemWidget> {
           text: TextSpan(
             text: "Job Description",
             style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Poppins'),
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontFamily: 'Poppins',
+            ),
           ),
         ),
-        SizedBox(height: 20.v), // Adjust as needed
+        SizedBox(height: 20), // Adjust as needed
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 15.h),
+          padding: EdgeInsets.symmetric(horizontal: 15), // Adjust as needed
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 10.h),
-                child: TextField(
-                  enabled: false,
-                  decoration: InputDecoration(
-                    hintText: "• ${widget.description}",
-                    hintStyle: TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                    ),
-                    border: InputBorder.none,
+                padding: EdgeInsets.only(left: 10), // Adjust as needed
+                child: Text(
+                  widget.description ?? '',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
