@@ -219,7 +219,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(body ?? "No body"),
+                                            // Text(body ?? "No body"),
                                             _buildBodyText(body ?? "No body"),
                                             // SizedBox(height: 8),
                                             // Text(notification['timestamp']
