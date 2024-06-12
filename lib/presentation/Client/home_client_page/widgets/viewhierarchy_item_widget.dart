@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/widgets/custom_elevated_button.dart';
 import '../../../../core/app_export.dart'; // ignore: must_be_immutable
-import '../../post_insight_page/widgets/post_insight_item.dart';
+import '../../post_insight_page/widgets/click_insight_item.dart';
 import '../../post_insight_page/post_insight_page.dart';
 
 class ViewhierarchyItemWidget extends StatefulWidget {
@@ -16,10 +16,12 @@ class ViewhierarchyItemWidget extends StatefulWidget {
         );
 
   @override
-  State<ViewhierarchyItemWidget> createState() => _ViewhierarchyItemWidgetState();
+  State<ViewhierarchyItemWidget> createState() =>
+      _ViewhierarchyItemWidgetState();
 }
 
-class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with TickerProviderStateMixin {
+class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
+    with TickerProviderStateMixin {
   List data = [];
   List<dynamic> jobPostList = [];
   late Future buildFuture;
@@ -68,8 +70,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                 child: ElevatedButton(
                                     style: ButtonStyle(
                                         elevation: WidgetStatePropertyAll(0),
-                                        shadowColor: WidgetStateColor.transparent,
-                                        backgroundColor: WidgetStatePropertyAll(Color(0xffEEEEF3))),
+                                        shadowColor:
+                                            WidgetStateColor.transparent,
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Color(0xffEEEEF3))),
                                     onPressed: () {},
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
@@ -82,13 +86,20 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                 child: ElevatedButton(
                                     style: ButtonStyle(
                                         elevation: WidgetStatePropertyAll(0),
-                                        shadowColor: WidgetStateColor.transparent,
-                                        backgroundColor: WidgetStatePropertyAll(Colors.transparent)),
+                                        shadowColor:
+                                            WidgetStateColor.transparent,
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            Colors.transparent)),
                                     onPressed: () {},
                                     child: Column(
                                       children: [
                                         Text.rich(
-                                          TextSpan(children: [TextSpan(text: "6\n", style: TextStyle(fontSize: 24)), TextSpan(text: "applications")]),
+                                          TextSpan(children: [
+                                            TextSpan(
+                                                text: "6\n",
+                                                style: TextStyle(fontSize: 24)),
+                                            TextSpan(text: "applications")
+                                          ]),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(height: 0.9),
                                         )
@@ -104,14 +115,19 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: ElevatedButton(
                                       style: ButtonStyle(
                                           elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xff007BFF).withOpacity(0.2))),
+                                          shadowColor:
+                                              WidgetStateColor.transparent,
+                                          backgroundColor:
+                                              WidgetStatePropertyAll(
+                                                  Color(0xff007BFF)
+                                                      .withOpacity(0.2))),
                                       onPressed: () {},
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           "Employed",
-                                          style: TextStyle(color: Color(0xff007BFF)),
+                                          style: TextStyle(
+                                              color: Color(0xff007BFF)),
                                         ),
                                       ))),
                             ],
@@ -124,14 +140,19 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: ElevatedButton(
                                       style: ButtonStyle(
                                           elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
+                                          shadowColor:
+                                              WidgetStateColor.transparent,
+                                          backgroundColor:
+                                              WidgetStatePropertyAll(
+                                                  Color(0xffDDFFE9)
+                                                      .withOpacity(0.5))),
                                       onPressed: () {},
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           "Completed",
-                                          style: TextStyle(color: Color(0xff1ED760)),
+                                          style: TextStyle(
+                                              color: Color(0xff1ED760)),
                                         ),
                                       ))),
                             ],
@@ -145,14 +166,19 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: ElevatedButton(
                                       style: ButtonStyle(
                                           elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
+                                          shadowColor:
+                                              WidgetStateColor.transparent,
+                                          backgroundColor:
+                                              WidgetStatePropertyAll(
+                                                  Color(0xffDDFFE9)
+                                                      .withOpacity(0.5))),
                                       onPressed: () {},
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
                                           "Completed",
-                                          style: TextStyle(color: Color(0xff1ED760)),
+                                          style: TextStyle(
+                                              color: Color(0xff1ED760)),
                                         ),
                                       ))),
                             ],
@@ -161,7 +187,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
                       return InkWell(
                           onTap: () {
-                            showBottomSheetPreviewPost(context, jobPostList[index]);
+                            showBottomSheetPreviewPost(
+                                context, jobPostList[index]);
                           },
                           child: Container(
                             width: double.infinity,
@@ -172,7 +199,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                             ),
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(20)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -201,15 +229,18 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
                                         onSelected: (item) {
                                           if (item == 1) {
-                                            showBottomSheetPreviewPost(context, jobPostList[index]);
+                                            showBottomSheetPreviewPost(
+                                                context, jobPostList[index]);
                                           }
                                         },
-                                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                                        itemBuilder: (BuildContext context) =>
+                                            <PopupMenuEntry>[
                                           const PopupMenuItem(
                                             value: 1,
                                             child: Row(
                                               children: [
-                                                Icon(Icons.remove_red_eye_outlined),
+                                                Icon(Icons
+                                                    .remove_red_eye_outlined),
                                                 SizedBox(
                                                   width: 10,
                                                 ),
@@ -245,15 +276,22 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
   Future getAllJobPost() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
+    final String? companyID =
+        jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-    DocumentReference companyRef = await FirebaseFirestore.instance.collection("company").doc(companyID);
-    return await FirebaseFirestore.instance.collection("jobPost").where("company", isEqualTo: companyRef).get().then((querySnapshot) {
+    DocumentReference companyRef =
+        await FirebaseFirestore.instance.collection("company").doc(companyID);
+    return await FirebaseFirestore.instance
+        .collection("jobPost")
+        .where("company", isEqualTo: companyRef)
+        .get()
+        .then((querySnapshot) {
       return querySnapshot.docs;
     });
   }
 
-  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail) {
+  Future showBottomSheetPreviewPost(
+      BuildContext context, dynamic jobPostDetail) {
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -331,7 +369,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                 ),
                                 TextSpan(
                                   text: jobPostDetail['location'] ?? "Location",
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
@@ -353,8 +394,12 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 TextSpan(
-                                  text: "                   RM${jobPostDetail['budget'] ?? "123"}/${jobPostDetail['workingHours'] ?? "123"}h  ",
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  text:
+                                      "                   RM${jobPostDetail['budget'] ?? "123"}/${jobPostDetail['workingHours'] ?? "123"}h  ",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
                                         fontWeight: FontWeight.bold,
                                       ),
                                 ),
@@ -403,7 +448,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                     child: SizedBox(
                                       height: 200.v,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Job Descriptions",
@@ -436,7 +482,9 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                   Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
                         boxShadow: [
                           BoxShadow(
                             color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -469,17 +517,27 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: CustomElevatedButton(
                                     height: 48.v,
                                     text: "Edit",
-                                    buttonTextStyle: CustomTextStyles.titleSmallWhiteA700SemiBold.copyWith(
-                                      color: Colors.black, // Set the text color to black
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleSmallWhiteA700SemiBold
+                                        .copyWith(
+                                      color: Colors
+                                          .black, // Set the text color to black
                                     ),
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
                                     buttonStyle: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromARGB(255, 255, 255, 255), // Set the background color here
+                                      backgroundColor: Color.fromARGB(
+                                          255,
+                                          255,
+                                          255,
+                                          255), // Set the background color here
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.0), // Set the border radius here
-                                        side: BorderSide(color: Colors.black), // Set the border color here
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Set the border radius here
+                                        side: BorderSide(
+                                            color: Colors
+                                                .black), // Set the border color here
                                       ),
                                     ),
                                   )),
@@ -488,23 +546,35 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: CustomElevatedButton(
                                     height: 48.v,
                                     text: "Insight",
-                                    buttonTextStyle: CustomTextStyles.titleSmallWhiteA700SemiBold.copyWith(
-                                      color: Colors.black, // Set the text color to black
+                                    buttonTextStyle: CustomTextStyles
+                                        .titleSmallWhiteA700SemiBold
+                                        .copyWith(
+                                      color: Colors
+                                          .black, // Set the text color to black
                                     ),
                                     onPressed: () {
-                                      Navigator.of(context, rootNavigator: true).push(
+                                      Navigator.of(context, rootNavigator: true)
+                                          .push(
                                         MaterialPageRoute(
                                           builder: (BuildContext context) {
-                                            return PostInsightScreen(postId: "a3");
+                                            return PostInsightScreen(
+                                                postId: "a3");
                                           },
                                         ),
                                       );
                                     },
                                     buttonStyle: ElevatedButton.styleFrom(
-                                      backgroundColor: Color.fromARGB(255, 255, 255, 255), // Set the background color here
+                                      backgroundColor: Color.fromARGB(
+                                          255,
+                                          255,
+                                          255,
+                                          255), // Set the background color here
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8.0), // Set the border radius here
-                                        side: BorderSide(color: Colors.black), // Set the border color here
+                                        borderRadius: BorderRadius.circular(
+                                            8.0), // Set the border radius here
+                                        side: BorderSide(
+                                            color: Colors
+                                                .black), // Set the border color here
                                       ),
                                     ),
                                   )),
@@ -513,12 +583,15 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                 child: CustomElevatedButton(
                                   height: 48.v,
                                   text: "Candidate",
-                                  buttonTextStyle: CustomTextStyles.titleSmallWhiteA700SemiBold,
+                                  buttonTextStyle: CustomTextStyles
+                                      .titleSmallWhiteA700SemiBold,
                                   onPressed: () async {
-                                    Navigator.of(context, rootNavigator: true).push(
+                                    Navigator.of(context, rootNavigator: true)
+                                        .push(
                                       MaterialPageRoute(
                                         builder: (BuildContext context) {
-                                          return PostInsightScreen(postId: "a3");
+                                          return PostInsightScreen(
+                                              postId: "a3");
                                         },
                                       ),
                                     );
