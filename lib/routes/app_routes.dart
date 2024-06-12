@@ -28,6 +28,9 @@ import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/loading_screen/loading_screen.dart';
 import '../presentation/Client/client_profile_screen/client_profile_screen.dart';
 
+import '../presentation/Client/insight_page/insight_page.dart';
+import '../presentation/Client/candidate_page/candidate_page.dart';
+
 class AppRoutes {
   //Client Routes
   static const String homeClientContainerScreen =
@@ -36,6 +39,8 @@ class AppRoutes {
   static const String homeClientPage = '/home_client_page';
 
   static const String postListPage = '/post_list_page';
+
+  static const String candidatePage = '/candidate_page';
 
   static const String newPostPage = '/preview_post_screen';
 
@@ -96,6 +101,8 @@ class AppRoutes {
 
   static const String clientProfileScreen = '/client_profile_screen';
 
+  static const String insightJobScreen = '/insight_job_page';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -126,12 +133,19 @@ class AppRoutes {
     //Client
     homeClientContainerScreen: (context) => HomeClientContainerScreen(),
     postListPage: (context) => PostListScreen(),
+    candidatePage: (context) => CandidateScreen(),
     newPostPage: (context) => NewPostScreen(),
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
     clientProfileScreen: (context) => ClientProfileScreen(),
 
+<<<<<<< Updated upstream
     // initialRoute: (context) => CheckSession()
     initialRoute: (context) => CheckSession()
+=======
+    insightJobScreen: (context) => InsightJobScreen(),
+
+    initialRoute: (context) => CandidateScreen()
+>>>>>>> Stashed changes
   };
 }
