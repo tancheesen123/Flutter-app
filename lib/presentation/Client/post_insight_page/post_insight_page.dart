@@ -11,9 +11,9 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/UserController.dart'; // Import the JobPost model
-import 'descriptionMenu.dart';
-import 'companyMenu.dart';
-import 'widgets/post_insight_item.dart';
+import 'package:workwise/Controller/PostInsightController.dart';
+import 'widgets/click_insight_item.dart';
+import 'widgets/apply_insight_item.dart';
 
 class PostInsightScreen extends StatefulWidget {
   final String? postId;
@@ -29,6 +29,8 @@ class _PostInsightScreenState extends State<PostInsightScreen>
   late TabController tabviewController;
   final ApplyJobController applyJobController = Get.put(ApplyJobController());
   final UserController userController = Get.put(UserController());
+  final PostInsightController postInsightController =
+      Get.put(PostInsightController());
   String? postId;
   @override
   void initState() {
@@ -54,6 +56,8 @@ class _PostInsightScreenState extends State<PostInsightScreen>
           future: Future.wait([
             applyJobController.getJobPostData(widget.postId ?? ""),
             userController.getUserInformation(),
+            postInsightController.savePostInsight("a1"),
+            postInsightController.fetchPostInsight("a1"),
             // Add your second future here
             // FutureOperation2()
           ]),
@@ -68,6 +72,10 @@ class _PostInsightScreenState extends State<PostInsightScreen>
               final data = snapshot.data!;
               Map<String, dynamic> jobPostData = data[0];
               Map<String, dynamic> userData = data[1];
+              Map<String, dynamic> postInsightData = data[3];
+              print("This is json i fetch from postInsight ${postInsightData}");
+              Map<String, dynamic> impression = postInsightData["impression"];
+              print("This is json impression ${impression}");
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
               return Stack(
@@ -307,8 +315,8 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                PostInsightLineChart(), // Pass description here
-                                PostInsightLineChart(),
+                                ClickInsightLineChart(), // Pass description here
+                                ApplyInsightLineChart(),
                               ],
                             ),
                           ),
