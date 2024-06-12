@@ -320,7 +320,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                     ),
                                   ),
                                 ),
-                                PostInsightItemPage(),
+                                PostInsightScreen(),
                               ],
                             ),
                           ))
