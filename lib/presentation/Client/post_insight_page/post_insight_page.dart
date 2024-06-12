@@ -119,59 +119,156 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                           SizedBox(height: 10.v),
                           Text(
                             jobPostData['title'] ?? "Job Title",
-                            style: Theme.of(context).textTheme.headlineLarge,
+                            style: Theme.of(context)
+                                .textTheme
+                                .headlineLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight
+                                      .bold, // Example modification: Make text bold
+                                  fontSize:
+                                      24, // Example modification: Set font size to 24
+                                  color: Colors
+                                      .black, // Example modification: Set text color to black
+                                ),
                           ),
                           SizedBox(height: 20.v),
-                          RichText(
-                            text: TextSpan(
-                              text: "Chargee MY -",
-                              style: Theme.of(context).textTheme.bodyLarge,
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.location_on_outlined,
-                                    size: 24.0,
+                          _buildDivider(),
+                          SizedBox(height: 20.v),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.start,
+                          //   children: [
+                          //     // Use Spacer to push the text to the right
+                          //     Padding(
+                          //       padding: const EdgeInsets.only(
+                          //           right:
+                          //               8.0), // Adjust the right padding as needed
+                          //       child: Text(
+                          //         "7-Day Insights",
+                          //         style: TextStyle(
+                          //           fontSize: 18, // Set font size to 18
+                          //           fontWeight:
+                          //               FontWeight.bold, // Make text bold
+                          //           color:
+                          //               Colors.black, // Set text color to black
+                          //         ),
+                          //       ),
+                          //     ),
+                          //     // Add other children here if needed
+                          //   ],
+                          // ),
+                          // SizedBox(height: 20.v),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Icon(Icons.insert_chart_outlined,
+                                      color: Colors.black),
+                                  Text(
+                                    '37',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight
+                                              .bold, // Example modification: Make text bold
+                                          fontSize:
+                                              24, // Example modification: Set font size to 24
+                                          color: Colors
+                                              .black, // Example modification: Set text color to black
+                                        ),
+                                  ), // Add icon
+                                  Text(
+                                    'Impressions',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                                TextSpan(
-                                  text: jobPostData['location'] ?? "Location",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(Icons.touch_app, color: Colors.black),
+                                  Text(
+                                    '7',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight
+                                              .bold, // Example modification: Make text bold
+                                          fontSize:
+                                              24, // Example modification: Set font size to 24
+                                          color: Colors
+                                              .black, // Example modification: Set text color to black
+                                        ),
+                                  ), // Add icon
+                                  Text(
+                                    'Clicks',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Icon(Icons.chat,
+                                      color: Colors.black), // Add icon
+                                  Text(
+                                    '0',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineLarge
+                                        ?.copyWith(
+                                          fontWeight: FontWeight
+                                              .bold, // Example modification: Make text bold
+                                          fontSize:
+                                              24, // Example modification: Set font size to 24
+                                          color: Colors
+                                              .black, // Example modification: Set text color to black
+                                        ),
+                                  ),
+                                  Text(
+                                    'Apply',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                           SizedBox(height: 20.v),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                WidgetSpan(
-                                  child: Icon(
-                                    Icons.access_time,
-                                    size: 24.0,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: jobPostData['status'] ?? "status",
-                                  style: Theme.of(context).textTheme.bodyLarge,
-                                ),
-                                TextSpan(
-                                  text:
-                                      "                   RM${jobPostData['budget'] ?? "123"}/${jobPostData['workingHours'] ?? "123"}h  ",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
+                          // RichText(
+                          //   text: TextSpan(
+                          //     children: [
+                          //       WidgetSpan(
+                          //         child: Icon(
+                          //           Icons.access_time,
+                          //           size: 24.0,
+                          //         ),
+                          //       ),
+                          //       TextSpan(
+                          //         text: jobPostData['status'] ?? "status",
+                          //         style: Theme.of(context).textTheme.bodyLarge,
+                          //       ),
+                          //       TextSpan(
+                          //         text:
+                          //             "                   RM${jobPostData['budget'] ?? "123"}/${jobPostData['workingHours'] ?? "123"}h  ",
+                          //         style: Theme.of(context)
+                          //             .textTheme
+                          //             .bodyLarge
+                          //             ?.copyWith(
+                          //               fontWeight: FontWeight.bold,
+                          //             ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                           SizedBox(height: 15.v),
                           Container(
                             height: 50.v,
@@ -199,20 +296,19 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                                 borderRadius: BorderRadius.circular(12.h),
                               ),
                               tabs: [
-                                Tab(child: Text("Description")),
-                                Tab(child: Text("Post Insight")),
+                                Tab(child: Text("Clicks")),
+                                Tab(child: Text("Apply")),
                               ],
                             ),
                           ),
+
                           SizedBox(
-                            height: 557.v,
+                            height: 350.v,
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                descriptionMenuPage(
-                                    description: jobPostData['description'] ??
-                                        "No description available"), // Pass description here
-                                PostInsightItemPage(),
+                                PostInsightLineChart(), // Pass description here
+                                PostInsightLineChart(),
                               ],
                             ),
                           ),
@@ -363,5 +459,14 @@ class _PostInsightScreenState extends State<PostInsightScreen>
 
   void onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  Widget _buildDivider() {
+    return Divider(
+      color: appTheme.gray6007f,
+      indent: 1.h,
+      endIndent: 1.h,
+      thickness: 1,
+    );
   }
 }

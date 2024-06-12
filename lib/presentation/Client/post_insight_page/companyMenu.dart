@@ -46,7 +46,7 @@ class CompanyMenuPageState extends State<CompanyMenuPage>
         },
         itemCount: 4,
         itemBuilder: (context, index) {
-          return PostInsightItemPage();
+          return PostInsightLineChart();
         },
       ),
     );
