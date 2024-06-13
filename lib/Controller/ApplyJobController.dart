@@ -104,6 +104,7 @@ class ApplyJobController extends GetxController {
       // notificationController.sendNotification(token);
       var test = await getJobPostData(jobPostId);
       DocumentSnapshot companyData = await getCompanyData(test!['company']);
+      print("This is company Data ${companyData["user"]}");
       DocumentSnapshot userData = await getUserData(companyData["user"]);
 
       print("This is the Token: ${userData["Token"]}");
