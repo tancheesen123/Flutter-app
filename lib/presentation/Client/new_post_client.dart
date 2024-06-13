@@ -845,10 +845,8 @@ class _NewPostScreenState extends State<NewPostScreen>
     final String? companyID =
         jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-    DocumentReference userRef =
-        FirebaseFirestore.instance.collection("users").doc(clientUID);
-    DocumentReference companyRef =
-        FirebaseFirestore.instance.collection("company").doc(companyID);
+    DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
+    DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
 
     Map<String, dynamic> notificationData = {
       "notification": {

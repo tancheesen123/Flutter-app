@@ -42,25 +42,57 @@ class HomePageController extends GetxController {
     final PostInsightController postInsightController =
         Get.put(PostInsightController());
     List<Map<String, dynamic>> dataList = [];
-    var querySnapshot =
-        await FirebaseFirestore.instance.collection('jobPost').get();
+    var querySnapshot = await firestore.collection('jobPost').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       data['postId'] = doc.id;
       dataList.add(data);
       postInsightController.saveImpression(doc.id);
-    });
 
+    }
     return dataList;
+
+    }
+    
+
+  Future<DocumentSnapshot> getCompanyData(DocumentReference companyRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot companySnapshot = await companyRef.get();
+      return companySnapshot;
+    } catch (e) {
+      print('Error fetching company document: $e');
+      rethrow;
+    }
   }
 
-  Future<void> getUserData() async {
+  Future<DocumentSnapshot> getUserDataById(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot = await firestore.collection('user').doc(userId).get();
+      return userSnapshot;
+    } catch (e) {
+      print('Error fetching user document: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserDataByRef(DocumentReference userRef) async {
+  try {
+    DocumentSnapshot userSnapshot = await userRef.get();
+    return userSnapshot;
+  } catch (e) {
+    print('Error fetching user document: $e');
+    rethrow;
+  }
+  
+}
+
+Future<void> getUserData() async {
     try {
       final userEmail = firebaseAuth.currentUser?.email;
       if (userEmail != null) {
-        DocumentSnapshot<Map<String, dynamic>> snapshot =
-            await firestore.collection('user').doc(userEmail).get();
+        DocumentSnapshot<Map<String, dynamic>> snapshot = await firestore.collection('user').doc(userEmail).get();
 
         if (snapshot.exists) {
           Map<String, dynamic>? userData = snapshot.data();
@@ -69,16 +101,11 @@ class HomePageController extends GetxController {
 
           // Prefetch the profile image
           if (profileImageUrl.value.isNotEmpty) {
-            CachedNetworkImageProvider(profileImageUrl.value)
-                .resolve(ImageConfiguration());
+            CachedNetworkImageProvider(profileImageUrl.value).resolve(ImageConfiguration());
           }
 
           // Set up real-time listener for user data changes
-          _userDataSubscription = firestore
-              .collection('user')
-              .doc(userEmail)
-              .snapshots()
-              .listen((snapshot) {
+          _userDataSubscription = firestore.collection('user').doc(userEmail).snapshots().listen((snapshot) {
             if (snapshot.exists) {
               Map<String, dynamic>? userData = snapshot.data();
               username.value = userData?['username'] ?? '';
@@ -86,8 +113,7 @@ class HomePageController extends GetxController {
 
               // Prefetch the updated profile image
               if (profileImageUrl.value.isNotEmpty) {
-                CachedNetworkImageProvider(profileImageUrl.value)
-                    .resolve(ImageConfiguration());
+                CachedNetworkImageProvider(profileImageUrl.value).resolve(ImageConfiguration());
               }
             }
           });
@@ -97,6 +123,7 @@ class HomePageController extends GetxController {
       print('Error retrieving user data: $e');
     }
   }
+  
 
   void clearUserData() {
     username.value = '';
