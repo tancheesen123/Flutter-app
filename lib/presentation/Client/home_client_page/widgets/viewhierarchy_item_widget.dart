@@ -49,7 +49,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
               data.clear();
               jobPostList.clear();
               data.addAll(snapshot.data! as List<dynamic>);
-              print(data);
+
               data.forEach((job) {
                 jobPostList.add({"data": job.data(), "id": job.id});
               });
