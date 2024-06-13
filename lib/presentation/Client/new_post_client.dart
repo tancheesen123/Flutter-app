@@ -742,6 +742,9 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
   }
 
   Future<bool> submitJobPost() async {
+    final now = DateTime.now(); // Replace with current date in production
+    final month = now.month;
+    final day = now.day;
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
     final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
@@ -756,11 +759,39 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
       }
     };
 
+    Map<String, dynamic> insightData = {
+      'impression': {
+        '$month': {
+          '$day': {
+            'dayDate': "$day",
+            'value': "0",
+          },
+        },
+      },
+      'clicks': {
+        '$month': {
+          '$day': {
+            'dayDate': "$day",
+            'value': "0",
+          },
+        },
+      },
+      'apply': {
+        '$month': {
+          '$day': {
+            'dayDate': "$day",
+            'value': "0",
+          },
+        },
+      },
+    };
+
     Map<String, dynamic> data = {
       "title": titleTextFieldController.text,
       "location": locationTextFieldController.text,
       "budget": int.parse(budgetTextFieldController.text),
       "description": descriptionTextFieldController.text,
+      "insight": json.encode(insightData),
       // "status": "Part Time",
       // "workingHours": 20,
       "user": userRef,
