@@ -4,7 +4,14 @@ import '../../../../resources/app_resources.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class ApplyInsightLineChart extends StatefulWidget {
-  const ApplyInsightLineChart({Key? key}) : super(key: key);
+  final Map<String, dynamic> postInsightData;
+  final Map<String, int> totalValues;
+
+  const ApplyInsightLineChart({
+    Key? key,
+    required this.postInsightData,
+    required this.totalValues,
+  }) : super(key: key);
 
   @override
   _ApplyInsightLineChartState createState() => _ApplyInsightLineChartState();
@@ -12,9 +19,10 @@ class ApplyInsightLineChart extends StatefulWidget {
 
 class _ApplyInsightLineChartState extends State<ApplyInsightLineChart> {
   String? _tappedBarValue;
-
   @override
   Widget build(BuildContext context) {
+    final postInsightData = widget.postInsightData ?? '';
+    final totalValues = widget.totalValues ?? '';
     return Scaffold(
       appBar: AppBar(
         title: Text('Apply Bar Chart Example'),
