@@ -24,41 +24,36 @@ class _ClickInsightLineChartState extends State<ClickInsightLineChart> {
   String? _tappedBarValue;
 
   @override
-  @override
   Widget build(BuildContext context) {
+    print("This is post Insight Data ${widget.postInsightData["clicks"]}");
     return Scaffold(
       appBar: AppBar(
         title: Text('Clicks Bar Chart Example'),
       ),
-      body: FutureBuilder<List<SalesData>>(
-        future: postInsightController
-            .getLast7DaysClicksData(widget.postInsightData),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error loading clicks data"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("No clicks data available"));
-          } else {
-            List<SalesData> salesData = snapshot.data!;
-            return Center(
-              child: SfCartesianChart(
-                isTransposed: true,
-                primaryXAxis: CategoryAxis(),
-                primaryYAxis: NumericAxis(),
-                series: <BarSeries<SalesData, String>>[
-                  BarSeries<SalesData, String>(
-                    dataSource: salesData,
-                    xValueMapper: (SalesData sales, _) => sales.month,
-                    yValueMapper: (SalesData sales, _) => sales.sales,
-                    dataLabelSettings: DataLabelSettings(isVisible: true),
-                  ),
-                ],
-              ),
-            );
-          }
-        },
+      body: Center(
+        child: SfCartesianChart(
+          // Rotate the axes for vertical bars
+          isTransposed: true,
+          primaryXAxis: CategoryAxis(),
+          primaryYAxis: NumericAxis(),
+          series: <BarSeries<SalesData, String>>[
+            BarSeries<SalesData, String>(
+              // Bind dataSource
+              dataSource: <SalesData>[
+                SalesData('Jan', 35),
+                SalesData('Feb', 28),
+                SalesData('Mar', 34),
+                SalesData('Apr', 32),
+                SalesData('Today', 40),
+              ],
+              // Map data properties
+              xValueMapper: (SalesData sales, _) => sales.month,
+              yValueMapper: (SalesData sales, _) => sales.sales,
+              // Enable data labels
+              dataLabelSettings: DataLabelSettings(isVisible: true),
+            ),
+          ],
+        ),
       ),
     );
   }
