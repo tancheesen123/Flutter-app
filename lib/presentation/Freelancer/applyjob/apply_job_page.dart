@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -72,6 +74,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
               final data = snapshot.data!;
               Map<String, dynamic> jobPostData = data[0];
               Map<String, dynamic> userData = data[1];
+              DocumentReference? userRef = jobPostData['user'] as DocumentReference?;
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
               return Stack(
@@ -86,38 +89,30 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                           SizedBox(
                             height: 82.v,
                             width: 80.h,
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle515,
-                                  height: 80.adaptSize,
-                                  width: 80.adaptSize,
-                                  radius: BorderRadius.circular(40.h),
-                                  alignment: Alignment.center,
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
-                                    height: 19.adaptSize,
-                                    width: 19.adaptSize,
-                                    margin: EdgeInsets.only(right: 6.h),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.h, vertical: 6.v),
-                                    decoration:
-                                        AppDecoration.outlineGray5001.copyWith(
-                                      borderRadius:
-                                          BorderRadiusStyle.roundedBorder9,
-                                    ),
-                                    child: CustomImageView(
-                                      imagePath: ImageConstant.imgFill244,
-                                      height: 5.v,
-                                      width: 6.h,
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                  ),
-                                )
-                              ],
+                            child: FutureBuilder<DocumentSnapshot>(
+                              future: applyJobController.getUserData(userRef!),
+                              builder: (context, userSnapshot) {
+                                if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                  return _buildShimmerLoading_CompanyLogo();
+                                 }else if (userSnapshot.hasError) {
+                                  return Text('Error: ${userSnapshot.error}');
+                                } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                                  return Text('No user data found');
+                                } else {
+                                  String? profileImageUrl = userSnapshot.data!.get('profileImageUrl');
+                                  return Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 40.h,
+                                        backgroundImage: profileImageUrl != null
+                                            ? CachedNetworkImageProvider(profileImageUrl)
+                                            : AssetImage(ImageConstant.imgRectangle515) as ImageProvider<Object>,
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
                             ),
                           ),
                           SizedBox(height: 10.v),
@@ -128,7 +123,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                           SizedBox(height: 20.v),
                           RichText(
                             text: TextSpan(
-                              text: "Chargee MY -",
+                              text: "Chagee MY -",
                               style: Theme.of(context).textTheme.bodyLarge,
                               children: [
                                 WidgetSpan(
@@ -345,5 +340,20 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
 
   void onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  Widget _buildShimmerLoading_CompanyLogo() {
+    return SizedBox(
+      height: 50.v,
+      width: 50.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: CircleAvatar(
+                radius: 40.h,
+                backgroundColor: Colors.white,
+              ),
+      ),
+    );
   }
 }
