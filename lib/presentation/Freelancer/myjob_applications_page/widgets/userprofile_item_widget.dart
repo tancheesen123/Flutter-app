@@ -134,7 +134,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
                   else if (status == 'Reject')
                     buildCustomRejectBtn(context)
                   else
-                    buildCustomPendingBtn(context),
+                    buildCustomAcceptBtn(context),
                   Padding(
                     padding: EdgeInsets.only(
                       top: 4.v,
@@ -173,6 +173,31 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
             'Pending',
             style: TextStyle(
               color: Color(0xFFF29339),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildCustomAcceptBtn(BuildContext context) {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        height: 50,
+        width: 150,
+        decoration: BoxDecoration(
+          color: Color.fromARGB(255, 73, 242, 57).withOpacity(0.2),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Align(
+          alignment: Alignment.center,
+          child: Text(
+            'Accepted',
+            style: TextStyle(
+              color: Color.fromARGB(255, 88, 242, 57),
               fontWeight: FontWeight.bold,
             ),
           ),

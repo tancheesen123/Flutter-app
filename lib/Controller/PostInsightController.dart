@@ -14,72 +14,6 @@ class PostInsightController extends GetxController {
   var email = ''.obs;
   var deviceToken = ''.obs;
 
-  // Future<void> savePostInsight(String jobPostId) async {
-  //   final now = DateTime.now(); // Replace with your project ID
-  //   print("This is date time $now");
-  //   final month = now.month;
-
-  //   final docRef =
-  //       FirebaseFirestore.instance.collection('jobPost').doc(jobPostId);
-  //   final doc = await docRef.get();
-
-  //   if (doc.exists) {
-  //     // print(doc.data());
-  //     final insightData = doc.data()?["insight"];
-  //     print("This is data after fetching $insightData");
-  //   }
-
-  //   print("This is date time month $month");
-  // final month = now.month;
-  // final day = now.day;
-  // final Map<String, dynamic> postInsight = {
-  //   'insight': {
-  //     'impression': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //       },
-  //     },
-  //     'clicks': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //       },
-  //     },
-  //     'apply': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "123",
-  //         },
-  //       },
-  //     },
-  //   }
-  // };
-
-  //   print(jsonEncode(postInsight));
-  //   // final http.Response response = await http.post(
-  //   //   fcmUrl,
-  //   //   headers: headers,
-  //   //   body: jsonEncode(notification),
-  //   // );
-  // }
   Future<Map<String, dynamic>> fetchPostInsight(String jobPostId) async {
     final docRef =
         FirebaseFirestore.instance.collection('jobPost').doc(jobPostId);
@@ -123,9 +57,6 @@ class PostInsightController extends GetxController {
           insightData = Map<String, dynamic>.from(insightJsonString);
         }
       }
-
-      print("This is data after fetching: $insightData");
-
       // Calculate new values
       final int impressionValue = (int.tryParse(insightData['impression']
                       ?['$month']?['$day']?['value'] ??
@@ -172,8 +103,6 @@ class PostInsightController extends GetxController {
           },
         },
       };
-
-      print(jsonEncode(insightData));
 
       // Save the updated insight data back to Firestore
       final jsonString = jsonEncode(insightData);
@@ -238,8 +167,6 @@ class PostInsightController extends GetxController {
         }
       }
 
-      print("This is data after fetching: $insightData");
-
       // Calculate new value
       final int newValue = (int.tryParse(
                   insightData[field]?['$month']?['$day']?['value'] ?? "0") ??
@@ -259,12 +186,10 @@ class PostInsightController extends GetxController {
         'value': newValue.toString(),
       };
 
-      print(jsonEncode(insightData));
-
       // Save the updated insight data back to Firestore
       final jsonString = jsonEncode(insightData);
       await docRef.set({'insight': jsonString}, SetOptions(merge: true));
-      print("Insight data successfully updated for $field.");
+      // print("Insight data successfully updated for $field.");
     } catch (e) {
       print("Failed to update insight data for $field: $e");
     }
