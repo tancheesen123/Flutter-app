@@ -24,7 +24,6 @@ class MyJobController extends GetxController {
     final doc = await docRef.get();
 
     if (doc.exists) {
-      // print(doc.data());
       return doc.data();
     } else {
       return null;
@@ -48,8 +47,7 @@ class MyJobController extends GetxController {
   Future<List<Map<String, dynamic>>> fetchData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('userEmail') ?? '';
-    // String email = userController.getEmail();
-    // print("This email: $email");
+
     List<Map<String, dynamic>> dataList = [];
 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -80,7 +78,6 @@ class MyJobController extends GetxController {
                 postDoc.data() as Map<String, dynamic>;
 
             postData['postId'] = doc.id;
-            // print("This is postData: $postData");
 
             dataList.add({
               'statusApplication': applicationStatus,
@@ -92,13 +89,10 @@ class MyJobController extends GetxController {
               'workingHours': postData['workingHours'],
               'budget': postData['budget'],
             });
-          } else {
-            // print("postDoc.data() is null for documentId: $documentId");
-          }
+          } else {}
         }
       }
     });
-    print("This is dataList: $dataList");
     return dataList;
   }
 }

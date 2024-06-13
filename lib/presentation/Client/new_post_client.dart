@@ -53,7 +53,6 @@ class _NewPostScreenState extends State<NewPostScreen>
         titleMessageTextFieldController.text.isNotEmpty &&
         bodyMessageTextFieldController.text.isNotEmpty) {
       setState(() {
-        print("Hello");
         validToSubmit = true;
       });
     } else {
