@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:workwise/Controller/PostInsightController.dart';
 
 class HomePageController extends GetxController {
   final FirebaseFirestore firestore;
@@ -38,6 +39,8 @@ class HomePageController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> fetchJobPostData() async {
+    final PostInsightController postInsightController =
+        Get.put(PostInsightController());
     List<Map<String, dynamic>> dataList = [];
     var querySnapshot =
         await FirebaseFirestore.instance.collection('jobPost').get();
@@ -46,8 +49,9 @@ class HomePageController extends GetxController {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       data['postId'] = doc.id;
       dataList.add(data);
+      postInsightController.saveImpression(doc.id);
     });
-    print("This is querySnapShoot $querySnapshot[0]");
+
     return dataList;
   }
 

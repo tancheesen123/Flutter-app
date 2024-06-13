@@ -56,8 +56,8 @@ class _PostInsightScreenState extends State<PostInsightScreen>
           future: Future.wait([
             applyJobController.getJobPostData(widget.postId ?? ""),
             userController.getUserInformation(),
-            postInsightController.fetchPostInsight("a1"),
-            postInsightController.getTotalValues("a1"),
+            postInsightController.fetchPostInsight(widget.postId ?? ""),
+            postInsightController.getTotalValues(widget.postId ?? ""),
 
             // Add your second future here
             // FutureOperation2()
