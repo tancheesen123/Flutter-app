@@ -47,6 +47,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
           ),
         );
       },
+      child:Padding(padding: EdgeInsets.symmetric(horizontal: 20.h),
       child: Container(
         padding: EdgeInsets.symmetric(
           horizontal: 20.h,
@@ -150,6 +151,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
             )
           ],
         ),
+      ),
       ),
     );
   }
