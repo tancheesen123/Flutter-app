@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +22,7 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
   ));
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _homePageController.fetchJobPostData(),
       builder: (context, snapshot) {
@@ -43,75 +44,81 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
                 },
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  final post = snapshot.data![index];
-                  return GestureDetector(
-                    onTap: () {
-                      print('Post ID: ${post['postId']}');
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return ApplyJobScreen(
-                              postId: post['postId'],
+                  Map<String, dynamic> post = snapshot.data![index];
+                  DocumentReference? userRef = post['user'] as DocumentReference?;
+
+                  if (userRef == null) {
+                    return Text('User reference is null');
+                  }
+
+                  return FutureBuilder<DocumentSnapshot>(
+                    future: _homePageController.getUserDataByRef(userRef),
+                    builder: (context, userSnapshot) {
+                      if (userSnapshot.connectionState == ConnectionState.waiting) {
+                        return _buildShimmerLoading();
+                      } else if (userSnapshot.hasError) {
+                        return Text('Error: ${userSnapshot.error}');
+                      } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                        return Text('No user data found');
+                      } else {
+                        String? profileImageUrl = userSnapshot.data!.get('profileImageUrl');
+
+                        return GestureDetector(
+                          onTap: () {
+                            print('Post ID: ${post['postId']}');
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                builder: (BuildContext context) {
+                                  return ApplyJobScreen(
+                                    postId: post['postId'],
+                                  );
+                                },
+                              ),
                             );
                           },
-                        ),
-                      );
-                    },
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        padding: EdgeInsets.all(15.h),
-                        decoration:
-                            AppDecoration.outlineErrorContainer.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder20,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomImageView(
-                              imagePath: ImageConstant.imgRectangle515,
-                              height: 50.adaptSize,
-                              width: 50.adaptSize,
-                              radius: BorderRadius.circular(
-                                15.h,
+                          child: Align(
+                            alignment: Alignment.topCenter,
+                            child: Container(
+                              padding: EdgeInsets.all(15.h),
+                              decoration: AppDecoration.outlineErrorContainer.copyWith(
+                                borderRadius: BorderRadiusStyle.roundedBorder20,
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: 20.h,
-                                bottom: 4.v,
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    post['title'] ?? "Retail Assistant",
-                                    style: CustomTextStyles
-                                        .titleMediumPrimaryContainerSemiBold,
+                                  CircleAvatar(
+                                    radius: 25.h,
+                                    backgroundImage: profileImageUrl != null
+                                        ? CachedNetworkImageProvider(profileImageUrl)
+                                        : AssetImage(ImageConstant.imgRectangle515) as ImageProvider<Object>,
                                   ),
-                                  SizedBox(height: 2.v),
+                                  SizedBox(width: 20.h),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        post['title'] ?? "Retail Assistant",
+                                        style: CustomTextStyles.titleMediumPrimaryContainerSemiBold,
+                                      ),
+                                      SizedBox(height: 2.v),
+                                      Text(
+                                        post['status'] ?? "Part Time",
+                                        style: theme.textTheme.bodySmall,
+                                      ),
+                                    ],
+                                  ),
+                                  Spacer(),
                                   Text(
-                                    post['status'] ?? "Part Time",
-                                    style: theme.textTheme.bodySmall,
+                                    "RM${post['budget']}/${post['workingHours']}h",
+                                    style: CustomTextStyles.labelLarge12,
                                   ),
                                 ],
                               ),
                             ),
-                            Spacer(),
-                            Padding(
-                              padding: EdgeInsets.only(
-                                top: 15.v,
-                                bottom: 16.v,
-                              ),
-                              child: Text(
-                                "RM${post['budget']}/${post['workingHours']}h",
-                                style: CustomTextStyles.labelLarge12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          ),
+                        );
+                      }
+                    },
                   );
                 },
               ),
