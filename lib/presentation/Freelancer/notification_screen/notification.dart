@@ -134,7 +134,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           return SizedBox.shrink();
                         } else {
                           if (isLoading) {
-                            context.loaderOverlay.show();
+                            context.loaderOverlay.hide();
                             isLoading = false;
                           }
                         }
