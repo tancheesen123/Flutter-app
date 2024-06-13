@@ -75,11 +75,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
               Map<String, dynamic> userData = data[1];
               Map<String, dynamic> postInsightData = data[2];
               Map<String, int> totalValues = data[3];
-              print(
-                  "This is json i fetch from totalValues ${totalValues["impression"]}");
-              print("This is json i fetch from postInsight ${postInsightData}");
-              Map<String, dynamic> impression = postInsightData["impression"];
-              print("This is json impression ${impression}");
+
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
               return Stack(
