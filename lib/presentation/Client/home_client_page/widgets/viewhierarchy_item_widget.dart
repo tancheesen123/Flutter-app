@@ -49,8 +49,9 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
               data.clear();
               jobPostList.clear();
               data.addAll(snapshot.data! as List<dynamic>);
+              print(data);
               data.forEach((job) {
-                jobPostList.add(job.data());
+                jobPostList.add({"data": job.data(), "id": job.id});
               });
             }
           }
@@ -63,7 +64,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                         children: List.generate(jobPostList.length, (index) {
                       Widget buttonType;
 
-                      switch (jobPostList[index]["postStatus"]) {
+                      switch (jobPostList[index]['data']["postStatus"]) {
                         case "OPEN":
                           buttonType = Row(children: [
                             Expanded(
@@ -219,7 +220,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   child: Row(
                                     children: [
                                       Text(
-                                        jobPostList[index]["title"],
+                                        jobPostList[index]['data']["title"],
                                         style: theme.textTheme.titleMedium,
                                       ),
                                       Spacer(),
@@ -256,7 +257,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                 Padding(
                                   padding: EdgeInsets.only(left: 5.h),
                                   child: Text(
-                                    jobPostList[index]["location"],
+                                    jobPostList[index]['data']["location"],
                                     style: theme.textTheme.bodySmall,
                                   ),
                                 ),
@@ -352,7 +353,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                           ),
                           SizedBox(height: 10.v),
                           Text(
-                            jobPostDetail['title'] ?? "Job Title",
+                            jobPostDetail["data"]['title'] ?? "Job Title",
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           SizedBox(height: 20.v),
@@ -368,7 +369,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   ),
                                 ),
                                 TextSpan(
-                                  text: jobPostDetail['location'] ?? "Location",
+                                  text: jobPostDetail["data"]['location'] ??
+                                      "Location",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -390,12 +392,13 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   ),
                                 ),
                                 TextSpan(
-                                  text: jobPostDetail['status'] ?? "status",
+                                  text: jobPostDetail["data"]['status'] ??
+                                      "status",
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 TextSpan(
                                   text:
-                                      "                   RM${jobPostDetail['budget'] ?? "123"}/${jobPostDetail['workingHours'] ?? "123"}h  ",
+                                      "                   RM${jobPostDetail["data"]['budget'] ?? "123"}/${jobPostDetail["data"]['workingHours'] ?? "123"}h  ",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -461,7 +464,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                           Expanded(
                                             child: SingleChildScrollView(
                                               child: Text(
-                                                jobPostDetail["description"],
+                                                jobPostDetail["data"]
+                                                    ["description"],
                                               ),
                                             ),
                                           ),
@@ -558,7 +562,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                         MaterialPageRoute(
                                           builder: (BuildContext context) {
                                             return PostInsightScreen(
-                                                postId: "a3");
+                                                postId: jobPostDetail["id"]);
                                           },
                                         ),
                                       );
@@ -591,7 +595,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                       MaterialPageRoute(
                                         builder: (BuildContext context) {
                                           return PostInsightScreen(
-                                              postId: "a3");
+                                              postId: jobPostDetail["id"]);
                                         },
                                       ),
                                     );

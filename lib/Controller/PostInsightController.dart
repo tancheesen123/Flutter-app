@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -216,7 +216,8 @@ class PostInsightController extends GetxController {
 
   Future<void> updateInsight(String jobPostId, String field) async {
     // final now = DateTime.now(); // Replace with current date in production
-    final now = DateTime.utc(1989, 3, 12);
+    // final now = DateTime.utc(1989, 3, 12);
+    final now = DateTime.now();
     final month = now.month;
     final day = now.day;
 
@@ -337,15 +338,39 @@ class PostInsightController extends GetxController {
           insightData = Map<String, dynamic>.from(insightJsonString);
         }
 
-        totalValues['impression'] = _calculateTotal(insightData['impression']);
-        totalValues['clicks'] = _calculateTotal(insightData['clicks']);
-        totalValues['apply'] = _calculateTotal(insightData['apply']);
+        // Filter the insight data to include only the last 7 days
+        DateTime now = DateTime.now();
+        DateFormat dateFormat = DateFormat('MM/dd');
+
+        totalValues['impression'] = _calculateTotalForLast7Days(
+            insightData['impression'], now, dateFormat);
+        totalValues['clicks'] =
+            _calculateTotalForLast7Days(insightData['clicks'], now, dateFormat);
+        totalValues['apply'] =
+            _calculateTotalForLast7Days(insightData['apply'], now, dateFormat);
       }
     } catch (e) {
       print("Failed to get total values: $e");
     }
 
     return totalValues;
+  }
+
+  int _calculateTotalForLast7Days(
+      Map<String, dynamic> data, DateTime now, DateFormat dateFormat) {
+    int total = 0;
+
+    for (int i = 0; i < 7; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String month = date.month.toString();
+      String day = date.day.toString();
+
+      if (data != null && data[month] != null && data[month][day] != null) {
+        total += int.parse(data[month][day]['value']);
+      }
+    }
+
+    return total;
   }
 
   int _calculateTotal(Map<String, dynamic>? data) {
@@ -364,13 +389,17 @@ class PostInsightController extends GetxController {
     return total;
   }
 
-  List<Map<String, dynamic>> getLast7DaysClicksData(
-      Map<String, dynamic> postInsightData) {
+  Future<List<Map<String, dynamic>>> getLast7DaysClicksData(
+      Map<String, dynamic> postInsightData) async {
     List<Map<String, dynamic>> last7DaysClicks = [];
     DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('MM/dd');
 
     for (int i = 0; i < 7; i++) {
       DateTime date = now.subtract(Duration(days: i));
+      String formattedDate = i == 0
+          ? 'Today'
+          : formatter.format(date); // Change today's date to "Today"
       String month = date.month.toString();
       String day = date.day.toString();
 
@@ -378,17 +407,63 @@ class PostInsightController extends GetxController {
           postInsightData['clicks'][month] != null &&
           postInsightData['clicks'][month][day] != null) {
         last7DaysClicks.add({
-          'date': date,
+          'date': formattedDate,
           'value': int.parse(postInsightData['clicks'][month][day]['value']),
         });
       } else {
         last7DaysClicks.add({
-          'date': date,
+          'date': formattedDate,
           'value': 0,
         });
       }
     }
 
+    // Sort the list in ascending order by date (ignoring 'Today')
+    last7DaysClicks.sort((a, b) {
+      if (a['date'] == 'Today') return 1;
+      if (b['date'] == 'Today') return -1;
+      return a['date'].compareTo(b['date']);
+    });
+
     return last7DaysClicks;
+  }
+
+  Future<List<Map<String, dynamic>>> getLast7DaysApplyData(
+      Map<String, dynamic> postInsightData) async {
+    List<Map<String, dynamic>> last7DaysApply = [];
+    DateTime now = DateTime.now();
+    DateFormat formatter = DateFormat('MM/dd');
+
+    for (int i = 0; i < 7; i++) {
+      DateTime date = now.subtract(Duration(days: i));
+      String formattedDate = i == 0
+          ? 'Today'
+          : formatter.format(date); // Change today's date to "Today"
+      String month = date.month.toString();
+      String day = date.day.toString();
+
+      if (postInsightData['apply'] != null &&
+          postInsightData['apply'][month] != null &&
+          postInsightData['apply'][month][day] != null) {
+        last7DaysApply.add({
+          'date': formattedDate,
+          'value': int.parse(postInsightData['apply'][month][day]['value']),
+        });
+      } else {
+        last7DaysApply.add({
+          'date': formattedDate,
+          'value': 0,
+        });
+      }
+    }
+
+    // Sort the list in ascending order by date (ignoring 'Today')
+    last7DaysApply.sort((a, b) {
+      if (a['date'] == 'Today') return 1;
+      if (b['date'] == 'Today') return -1;
+      return a['date'].compareTo(b['date']);
+    });
+
+    return last7DaysApply;
   }
 }

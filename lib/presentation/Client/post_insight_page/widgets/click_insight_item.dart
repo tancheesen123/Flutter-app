@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:workwise/Controller/PostInsightController.dart';
+import 'package:intl/intl.dart';
 
 class ClickInsightLineChart extends StatefulWidget {
   final Map<String, dynamic> postInsightData;
@@ -21,39 +21,45 @@ class ClickInsightLineChart extends StatefulWidget {
 class _ClickInsightLineChartState extends State<ClickInsightLineChart> {
   final PostInsightController postInsightController =
       Get.put(PostInsightController());
-  String? _tappedBarValue;
 
   @override
   Widget build(BuildContext context) {
-    print("This is post Insight Data ${widget.postInsightData["clicks"]}");
     return Scaffold(
       appBar: AppBar(
-        title: Text('Clicks Bar Chart Example'),
+        title: Text('7-Day Click Bar Chart'),
       ),
-      body: Center(
-        child: SfCartesianChart(
-          // Rotate the axes for vertical bars
-          isTransposed: true,
-          primaryXAxis: CategoryAxis(),
-          primaryYAxis: NumericAxis(),
-          series: <BarSeries<SalesData, String>>[
-            BarSeries<SalesData, String>(
-              // Bind dataSource
-              dataSource: <SalesData>[
-                SalesData('Jan', 35),
-                SalesData('Feb', 28),
-                SalesData('Mar', 34),
-                SalesData('Apr', 32),
-                SalesData('Today', 40),
-              ],
-              // Map data properties
-              xValueMapper: (SalesData sales, _) => sales.month,
-              yValueMapper: (SalesData sales, _) => sales.sales,
-              // Enable data labels
-              dataLabelSettings: DataLabelSettings(isVisible: true),
-            ),
-          ],
-        ),
+      body: FutureBuilder<List<Map<String, dynamic>>>(
+        future: postInsightController
+            .getLast7DaysClicksData(widget.postInsightData),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text("Error loading clicks data"));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text("No clicks data available"));
+          } else {
+            List<Map<String, dynamic>> clickData = snapshot.data!;
+            List<SalesData> salesData = clickData.map((data) {
+              return SalesData(data['date'], data['value'].toDouble());
+            }).toList();
+            return Center(
+              child: SfCartesianChart(
+                isTransposed: true,
+                primaryXAxis: CategoryAxis(),
+                primaryYAxis: NumericAxis(),
+                series: <BarSeries<SalesData, String>>[
+                  BarSeries<SalesData, String>(
+                    dataSource: salesData,
+                    xValueMapper: (SalesData sales, _) => sales.month,
+                    yValueMapper: (SalesData sales, _) => sales.sales,
+                    dataLabelSettings: DataLabelSettings(isVisible: true),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
       ),
     );
   }
