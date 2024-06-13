@@ -33,7 +33,6 @@ class ApplyJobController extends GetxController {
     final doc = await docRef.get();
 
     if (doc.exists) {
-      // print(doc.data());
       return doc.data();
     } else {
       return null;
@@ -66,7 +65,7 @@ class ApplyJobController extends GetxController {
     await candidateRef.set(candidateData);
 
     DocumentReference PostRef = _firestore.collection('jobPost').doc(jobPostId);
-    String postRefPath = PostRef.path;
+    // String postRefPath = PostRef.path;
 
     // Store the reference path in another collection
     String email =
@@ -76,7 +75,7 @@ class ApplyJobController extends GetxController {
         .collection('user')
         .doc(email)
         .collection("Application")
-        .where('postRefPath', isEqualTo: postRefPath)
+        .where('postRefPath', isEqualTo: PostRef)
         .limit(
             1) // Limit the query to 1 document, as we only need to check if any document exists
         .get();
@@ -95,7 +94,7 @@ class ApplyJobController extends GetxController {
           .collection(
               "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
           .add({
-        'postRefPath': postRefPath,
+        'postRefPath': PostRef,
         'status': "Pending",
       });
       // Fetch the updated list of candidates
@@ -104,10 +103,7 @@ class ApplyJobController extends GetxController {
       // notificationController.sendNotification(token);
       var test = await getJobPostData(jobPostId);
       DocumentSnapshot companyData = await getCompanyData(test!['company']);
-      print("This is company Data ${companyData["user"]}");
       DocumentSnapshot userData = await getUserData(companyData["user"]);
-
-      print("This is the Token: ${userData["Token"]}");
 
       await postInsightController.saveApply(jobPostId);
       notificationController.sendNotification(
