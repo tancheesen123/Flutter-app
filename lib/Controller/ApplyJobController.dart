@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/UserController.dart';
 import 'package:workwise/Controller/NotificationController.dart';
+import 'package:workwise/Controller/PostInsightController.dart';
 
 class ApplyJobController extends GetxController {
   static ApplyJobController instance = Get.find();
   final UserController userController = Get.put(UserController());
   final NotificationController notificationController =
       Get.put(NotificationController());
+  final PostInsightController postInsightController =
+      Get.put(PostInsightController());
 
   DateTime? lastEmailSentTime;
 
@@ -50,20 +53,6 @@ class ApplyJobController extends GetxController {
 
     candidates.value = candidatesList;
   }
-
-  // Future<void> addCandidate(
-  //     String jobPostId, Map<String, dynamic> candidateData) async {
-  //   String label = candidateData["label"];
-  //   await _firestore
-  //       .collection('jobPost')
-  //       .doc(jobPostId)
-  //       .collection('candidate')
-  //       .doc(label) // Use the new label here
-  //       .set(
-  //           candidateData); // Use set instead of add to set data with specified document ID
-  //   // Fetch the updated list of candidates
-  //   await getCandidates(jobPostId);
-  // }
 
   Future<bool> addCandidate2(
       String jobPostId, Map<String, dynamic> candidateData) async {
@@ -118,6 +107,8 @@ class ApplyJobController extends GetxController {
       DocumentSnapshot userData = await getUserData(companyData["user"]);
 
       print("This is the Token: ${userData["Token"]}");
+
+      await postInsightController.saveApply(jobPostId);
       notificationController.sendNotification(
           "${userData["Token"]}",
           "Congrates! You have a new application",
