@@ -56,8 +56,9 @@ class _PostInsightScreenState extends State<PostInsightScreen>
           future: Future.wait([
             applyJobController.getJobPostData(widget.postId ?? ""),
             userController.getUserInformation(),
-            postInsightController.savePostInsight("a1"),
             postInsightController.fetchPostInsight("a1"),
+            postInsightController.getTotalValues("a1")
+
             // Add your second future here
             // FutureOperation2()
           ]),
@@ -72,7 +73,10 @@ class _PostInsightScreenState extends State<PostInsightScreen>
               final data = snapshot.data!;
               Map<String, dynamic> jobPostData = data[0];
               Map<String, dynamic> userData = data[1];
-              Map<String, dynamic> postInsightData = data[3];
+              Map<String, dynamic> postInsightData = data[2];
+              Map<String, int> totalValues = data[3];
+              print(
+                  "This is json i fetch from totalValues ${totalValues["impression"]}");
               print("This is json i fetch from postInsight ${postInsightData}");
               Map<String, dynamic> impression = postInsightData["impression"];
               print("This is json impression ${impression}");
@@ -142,29 +146,6 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                           SizedBox(height: 20.v),
                           _buildDivider(),
                           SizedBox(height: 20.v),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          //   children: [
-                          //     // Use Spacer to push the text to the right
-                          //     Padding(
-                          //       padding: const EdgeInsets.only(
-                          //           right:
-                          //               8.0), // Adjust the right padding as needed
-                          //       child: Text(
-                          //         "7-Day Insights",
-                          //         style: TextStyle(
-                          //           fontSize: 18, // Set font size to 18
-                          //           fontWeight:
-                          //               FontWeight.bold, // Make text bold
-                          //           color:
-                          //               Colors.black, // Set text color to black
-                          //         ),
-                          //       ),
-                          //     ),
-                          //     // Add other children here if needed
-                          //   ],
-                          // ),
-                          // SizedBox(height: 20.v),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
@@ -173,7 +154,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                                   Icon(Icons.insert_chart_outlined,
                                       color: Colors.black),
                                   Text(
-                                    '37',
+                                    '${totalValues["impression"]}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineLarge
@@ -199,7 +180,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                                 children: [
                                   Icon(Icons.touch_app, color: Colors.black),
                                   Text(
-                                    '7',
+                                    '${totalValues["clicks"]}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineLarge
@@ -226,7 +207,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                                   Icon(Icons.chat,
                                       color: Colors.black), // Add icon
                                   Text(
-                                    '0',
+                                    '${totalValues["apply"]}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineLarge
@@ -251,32 +232,6 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                             ],
                           ),
                           SizedBox(height: 20.v),
-                          // RichText(
-                          //   text: TextSpan(
-                          //     children: [
-                          //       WidgetSpan(
-                          //         child: Icon(
-                          //           Icons.access_time,
-                          //           size: 24.0,
-                          //         ),
-                          //       ),
-                          //       TextSpan(
-                          //         text: jobPostData['status'] ?? "status",
-                          //         style: Theme.of(context).textTheme.bodyLarge,
-                          //       ),
-                          //       TextSpan(
-                          //         text:
-                          //             "                   RM${jobPostData['budget'] ?? "123"}/${jobPostData['workingHours'] ?? "123"}h  ",
-                          //         style: Theme.of(context)
-                          //             .textTheme
-                          //             .bodyLarge
-                          //             ?.copyWith(
-                          //               fontWeight: FontWeight.bold,
-                          //             ),
-                          //       ),
-                          //     ],
-                          //   ),
-                          // ),
                           SizedBox(height: 15.v),
                           Container(
                             height: 50.v,
@@ -309,14 +264,19 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                               ],
                             ),
                           ),
-
                           SizedBox(
                             height: 350.v,
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                ClickInsightLineChart(), // Pass description here
-                                ApplyInsightLineChart(),
+                                ClickInsightLineChart(
+                                  postInsightData: postInsightData,
+                                  totalValues: totalValues,
+                                ), // Pass description here
+                                ApplyInsightLineChart(
+                                  postInsightData: postInsightData,
+                                  totalValues: totalValues,
+                                ),
                               ],
                             ),
                           ),
@@ -324,111 +284,100 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.5),
-                          topRight: Radius.circular(30.5),
-                        ),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.h,
-                        vertical: 12.v,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                              width: 100, // Set the desired width
-                              child: CustomElevatedButton(
-                                height: 48.v,
-                                text: "Edit",
-                                buttonTextStyle: CustomTextStyles
-                                    .titleSmallWhiteA700SemiBold,
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                buttonStyle: ElevatedButton.styleFrom(
-                                  backgroundColor: Color(
-                                      0xffC2C2C2), // Set the background color here
-                                ),
-                              )),
-                          // SizedBox(
-                          //   width: 100, // Set the desired width
-                          //   child: CustomElevatedButton(
-                          //     height: 48.v,
-                          //     text: "Button 2",
-                          //     buttonTextStyle:
-                          //         CustomTextStyles.titleSmallWhiteA700SemiBold,
-                          //     onPressed: () {
-                          //       // Add your onPressed logic here
-                          //     },
-                          //   ),
-                          // ),
-                          SizedBox(
-                            width: 200, // Set the desired width
-                            child: CustomElevatedButton(
-                              height: 48.v,
-                              text: "Apply",
-                              buttonTextStyle:
-                                  CustomTextStyles.titleSmallWhiteA700SemiBold,
-                              onPressed: () async {
-                                Map<String, dynamic> candidateData = {
-                                  'label': "${userData["email"]}",
-                                  'name': "${userData["username"]}",
-                                  'email': "${userData["email"]}",
-                                  'status': "pending",
-                                };
+                  // Align(
+                  //   alignment: Alignment.bottomCenter,
+                  //   child: Container(
+                  //     decoration: BoxDecoration(
+                  //       color: Colors.white,
+                  //       borderRadius: BorderRadius.only(
+                  //         topLeft: Radius.circular(30.5),
+                  //         topRight: Radius.circular(30.5),
+                  //       ),
+                  //     ),
+                  //     padding: EdgeInsets.symmetric(
+                  //       horizontal: 20.h,
+                  //       vertical: 12.v,
+                  //     ),
+                  //     child: Row(
+                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //       children: [
+                  //         SizedBox(
+                  //             width: 100, // Set the desired width
+                  //             child: CustomElevatedButton(
+                  //               height: 48.v,
+                  //               text: "Edit",
+                  //               buttonTextStyle: CustomTextStyles
+                  //                   .titleSmallWhiteA700SemiBold,
+                  //               onPressed: () {
+                  //                 Navigator.pop(context);
+                  //               },
+                  //               buttonStyle: ElevatedButton.styleFrom(
+                  //                 backgroundColor: Color(
+                  //                     0xffC2C2C2), // Set the background color here
+                  //               ),
+                  //             )),
 
-                                bool addedCandidateRef =
-                                    await applyJobController.addCandidate2(
-                                        "$postId", candidateData);
+                  //         SizedBox(
+                  //           width: 200, // Set the desired width
+                  //           child: CustomElevatedButton(
+                  //             height: 48.v,
+                  //             text: "Apply",
+                  //             buttonTextStyle:
+                  //                 CustomTextStyles.titleSmallWhiteA700SemiBold,
+                  //             onPressed: () async {
+                  //               Map<String, dynamic> candidateData = {
+                  //                 'label': "${userData["email"]}",
+                  //                 'name': "${userData["username"]}",
+                  //                 'email': "${userData["email"]}",
+                  //                 'status': "pending",
+                  //               };
 
-                                if (addedCandidateRef) {
-                                  ElegantNotification.success(
-                                    width: 360,
-                                    isDismissable: false,
-                                    animation: AnimationType.fromTop,
-                                    title: Text('Successful Apply'),
-                                    description: Text(
-                                        "You successfully applied to this job"),
-                                    onDismiss: () {},
-                                    onNotificationPressed: () {},
-                                    shadow: BoxShadow(
-                                      color: Colors.green.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ).show(context);
-                                } else {
-                                  ElegantNotification.error(
-                                    width: 360,
-                                    isDismissable: false,
-                                    animation: AnimationType.fromTop,
-                                    title: Text('Failed Apply'),
-                                    description:
-                                        Text("Already applied to this job"),
-                                    onDismiss: () {},
-                                    onNotificationPressed: () {},
-                                    shadow: BoxShadow(
-                                      color: Colors.red.withOpacity(0.2),
-                                      spreadRadius: 2,
-                                      blurRadius: 5,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ).show(context);
-                                }
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  //               bool addedCandidateRef =
+                  //                   await applyJobController.addCandidate2(
+                  //                       "$postId", candidateData);
+
+                  //               if (addedCandidateRef) {
+                  //                 ElegantNotification.success(
+                  //                   width: 360,
+                  //                   isDismissable: false,
+                  //                   animation: AnimationType.fromTop,
+                  //                   title: Text('Successful Apply'),
+                  //                   description: Text(
+                  //                       "You successfully applied to this job"),
+                  //                   onDismiss: () {},
+                  //                   onNotificationPressed: () {},
+                  //                   shadow: BoxShadow(
+                  //                     color: Colors.green.withOpacity(0.2),
+                  //                     spreadRadius: 2,
+                  //                     blurRadius: 5,
+                  //                     offset: const Offset(0, 4),
+                  //                   ),
+                  //                 ).show(context);
+                  //               } else {
+                  //                 ElegantNotification.error(
+                  //                   width: 360,
+                  //                   isDismissable: false,
+                  //                   animation: AnimationType.fromTop,
+                  //                   title: Text('Failed Apply'),
+                  //                   description:
+                  //                       Text("Already applied to this job"),
+                  //                   onDismiss: () {},
+                  //                   onNotificationPressed: () {},
+                  //                   shadow: BoxShadow(
+                  //                     color: Colors.red.withOpacity(0.2),
+                  //                     spreadRadius: 2,
+                  //                     blurRadius: 5,
+                  //                     offset: const Offset(0, 4),
+                  //                   ),
+                  //                 ).show(context);
+                  //               }
+                  //             },
+                  //           ),
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               );
             }
