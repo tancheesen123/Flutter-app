@@ -55,8 +55,8 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
                     future: _homePageController.getUserDataByRef(userRef),
                     builder: (context, userSnapshot) {
                       if (userSnapshot.connectionState == ConnectionState.waiting) {
-                        return _buildShimmerLoading();
-                      } else if (userSnapshot.hasError) {
+                        return _buildShimmerLoading_CompanyLogo();
+                      }else if (userSnapshot.hasError) {
                         return Text('Error: ${userSnapshot.error}');
                       } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
                         return Text('No user data found');
@@ -203,4 +203,23 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
       ),
     );
   }
+
+  Widget _buildShimmerLoading_CompanyLogo() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: SizedBox(
+      height: 50.v,
+      width: 50.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: CircleAvatar(
+          radius: 25.h,
+          backgroundColor: Colors.white,
+        ),
+      ),
+    ),
+  );
+}
+
 }
