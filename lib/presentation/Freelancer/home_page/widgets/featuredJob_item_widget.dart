@@ -1,19 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:workwise/Controller/ApplyJobController.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart';
 import '../../applyjob/apply_job_page.dart';
-import 'package:workwise/Controller/HomePageController.dart'; // ignore: must_be_immutable
+import 'package:workwise/Controller/HomePageController.dart';
 
 class FeaturedJobItemWidget extends StatefulWidget {
-  const FeaturedJobItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  const FeaturedJobItemWidget({Key? key}) : super(key: key);
 
   @override
   State<FeaturedJobItemWidget> createState() => _FeaturedJobItemWidgetState();
@@ -24,6 +22,7 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
     firestore: FirebaseFirestore.instance,
     firebaseAuth: FirebaseAuth.instance,
   ));
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
@@ -47,120 +46,110 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic> data = snapshot.data![index];
-                // String jobTitle = data['JobTitle'];
-                // int salary = data['SalaryPerHours'];
+                DocumentReference? userRef = data['user'] as DocumentReference?;
 
-                // /////////////
-                // String status = data['status'];
-                // int budget = data['budget'];
-                // String description = data['description'];
-                // String location = data['location'];
-                // String postId = data['postId'];
-                // String title = data['title'];
-                // int workingHours = data['workingHours'];
+                if (userRef == null) {
+                  return Text('User reference is null');
+                }
 
-                return GestureDetector(
-                  onTap: () {
-                    // print('Post ID: $postId');
+                return FutureBuilder<DocumentSnapshot>(
+                  future: _homePageController.getUserDataByRef(userRef),
+                  builder: (context, userSnapshot) {
+                    if (userSnapshot.connectionState == ConnectionState.waiting) {
+                      return _buildShimmerLoading();
+                    } else if (userSnapshot.hasError) {
+                      return Text('Error: ${userSnapshot.error}');
+                    } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
+                      return Text('No user data found');
+                    } else {
+                      String? profileImageUrl = userSnapshot.data!.get('profileImageUrl');
 
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                        builder: (BuildContext context) {
-                          return ApplyJobScreen(postId: data['postId']);
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(
+                              builder: (BuildContext context) {
+                                return ApplyJobScreen(postId: data['postId']);
+                              },
+                            ),
+                          );
                         },
-                      ),
-                    );
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => ApplyJobScreen(
-                    //       postId: postId,
-                    //     ),
-                    //   ),
-                    // );
-                  },
-                  child: SizedBox(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: Container(
-                        padding: EdgeInsets.all(10.h),
-                        decoration: AppDecoration.outlineBlack900.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder20,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 40.adaptSize,
-                                  width: 40.adaptSize,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(
-                                      13.h,
-                                    ),
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                        ImageConstant.imgRectangle515,
+                        child: SizedBox(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              padding: EdgeInsets.all(10.h),
+                              decoration: AppDecoration.outlineBlack900.copyWith(
+                                borderRadius: BorderRadiusStyle.roundedBorder20,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 20.h,
+                                        backgroundImage: profileImageUrl != null
+                                            ? CachedNetworkImageProvider(profileImageUrl)
+                                            : AssetImage(ImageConstant.imgRectangle382) as ImageProvider<Object>,
                                       ),
-                                      fit: BoxFit.cover,
-                                    ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          left: 157.h,
+                                          top: 5.v,
+                                          bottom: 7.v,
+                                        ),
+                                        child: CustomIconButton(
+                                          height: 28.adaptSize,
+                                          width: 28.adaptSize,
+                                          padding: EdgeInsets.all(6.h),
+                                          child: CustomImageView(
+                                            imagePath: ImageConstant.imgFavorite,
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                    left: 157.h,
-                                    top: 5.v,
-                                    bottom: 7.v,
-                                  ),
-                                  child: CustomIconButton(
-                                    height: 28.adaptSize,
-                                    width: 28.adaptSize,
-                                    padding: EdgeInsets.all(6.h),
-                                    child: CustomImageView(
-                                      imagePath: ImageConstant.imgFavorite,
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                            SizedBox(height: 3.v),
-                            Text(
-                              "${data['title']}",
-                              style: theme.textTheme.bodySmall,
-                            ),
-                            SizedBox(height: 11.v),
-                            Text(
-                              "${data['title']}",
-                              style: theme.textTheme.titleMedium,
-                            ),
-                            SizedBox(height: 8.v),
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(bottom: 1.v),
-                                  child: Text(
-                                    "RM${data['budget']}/${data['workinghours']}",
-                                    style: CustomTextStyles.labelLargeGray900,
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 60.h),
-                                  child: Text(
-                                    "${data['location']}",
+                                  SizedBox(height: 3.v),
+                                  Text(
+                                    "${data['title']}",
                                     style: theme.textTheme.bodySmall,
                                   ),
-                                )
-                              ],
+                                  SizedBox(height: 11.v),
+                                  Text(
+                                    "${data['title']}",
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                  SizedBox(height: 8.v),
+                                  Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(bottom: 1.v),
+                                        child: Text(
+                                          "RM${data['budget']}/${data['workinghours']}",
+                                          style: CustomTextStyles.labelLargeGray900,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 60.h),
+                                        child: Text(
+                                          "${data['location']}",
+                                          style: theme.textTheme.bodySmall,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.v)
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 5.v)
-                          ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
+                      );
+                    }
+                  },
                 );
               },
             ),
@@ -196,5 +185,5 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
         },
       ),
     );
-  }
+}
 }

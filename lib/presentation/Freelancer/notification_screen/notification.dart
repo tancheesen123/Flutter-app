@@ -16,6 +16,7 @@ import 'package:workwise/widgets/app_bar/appbar_title.dart';
 import 'package:workwise/widgets/app_bar/custom_app_bar.dart';
 import 'package:workwise/Controller/FirebaseApiController.dart';
 import 'package:workwise/Controller/NotificationController.dart';
+import 'package:workwise/widgets/loaderOverlay.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
@@ -97,43 +98,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return LoaderOverlay(
-        overlayColor: Colors.black.withOpacity(0.5),
-        useDefaultLoading: false,
-        overlayWidgetBuilder: (progress) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: 4.5,
-              sigmaY: 4.5,
-            ),
-            child: Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5.0), // Rounded edges
-                child: Container(
-                  width: 120,
-                  height: 100,
-                  color: Colors.black,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      LoadingAnimationWidget.staggeredDotsWave(
-                        color: Colors.white,
-                        size: 50,
-                      ),
-                      Text(
-                        'Please wait...',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
+    return UniversalLoaderOverlay(
         child: SafeArea(
           child: Scaffold(
             appBar: _buildAppBar(context),
@@ -169,7 +134,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           return SizedBox.shrink();
                         } else {
                           if (isLoading) {
-                            context.loaderOverlay.hide();
+                            context.loaderOverlay.show();
                             isLoading = false;
                           }
                         }
