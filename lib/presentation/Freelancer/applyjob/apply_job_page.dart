@@ -11,6 +11,7 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/UserController.dart'; // Import the JobPost model
+import 'package:workwise/Controller/PostInsightController.dart';
 import 'descriptionMenu.dart';
 import 'companyMenu.dart';
 import "../myjob_applications_page/myjob_applications_page.dart";
@@ -29,12 +30,15 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
   late TabController tabviewController;
   final ApplyJobController applyJobController = Get.put(ApplyJobController());
   final UserController userController = Get.put(UserController());
+  final PostInsightController postInsightController =
+      Get.put(PostInsightController());
   String? postId;
   @override
   void initState() {
     super.initState();
     tabviewController = TabController(length: 2, vsync: this);
     postId = widget.postId;
+    postInsightController.saveClicks(postId ?? "");
   }
 
   @override
