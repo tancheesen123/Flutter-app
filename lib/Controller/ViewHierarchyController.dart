@@ -24,53 +24,66 @@ class ViewHierarchyController extends GetxController {
     return await Future.wait([jobPostsFuture, companyFuture /*, otherFuture*/]);
   }
 
-  Future<Map<String, List<DocumentSnapshot>>> getAllJobPost() async {
+  Future<List<dynamic>> getAllJobPost() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID =
-        jsonDecode(prefs.getString("companyDetail")!)["id"];
+    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-    DocumentReference companyRef =
-        FirebaseFirestore.instance.collection("company").doc(companyID);
+    DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
 
-    // Fetch job posts
-    QuerySnapshot jobPostSnapshot = await FirebaseFirestore.instance
-        .collection("jobPost")
-        .where("company", isEqualTo: companyRef)
-        .get();
+    // // Fetch job posts
+    // QuerySnapshot jobPostSnapshot = await FirebaseFirestore.instance
+    //     .collection("jobPost")
+    //     .where("company", isEqualTo: companyRef)
+    //     .get();
 
-    // Initialize lists to store job posts and candidate details
-    List<DocumentSnapshot> jobPostDocs = [];
-    List<DocumentSnapshot> candidateDocs = [];
+    // // Initialize lists to store job posts and candidate details
+    // List<DocumentSnapshot> jobPostDocs = [];
+    // List<DocumentSnapshot> candidateDocs = [];
 
-    // Logging and collecting job post data
-    for (var doc in jobPostSnapshot.docs) {
-      print("post id ${doc.id}");
-      jobPostDocs.add(doc);
+    // // Logging and collecting job post data
+    // for (var doc in jobPostSnapshot.docs) {
+    //   print("post id ${doc.id}");
+    //   jobPostDocs.add(doc);
 
-      // Fetch candidates for each job post
-      QuerySnapshot candidateSnapshot = await FirebaseFirestore.instance
-          .collection("jobPost")
-          .doc(doc.id)
-          .collection("candidate")
-          .get();
+    //   // Fetch candidates for each job post
+    //   QuerySnapshot candidateSnapshot = await FirebaseFirestore.instance
+    //       .collection("jobPost")
+    //       .doc(doc.id)
+    //       .collection("candidate")
+    //       .get();
 
-      // Add all candidate documents to the list
-      candidateDocs.addAll(candidateSnapshot.docs);
-    }
+    //   // Add all candidate documents to the list
+    //   candidateDocs.addAll(candidateSnapshot.docs);
+    // }
 
-    return {
-      'postDetail': jobPostDocs,
-      'candidateDetail': candidateDocs,
-    };
+    return await FirebaseFirestore.instance.collection("jobPost").where("company", isEqualTo: companyRef).get().then((querySnapshot) async {
+      List tempAllJobPostList = [];
+
+      await Future.forEach<dynamic>(querySnapshot.docs, (job) async {
+        List tempAllCandidateList = [];
+        dynamic candidateList = await job.reference.collection("candidate").get();
+
+        candidateList.docs.forEach((candidate) {
+          tempAllCandidateList.add({"id": candidate.id, "detail": candidate.data()});
+        });
+
+        tempAllJobPostList.add({"postReference": job, "data": job.data(), "id": job.id, "candidate": tempAllCandidateList});
+      });
+
+      return tempAllJobPostList;
+    });
+
+    // return {
+    //   'postDetail': jobPostDocs,
+    //   'candidateDetail': candidateDocs,
+    // };
   }
 
   Future<Map<String, dynamic>> getCompany() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID =
-        jsonDecode(prefs.getString("companyDetail")!)["id"];
+    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-    DocumentReference companyRef =
-        FirebaseFirestore.instance.collection("company").doc(companyID);
+    DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
     return await companyRef.get().then((documentSnapshot) {
       return documentSnapshot.data() as Map<String, dynamic>;
     });
@@ -79,11 +92,7 @@ class ViewHierarchyController extends GetxController {
   Future<List<Map<String, dynamic>>> fetchApplications(String postId) async {
     try {
       // Get the collection of candidates
-      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection("jobPost")
-          .doc(postId)
-          .collection("candidate")
-          .get();
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection("jobPost").doc(postId).collection("candidate").get();
 
       // Convert each document in the snapshot to a Map and return the list of Maps
       List<Map<String, dynamic>> candidates = querySnapshot.docs.map((doc) {

@@ -52,21 +52,22 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
               jobPostList.clear();
               List<dynamic> results = snapshot.data as List<dynamic>;
 
-              List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
-              List<DocumentSnapshot> candidateData = results[0]['candidateDetail']!;
+              jobPostList.addAll(results[0]);
+              company.addAll(results[1]);
 
-              company = results[1];
-              print("this is jobpost $jobPosts");
-              print("this is company $company");
-              data.addAll(jobPosts);
+              // List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
+              // List<DocumentSnapshot> candidateData = results[0]['candidateDetail']!;
 
-              data.forEach((job) {
-                jobPostList.add({
-                  "data": job.data(),
-                  "id": job.id,
-                  "candidateData": candidateData.where((candidate) => candidate.reference.parent.parent!.id == job.id).toList(),
-                });
-              });
+              // company = results[1];
+              // data.addAll(jobPosts);
+
+              // data.forEach((job) {
+              //   jobPostList.add({
+              //     "data": job.data(),
+              //     "id": job.id,
+              //     "candidateData": candidateData.where((candidate) => candidate.reference.parent.parent!.id == job.id).toList(),
+              //   });
+              // });
             }
           }
 
@@ -75,7 +76,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                 ? Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
-                        children: List.generate(jobPostList.length, (index) {
+                        children: List.generate(jobPostList[0].length, (index) {
                       Widget buttonType;
 
                       switch (jobPostList[index]['data']["postStatus"]) {
