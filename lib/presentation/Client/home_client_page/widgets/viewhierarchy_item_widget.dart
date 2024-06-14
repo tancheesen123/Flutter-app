@@ -57,13 +57,24 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
               jobPostList.clear();
               List<dynamic> results = snapshot.data as List<dynamic>;
 
-              List<QueryDocumentSnapshot> jobPosts = results[0];
+              List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
+              List<DocumentSnapshot> candidateData =
+                  results[0]['candidateDetail']!;
+
               company = results[1];
+              print("this is jobpost $jobPosts");
               print("this is company $company");
               data.addAll(jobPosts);
 
               data.forEach((job) {
-                jobPostList.add({"data": job.data(), "id": job.id});
+                jobPostList.add({
+                  "data": job.data(),
+                  "id": job.id,
+                  "candidateData": candidateData
+                      .where((candidate) =>
+                          candidate.reference.parent.parent!.id == job.id)
+                      .toList(),
+                });
               });
             }
           }
@@ -109,9 +120,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                         Text.rich(
                                           TextSpan(children: [
                                             TextSpan(
-                                                text: "6\n",
+                                                text:
+                                                    "${jobPostList[index]['candidateData'].length}\n",
                                                 style: TextStyle(fontSize: 24)),
-                                            TextSpan(text: "applications")
+                                            TextSpan(text: "Applications")
                                           ]),
                                           textAlign: TextAlign.center,
                                           style: TextStyle(height: 0.9),
@@ -233,7 +245,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                     children: [
                                       Text(
                                         jobPostList[index]['data']["title"],
-                                        style: theme.textTheme.titleMedium,
+                                        style: theme.textTheme.titleLarge,
                                       ),
                                       Spacer(),
                                       PopupMenuButton(
@@ -270,7 +282,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   padding: EdgeInsets.only(left: 5.h),
                                   child: Text(
                                     jobPostList[index]['data']["location"],
-                                    style: theme.textTheme.bodySmall,
+                                    style: theme.textTheme.titleMedium,
                                   ),
                                 ),
                                 SizedBox(
