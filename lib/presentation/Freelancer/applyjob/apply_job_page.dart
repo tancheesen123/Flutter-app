@@ -324,6 +324,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                             'name': "${userData["username"]}",
                             'email': "${userData["email"]}",
                             'status': "pending",
+                            'user': userRef,
                           };
 
                           // await applyJobController.addCandidate(
