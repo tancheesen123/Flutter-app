@@ -146,10 +146,8 @@ class _HomePageState extends State<HomePage> {
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         fit: BoxFit.cover,
                       )
-                    : Shimmer.fromColors(
-                        child: Container(color: Colors.grey),
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
+                    : Image.asset(
+                        ImageConstant.imgRectangle382,
                       ),
               ),
             )
