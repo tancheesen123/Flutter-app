@@ -3,7 +3,8 @@ import '../../../core/app_export.dart';
 import 'widgets/company_item.dart'; // ignore_for_file: must_be_immutable
 
 class CompanyMenuPage extends StatefulWidget {
-  const CompanyMenuPage({Key? key})
+  final String? description;
+  const CompanyMenuPage({Key? key, required this.description})
       : super(
           key: key,
         );
@@ -43,9 +44,9 @@ class CompanyMenuPageState extends State<CompanyMenuPage>
             height: 20.v,
           );
         },
-        itemCount: 4,
+        itemCount: 1,
         itemBuilder: (context, index) {
-          return CompanyItemWidget();
+          return CompanyItemWidget(description: widget.description);
         },
       ),
     );
