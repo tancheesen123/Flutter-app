@@ -28,6 +28,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
   Widget? jobPostContainer;
   Map<String, dynamic> company = {};
 
+  String _searchText = "";
+  List<Map> search_results = [];
+  TextEditingController searchTextFieldController = TextEditingController();
+
   late TabController tabviewController;
 
   final ViewHierarchyController viewHierarchyController = Get.put(ViewHierarchyController());
@@ -54,241 +58,290 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
               jobPostList.addAll(results[0]);
               company.addAll(results[1]);
-
-              // List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
-              // List<DocumentSnapshot> candidateData = results[0]['candidateDetail']!;
-
-              // company = results[1];
-              // data.addAll(jobPosts);
-
-              // data.forEach((job) {
-              //   jobPostList.add({
-              //     "data": job.data(),
-              //     "id": job.id,
-              //     "candidateData": candidateData.where((candidate) => candidate.reference.parent.parent!.id == job.id).toList(),
-              //   });
-              // });
             }
           }
 
-          return SingleChildScrollView(
-            child: jobPostList.isNotEmpty
-                ? Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                        children: List.generate(jobPostList[0].length, (index) {
-                      Widget buttonType;
+          return Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 33.h,
+                  right: 20.h,
+                ),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 20),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Expanded(
+                            child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color(0xffB3BAC3).withOpacity(0.25),
+                                spreadRadius: 0,
+                                blurRadius: 4,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: TextField(
+                            onChanged: ((text) {
+                              setState(() {
+                                _searchText = text;
 
-                      switch (jobPostList[index]['data']["postStatus"]) {
-                        case "OPEN":
-                          buttonType = Row(children: [
-                            Expanded(
-                                child: ElevatedButton(
-                                    style: ButtonStyle(
-                                        elevation: WidgetStatePropertyAll(0),
-                                        shadowColor: WidgetStateColor.transparent,
-                                        backgroundColor: WidgetStatePropertyAll(Color(0xffEEEEF3))),
-                                    onPressed: () {
-                                      Navigator.pushNamed(
-                                        context,
-                                        AppRoutes.candidatePage,
-                                        arguments: jobPostList[index],
-                                      );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Text("Open"),
-                                    ))),
-                            SizedBox(
-                              width: 12,
+                                search_results.clear();
+                                for (var post in jobPostList) {
+                                  if ((post['data']["title"] as String).toLowerCase().contains(_searchText.toLowerCase())) {
+                                    search_results.add(post);
+                                  }
+                                }
+                              });
+                            }),
+                            controller: searchTextFieldController,
+                            decoration: InputDecoration(
+                                filled: true,
+                                // focusColor: Colors.amber,
+                                fillColor: Colors.white,
+                                hintText: "Search here...",
+                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                contentPadding: EdgeInsets.all(8),
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                          ),
+                        )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {},
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
+                              elevation: MaterialStateProperty.all<double>(0.5),
                             ),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Text.rich(
-                                  TextSpan(children: [
-                                    TextSpan(
-                                        text: (jobPostList[index]["candidate"] as List).isNotEmpty
-                                            ? "${jobPostList[index]["candidate"].length}\n"
-                                            : "0\n",
-                                        style: TextStyle(fontSize: 24, color: Color(0xff007BFF))),
-                                    TextSpan(text: "applications", style: TextStyle(color: Color(0xff007BFF)))
-                                  ]),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(height: 0.9),
-                                )
-                              ],
+                            child: SvgPicture.asset(
+                              ImageConstant.imgGoBtn,
+                              colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
                             )),
-                          ]);
-                          break;
-
-                        case "EMPLOYED":
-                          buttonType = Row(
-                            children: [
-                              Expanded(
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xff007BFF).withOpacity(0.2))),
-                                      onPressed: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Employed",
-                                          style: TextStyle(color: Color(0xff007BFF)),
-                                        ),
-                                      ))),
-                            ],
-                          );
-                          break;
-                        case "COMPLETED":
-                          buttonType = Row(
-                            children: [
-                              Expanded(
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
-                                      onPressed: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Completed",
-                                          style: TextStyle(color: Color(0xff1ED760)),
-                                        ),
-                                      ))),
-                            ],
-                          );
-                          break;
-
-                        default:
-                          buttonType = Row(
-                            children: [
-                              Expanded(
-                                  child: ElevatedButton(
-                                      style: ButtonStyle(
-                                          elevation: WidgetStatePropertyAll(0),
-                                          shadowColor: WidgetStateColor.transparent,
-                                          backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
-                                      onPressed: () {},
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          "Completed",
-                                          style: TextStyle(color: Color(0xff1ED760)),
-                                        ),
-                                      ))),
-                            ],
-                          );
-                      }
-
-                      return InkWell(
-                          onTap: () {
-                            showBottomSheetPreviewPost(context, jobPostList[index], company);
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            margin: EdgeInsets.only(bottom: 24),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 24.h,
-                              vertical: 16.v,
-                            ),
-                            decoration: BoxDecoration(
+                        SizedBox(
+                          width: 10,
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AppRoutes.newPostPage);
+                            },
+                            child: Icon(
+                              Icons.add,
                               color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Color(0xffB3BAC3).withOpacity(0.25),
-                                  spreadRadius: 0,
-                                  blurRadius: 4,
-                                  offset: Offset(0, 4),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        jobPostList[index]['data']["title"],
-                                        style: theme.textTheme.titleLarge,
-                                      ),
-                                      Spacer(),
-                                      PopupMenuButton(
-                                        // shape: shape,
-                                        elevation: 2,
+                            ))
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: jobPostList.isNotEmpty
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Column(
+                              children: List.generate(search_results.isEmpty ? jobPostList.length : search_results.length, (index) {
+                            Widget buttonType;
 
-                                        onSelected: (item) {
-                                          if (item == 1) {
-                                            showBottomSheetPreviewPost(context, jobPostList[index], company);
-                                          }
-                                        },
-                                        itemBuilder: (BuildContext context) => <PopupMenuEntry>[
-                                          const PopupMenuItem(
-                                            value: 1,
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.remove_red_eye_outlined),
-                                                SizedBox(
-                                                  width: 10,
-                                                ),
-                                                Text('Post Details'),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
+                            List currentJobPost = search_results.isEmpty ? jobPostList : search_results;
+
+                            switch (currentJobPost[index]['data']["postStatus"]) {
+                              case "OPEN":
+                                buttonType = Row(children: [
+                                  Expanded(
+                                      child: ElevatedButton(
+                                          style: ButtonStyle(
+                                              elevation: WidgetStatePropertyAll(0),
+                                              shadowColor: WidgetStateColor.transparent,
+                                              backgroundColor: WidgetStatePropertyAll(Color(0xffEEEEF3))),
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                              context,
+                                              AppRoutes.candidatePage,
+                                              arguments: currentJobPost[index],
+                                            );
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Text("Open"),
+                                          ))),
+                                  SizedBox(
+                                    width: 12,
+                                  ),
+                                  Expanded(
+                                      child: Column(
+                                    children: [
+                                      Text.rich(
+                                        TextSpan(children: [
+                                          TextSpan(
+                                              text: (currentJobPost[index]["candidate"] as List).isNotEmpty
+                                                  ? "${currentJobPost[index]["candidate"].length}\n"
+                                                  : "0\n",
+                                              style: TextStyle(fontSize: 24, color: Color(0xff007BFF))),
+                                          TextSpan(text: "applications", style: TextStyle(color: Color(0xff007BFF)))
+                                        ]),
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(height: 0.9),
                                       )
                                     ],
+                                  )),
+                                ]);
+                                break;
+
+                              case "EMPLOYED":
+                                buttonType = Row(
+                                  children: [
+                                    Expanded(
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                elevation: WidgetStatePropertyAll(0),
+                                                shadowColor: WidgetStateColor.transparent,
+                                                backgroundColor: WidgetStatePropertyAll(Color(0xff007BFF).withOpacity(0.2))),
+                                            onPressed: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Employed",
+                                                style: TextStyle(color: Color(0xff007BFF)),
+                                              ),
+                                            ))),
+                                  ],
+                                );
+                                break;
+                              case "COMPLETED":
+                                buttonType = Row(
+                                  children: [
+                                    Expanded(
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                elevation: WidgetStatePropertyAll(0),
+                                                shadowColor: WidgetStateColor.transparent,
+                                                backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
+                                            onPressed: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Completed",
+                                                style: TextStyle(color: Color(0xff1ED760)),
+                                              ),
+                                            ))),
+                                  ],
+                                );
+                                break;
+
+                              default:
+                                buttonType = Row(
+                                  children: [
+                                    Expanded(
+                                        child: ElevatedButton(
+                                            style: ButtonStyle(
+                                                elevation: WidgetStatePropertyAll(0),
+                                                shadowColor: WidgetStateColor.transparent,
+                                                backgroundColor: WidgetStatePropertyAll(Color(0xffDDFFE9).withOpacity(0.5))),
+                                            onPressed: () {},
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                "Completed",
+                                                style: TextStyle(color: Color(0xff1ED760)),
+                                              ),
+                                            ))),
+                                  ],
+                                );
+                            }
+
+                            return InkWell(
+                                onTap: () {
+                                  showBottomSheetPreviewPost(context, currentJobPost[index], company);
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  margin: EdgeInsets.only(bottom: 24),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 24.h,
+                                    vertical: 16.v,
                                   ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(left: 5.h),
-                                  child: Text(
-                                    jobPostList[index]['data']["location"],
-                                    style: theme.textTheme.titleMedium,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Color(0xffB3BAC3).withOpacity(0.25),
+                                        spreadRadius: 0,
+                                        blurRadius: 4,
+                                        offset: Offset(0, 4),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                                buttonType
-                              ],
-                            ),
-                          ));
-                    })),
-                  )
-                : Container(),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.h),
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              currentJobPost[index]['data']["title"],
+                                              style: theme.textTheme.titleLarge,
+                                            ),
+                                            Spacer(),
+                                            PopupMenuButton(
+                                              // shape: shape,
+                                              elevation: 2,
+
+                                              onSelected: (item) {
+                                                if (item == 1) {
+                                                  showBottomSheetPreviewPost(context, currentJobPost[index], company);
+                                                }
+                                              },
+                                              itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                                                const PopupMenuItem(
+                                                  value: 1,
+                                                  child: Row(
+                                                    children: [
+                                                      Icon(Icons.remove_red_eye_outlined),
+                                                      SizedBox(
+                                                        width: 10,
+                                                      ),
+                                                      Text('Post Details'),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(left: 5.h),
+                                        child: Text(
+                                          currentJobPost[index]['data']["location"],
+                                          style: theme.textTheme.titleMedium,
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 20,
+                                      ),
+                                      buttonType
+                                    ],
+                                  ),
+                                ));
+                          })),
+                        )
+                      : Container(),
+                ),
+              ),
+            ],
           );
         }));
-  }
-
-  Future getAllJobPost() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
-
-    DocumentReference companyRef = await FirebaseFirestore.instance.collection("company").doc(companyID);
-    return await FirebaseFirestore.instance.collection("jobPost").where("company", isEqualTo: companyRef).get().then((querySnapshot) async {
-      List tempAllJobPostList = [];
-
-      await Future.forEach<dynamic>(querySnapshot.docs, (job) async {
-        List tempAllCandidateList = [];
-        dynamic candidateList = await job.reference.collection("candidate").get();
-
-        candidateList.docs.forEach((candidate) {
-          tempAllCandidateList.add({"id": candidate.id, "detail": candidate.data()});
-        });
-
-        tempAllJobPostList.add({"postReference": job, "data": job.data(), "id": job.id, "candidate": tempAllCandidateList});
-      });
-
-      return tempAllJobPostList;
-    });
   }
 
   Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail, dynamic company) {
