@@ -107,7 +107,7 @@ class ApplyJobController extends GetxController {
             .collection(
                 "Application") // Assuming email is a valid collection name
             .add({
-          'postRefPath': postRefPath,
+          'postRefPath': postRefPath.toString(),
           'status': "Pending",
         });
 
@@ -154,5 +154,17 @@ class ApplyJobController extends GetxController {
       print('Error fetching userSnapshot document: $e');
       rethrow;
     }
+  }
+
+  Future<String?> getProfileImageUrl(DocumentReference userRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        return userSnapshot['profileImageUrl'];
+      }
+    } catch (e) {
+      print('Error fetching user profile image: $e');
+    }
+    return null;
   }
 }
