@@ -3,11 +3,14 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/widgets/custom_elevated_button.dart';
 import '../../../../core/app_export.dart'; // ignore: must_be_immutable
 import '../../post_insight_page/widgets/click_insight_item.dart';
 import '../../post_insight_page/post_insight_page.dart';
+import 'package:workwise/Controller/ViewHierarchyController.dart';
 
 class ViewhierarchyItemWidget extends StatefulWidget {
   const ViewhierarchyItemWidget({Key? key})
@@ -29,11 +32,14 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
 
   late TabController tabviewController;
 
+  final ViewHierarchyController viewHierarchyController =
+      Get.put(ViewHierarchyController());
+
   @override
   void initState() {
     // TODO: implement initState
     tabviewController = TabController(length: 2, vsync: this);
-    buildFuture = getAllJobPost();
+    buildFuture = viewHierarchyController.getAllData();
     super.initState();
   }
 
@@ -48,7 +54,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
             } else if (snapshot.hasData) {
               data.clear();
               jobPostList.clear();
-              data.addAll(snapshot.data! as List<dynamic>);
+              List<dynamic> results = snapshot.data as List<dynamic>;
+
+              List<QueryDocumentSnapshot> jobPosts = results[0];
+              data.addAll(jobPosts);
 
               data.forEach((job) {
                 jobPostList.add({"data": job.data(), "id": job.id});
@@ -275,22 +284,6 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
         }));
   }
 
-  Future getAllJobPost() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String? companyID =
-        jsonDecode(prefs.getString("companyDetail")!)["id"];
-
-    DocumentReference companyRef =
-        await FirebaseFirestore.instance.collection("company").doc(companyID);
-    return await FirebaseFirestore.instance
-        .collection("jobPost")
-        .where("company", isEqualTo: companyRef)
-        .get()
-        .then((querySnapshot) {
-      return querySnapshot.docs;
-    });
-  }
-
   Future showBottomSheetPreviewPost(
       BuildContext context, dynamic jobPostDetail) {
     return showModalBottomSheet(
@@ -436,7 +429,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                               ),
                               tabs: [
                                 Tab(child: Text("Description")),
-                                Tab(child: Text("Insight")),
+                                Tab(child: Text("Company")),
                               ],
                             ),
                           ),
@@ -474,7 +467,35 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                     ),
                                   ),
                                 ),
-                                PostInsightScreen(),
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 200.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostDetail["data"]
+                                                    ["description"],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ))
