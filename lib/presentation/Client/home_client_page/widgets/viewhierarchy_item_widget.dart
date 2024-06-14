@@ -271,7 +271,9 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                                   jobPostList[index],
                                                   company);
                                             } else if (item == 2) {
-                                              print("click 2");
+                                              viewHierarchyController
+                                                  .deletePostStatus(
+                                                      jobPostList[index]['id']);
                                             } else if (item == 3) {
                                               viewHierarchyController
                                                   .updatePostStatus(
