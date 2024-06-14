@@ -40,6 +40,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
     super.initState();
     tabviewController = TabController(length: 2, vsync: this);
     postId = widget.postId;
+    print("This is postId in applyJobPage $postId");
     postInsightController.saveClicks(postId ?? "");
   }
 
@@ -52,6 +53,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    print("This is widget postId ${widget.postId}");
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -72,6 +74,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
               return Center(child: Text("Job post not found"));
             } else {
               final data = snapshot.data!;
+              print("This is Data $data");
               Map<String, dynamic> jobPostData = data[0];
               Map<String, dynamic> userData = data[1];
               DocumentReference? userRef =
