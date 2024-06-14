@@ -40,7 +40,7 @@ class ViewHierarchyController extends GetxController {
     });
   }
 
-  Future getCompany() async {
+  Future<Map<String, dynamic>> getCompany() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? companyID =
         jsonDecode(prefs.getString("companyDetail")!)["id"];
@@ -48,7 +48,7 @@ class ViewHierarchyController extends GetxController {
     DocumentReference companyRef =
         FirebaseFirestore.instance.collection("company").doc(companyID);
     return await companyRef.get().then((documentSnapshot) {
-      return documentSnapshot.data();
+      return documentSnapshot.data() as Map<String, dynamic>;
     });
   }
 }
