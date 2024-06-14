@@ -2,10 +2,14 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/widgets/custom_elevated_button.dart';
 import '../../../../core/app_export.dart'; // ignore: must_be_immutable
 import '../../post_insight_page/post_insight_page.dart';
+import 'package:workwise/Controller/ViewHierarchyController.dart';
 
 class ViewhierarchyItemWidget extends StatefulWidget {
   const ViewhierarchyItemWidget({Key? key})
@@ -22,14 +26,17 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
   List<dynamic> jobPostList = [];
   late Future buildFuture;
   Widget? jobPostContainer;
+  Map<String, dynamic> company = {};
 
   late TabController tabviewController;
+
+  final ViewHierarchyController viewHierarchyController = Get.put(ViewHierarchyController());
 
   @override
   void initState() {
     // TODO: implement initState
     tabviewController = TabController(length: 2, vsync: this);
-    buildFuture = getAllJobPost();
+    buildFuture = viewHierarchyController.getAllData();
     super.initState();
   }
 
@@ -43,8 +50,23 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
               return Container();
             } else if (snapshot.hasData) {
               jobPostList.clear();
+              List<dynamic> results = snapshot.data as List<dynamic>;
 
-              jobPostList.addAll(snapshot.data! as List<dynamic>);
+              List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
+              List<DocumentSnapshot> candidateData = results[0]['candidateDetail']!;
+
+              company = results[1];
+              print("this is jobpost $jobPosts");
+              print("this is company $company");
+              data.addAll(jobPosts);
+
+              data.forEach((job) {
+                jobPostList.add({
+                  "data": job.data(),
+                  "id": job.id,
+                  "candidateData": candidateData.where((candidate) => candidate.reference.parent.parent!.id == job.id).toList(),
+                });
+              });
             }
           }
 
@@ -163,7 +185,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
                       return InkWell(
                           onTap: () {
-                            showBottomSheetPreviewPost(context, jobPostList[index]);
+                            showBottomSheetPreviewPost(context, jobPostList[index], company);
                           },
                           child: Container(
                             width: double.infinity,
@@ -194,7 +216,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                     children: [
                                       Text(
                                         jobPostList[index]['data']["title"],
-                                        style: theme.textTheme.titleMedium,
+                                        style: theme.textTheme.titleLarge,
                                       ),
                                       Spacer(),
                                       PopupMenuButton(
@@ -203,7 +225,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
                                         onSelected: (item) {
                                           if (item == 1) {
-                                            showBottomSheetPreviewPost(context, jobPostList[index]);
+                                            showBottomSheetPreviewPost(context, jobPostList[index], company);
                                           }
                                         },
                                         itemBuilder: (BuildContext context) => <PopupMenuEntry>[
@@ -228,7 +250,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   padding: EdgeInsets.only(left: 5.h),
                                   child: Text(
                                     jobPostList[index]['data']["location"],
-                                    style: theme.textTheme.bodySmall,
+                                    style: theme.textTheme.titleMedium,
                                   ),
                                 ),
                                 SizedBox(
@@ -268,7 +290,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
     });
   }
 
-  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail) {
+  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail, dynamic company) {
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -335,7 +357,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                           SizedBox(height: 20.v),
                           RichText(
                             text: TextSpan(
-                              text: "Chargee MY -",
+                              text: "${company["name"]} -",
                               style: Theme.of(context).textTheme.bodyLarge,
                               children: [
                                 WidgetSpan(
@@ -404,7 +426,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                               ),
                               tabs: [
                                 Tab(child: Text("Description")),
-                                Tab(child: Text("Insight")),
+                                Tab(child: Text("Company")),
                               ],
                             ),
                           ),
@@ -417,7 +439,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
                                     child: SizedBox(
-                                      height: 200.v,
+                                      height: 500.v,
                                       child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -440,7 +462,33 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                     ),
                                   ),
                                 ),
-                                PostInsightScreen(),
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                "${company["CompanyDetail"]}",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ))
