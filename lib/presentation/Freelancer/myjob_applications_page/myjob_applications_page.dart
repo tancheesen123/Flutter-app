@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -29,7 +28,7 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
         appBar: _buildAppBar(context),
         body: FutureBuilder<List<Map<String, dynamic>>>(
           future: myJobController
-              .fetchData(), // Use the fetchData function as the future
+              .fetchData(), 
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(child: CircularProgressIndicator());
@@ -50,9 +49,6 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
                   },
                   itemCount: dataList.length,
                   itemBuilder: (context, index) {
-                    // Pass data to UserprofileItemWidget
-                    // print("adasdadsa");
-                    // print(dataList[index]);
                     return UserprofileItemWidget(data: dataList[index]);
                   },
                 ),
