@@ -55,7 +55,6 @@ class _PostInsightScreenState extends State<PostInsightScreen>
         body: FutureBuilder(
           future: Future.wait([
             applyJobController.getJobPostData(widget.postId ?? ""),
-            userController.getUserInformation(),
             postInsightController.fetchPostInsight(widget.postId ?? ""),
             postInsightController.getTotalValues(widget.postId ?? ""),
 
@@ -72,9 +71,9 @@ class _PostInsightScreenState extends State<PostInsightScreen>
             } else {
               final data = snapshot.data!;
               Map<String, dynamic> jobPostData = data[0];
-              Map<String, dynamic> userData = data[1];
-              Map<String, dynamic> postInsightData = data[2];
-              Map<String, int> totalValues = data[3];
+              print("jobposadstData ${jobPostData["jobpostData"]["title"]}");
+              Map<String, dynamic> postInsightData = data[1];
+              Map<String, int> totalValues = data[2];
 
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
@@ -105,7 +104,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                           ),
                           SizedBox(height: 7.v),
                           Text(
-                            jobPostData['title'] ?? "Job Title",
+                            "${jobPostData["jobpostData"]['title']}",
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           SizedBox(height: 15.v),
@@ -249,100 +248,6 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                       ),
                     ),
                   ),
-                  // Align(
-                  //   alignment: Alignment.bottomCenter,
-                  //   child: Container(
-                  //     decoration: BoxDecoration(
-                  //       color: Colors.white,
-                  //       borderRadius: BorderRadius.only(
-                  //         topLeft: Radius.circular(30.5),
-                  //         topRight: Radius.circular(30.5),
-                  //       ),
-                  //     ),
-                  //     padding: EdgeInsets.symmetric(
-                  //       horizontal: 20.h,
-                  //       vertical: 12.v,
-                  //     ),
-                  //     child: Row(
-                  //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //       children: [
-                  //         SizedBox(
-                  //             width: 100, // Set the desired width
-                  //             child: CustomElevatedButton(
-                  //               height: 48.v,
-                  //               text: "Edit",
-                  //               buttonTextStyle: CustomTextStyles
-                  //                   .titleSmallWhiteA700SemiBold,
-                  //               onPressed: () {
-                  //                 Navigator.pop(context);
-                  //               },
-                  //               buttonStyle: ElevatedButton.styleFrom(
-                  //                 backgroundColor: Color(
-                  //                     0xffC2C2C2), // Set the background color here
-                  //               ),
-                  //             )),
-
-                  //         SizedBox(
-                  //           width: 200, // Set the desired width
-                  //           child: CustomElevatedButton(
-                  //             height: 48.v,
-                  //             text: "Apply",
-                  //             buttonTextStyle:
-                  //                 CustomTextStyles.titleSmallWhiteA700SemiBold,
-                  //             onPressed: () async {
-                  //               Map<String, dynamic> candidateData = {
-                  //                 'label': "${userData["email"]}",
-                  //                 'name': "${userData["username"]}",
-                  //                 'email': "${userData["email"]}",
-                  //                 'status': "pending",
-                  //               };
-
-                  //               bool addedCandidateRef =
-                  //                   await applyJobController.addCandidate2(
-                  //                       "$postId", candidateData);
-
-                  //               if (addedCandidateRef) {
-                  //                 ElegantNotification.success(
-                  //                   width: 360,
-                  //                   isDismissable: false,
-                  //                   animation: AnimationType.fromTop,
-                  //                   title: Text('Successful Apply'),
-                  //                   description: Text(
-                  //                       "You successfully applied to this job"),
-                  //                   onDismiss: () {},
-                  //                   onNotificationPressed: () {},
-                  //                   shadow: BoxShadow(
-                  //                     color: Colors.green.withOpacity(0.2),
-                  //                     spreadRadius: 2,
-                  //                     blurRadius: 5,
-                  //                     offset: const Offset(0, 4),
-                  //                   ),
-                  //                 ).show(context);
-                  //               } else {
-                  //                 ElegantNotification.error(
-                  //                   width: 360,
-                  //                   isDismissable: false,
-                  //                   animation: AnimationType.fromTop,
-                  //                   title: Text('Failed Apply'),
-                  //                   description:
-                  //                       Text("Already applied to this job"),
-                  //                   onDismiss: () {},
-                  //                   onNotificationPressed: () {},
-                  //                   shadow: BoxShadow(
-                  //                     color: Colors.red.withOpacity(0.2),
-                  //                     spreadRadius: 2,
-                  //                     blurRadius: 5,
-                  //                     offset: const Offset(0, 4),
-                  //                   ),
-                  //                 ).show(context);
-                  //               }
-                  //             },
-                  //           ),
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                 ],
               );
             }
