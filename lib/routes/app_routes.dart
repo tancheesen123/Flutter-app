@@ -33,8 +33,7 @@ import '../presentation/Client/candidate_page/candidate_page.dart';
 
 class AppRoutes {
   //Client Routes
-  static const String homeClientContainerScreen =
-      '/home_client_container_screen';
+  static const String homeClientContainerScreen = '/home_client_container_screen';
 
   static const String homeClientPage = '/home_client_page';
 
@@ -59,8 +58,7 @@ class AppRoutes {
 
   static const String selectJobCategoryScreen = '/select_job_category_screen';
 
-  static const String selectJobPreferenceScreen =
-      '/select_job_preference_screen';
+  static const String selectJobPreferenceScreen = '/select_job_preference_screen';
 
   static const String homeContainerScreen = '/home_container_screen';
 
@@ -76,8 +74,7 @@ class AppRoutes {
 
   static const String profileScreen = '/profile_screen';
 
-  static const String myjobApplicationsContainerScreen =
-      '/myjob_applications_container_screen';
+  static const String myjobApplicationsContainerScreen = '/myjob_applications_container_screen';
 
   static const String myjobApplicationsPage = '/myjob_applications_page';
 
@@ -112,8 +109,7 @@ class AppRoutes {
     searchTabContainerScreen: (context) => SearchTabContainerScreen(),
     settingsScreen: (context) => SettingsScreen(),
     profileScreen: (context) => ProfileScreen(),
-    myjobApplicationsContainerScreen: (context) =>
-        MyjobApplicationsContainerScreen(),
+    myjobApplicationsContainerScreen: (context) => MyjobApplicationsContainerScreen(),
     myjobApplicationsPage: (context) => MyjobApplicationsPage(),
     homePage: (context) => HomePage(),
     changePasswordScreen: (context) => ChangePasswordScreen(),
@@ -133,19 +129,16 @@ class AppRoutes {
     //Client
     homeClientContainerScreen: (context) => HomeClientContainerScreen(),
     postListPage: (context) => PostListScreen(),
-    candidatePage: (context) => CandidateScreen(),
+    candidatePage: (context) {
+      final dynamic postDetail = ModalRoute.of(context)?.settings.arguments;
+      return CandidateScreen(postDetail);
+    },
     newPostPage: (context) => NewPostScreen(),
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
     clientProfileScreen: (context) => ClientProfileScreen(),
 
-<<<<<<< Updated upstream
     // initialRoute: (context) => CheckSession()
     initialRoute: (context) => CheckSession()
-=======
-    insightJobScreen: (context) => InsightJobScreen(),
-
-    initialRoute: (context) => CandidateScreen()
->>>>>>> Stashed changes
   };
 }
