@@ -50,49 +50,54 @@ class MyJobController extends GetxController {
 
     List<Map<String, dynamic>> dataList = [];
 
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('user')
-        .doc(email)
-        .collection("Application")
-        .get();
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('user')
+          .doc(email)
+          .collection("Application")
+          .get();
 
-    // Use Future.forEach to handle asynchronous operations correctly
-    await Future.forEach(querySnapshot.docs, (doc) async {
-      Map<String, dynamic> data =
-          (doc as DocumentSnapshot).data() as Map<String, dynamic>;
-      String postRefPath = data['postRefPath'];
-      String applicationStatus = data['status'];
-      if (postRefPath != null) {
-        List<String> pathParts = postRefPath.split('/');
-        if (pathParts.length == 2) {
-          String collection = pathParts[0];
-          String documentId = pathParts[1];
-          DocumentSnapshot postDoc = await FirebaseFirestore.instance
-              .collection(collection)
-              .doc(documentId)
-              .get();
+      // Use Future.forEach to handle asynchronous operations correctly
+      await Future.forEach(querySnapshot.docs, (DocumentSnapshot doc) async {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        DocumentReference postRefPath = data['postRefPath'];
+        DocumentSnapshot postDoc = await getPostData(postRefPath);
 
-          // Check if postDoc.data() is not null before casting
-          if (postDoc.data() != null) {
-            Map<String, dynamic> postData =
-                postDoc.data() as Map<String, dynamic>;
-
-            postData['postId'] = doc.id;
-
-            dataList.add({
-              'statusApplication': applicationStatus,
-              'status': postData['status'],
-              'description': postData['description'],
-              'location': postData['location'],
-              'postId': documentId,
-              'title': postData['title'],
-              'workingHours': postData['workingHours'],
-              'budget': postData['budget'],
-            });
-          } else {}
+        if (postDoc.exists) {
+          Map<String, dynamic> postData =
+              postDoc.data() as Map<String, dynamic>;
+          print("this is status ${postData['status']}");
+          dataList.add({
+            'statusApplication': data['status'],
+            'status': postData['status'],
+            'description': postData['description'],
+            'location': postData['location'],
+            'postId': postDoc.id,
+            'title': postData['title'],
+            'workingHours': postData['workingHours'],
+            'budget': postData['budget'],
+          });
+        } else {
+          print(
+              'Post document does not exist for reference: ${postRefPath.path}');
         }
-      }
-    });
-    return dataList;
+      });
+
+      return dataList;
+    } catch (e) {
+      print('Error fetching application data: $e');
+      return []; // Return an empty list or handle error as needed
+    }
+  }
+
+  Future<DocumentSnapshot> getPostData(DocumentReference postRef) async {
+    try {
+      // Fetch the post document snapshot
+      DocumentSnapshot postSnapshot = await postRef.get();
+      return postSnapshot;
+    } catch (e) {
+      print('Error fetching post document: $e');
+      rethrow; // Rethrow the error to handle it further up the call stack
+    }
   }
 }
