@@ -54,20 +54,30 @@ class _CandidateScreenState extends State<CandidateScreen> {
       body: Column(
         children: [
           Container(
+            margin: EdgeInsets.only(top: 20),
             child: Padding(
               padding: EdgeInsets.all(20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    icon: Icon(Icons.arrow_back),
+                    icon: Icon(
+                      Icons.chevron_left,
+                      size: 40,
+                    ),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
-                  SizedBox(width: 16), // Space between the button and the text
                   Text(
                     "Application",
                     style: theme.textTheme.titleLarge,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search, size: 40),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
@@ -287,8 +297,14 @@ Future<bool> acceptCandidate(dynamic postDetail, List listAcceptedCandidate) asy
     });
 
     await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
-      dynamic userApplication = await FirebaseFirestore.instance.collection('user').doc(candidate["id"]).collection("Application").get();
+      dynamic userApplication = await FirebaseFirestore.instance
+          .collection('user')
+          .doc(candidate["id"])
+          .collection("Application")
+          .where("postRefPath", isEqualTo: postDetail["postReference"].reference)
+          .get();
 
+      print(userApplication);
       await FirebaseFirestore.instance
           .collection('user')
           .doc(candidate["id"])
