@@ -64,52 +64,52 @@ class ApplyJobController extends GetxController {
 
     await candidateRef.set(candidateData);
 
-    DocumentReference PostRef = _firestore.collection('jobPost').doc(jobPostId);
-    // String postRefPath = PostRef.path;
+    DocumentReference postRef = _firestore.collection('jobPost').doc(jobPostId);
+    String postRefPath = postRef.path;
 
     // Store the reference path in another collection
     String email =
         candidateData['email']; // Assuming email is a field in candidateData
-    // if (email != null && email.isNotEmpty) {
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('user')
-        .doc(email)
-        .collection("Application")
-        .where('postRefPath', isEqualTo: PostRef)
-        .limit(
-            1) // Limit the query to 1 document, as we only need to check if any document exists
-        .get();
-    // String token = await userController.getDeviceToken();
-    // notificationController.sendNotification(token);
-    // notificationController.sendNotification(
-    //     "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
-
-    if (querySnapshot.docs.isNotEmpty) {
-      print('Document with the same postRefPath already exists');
-      return false; // or you can throw an exception, depending on your requirements
-    } else {
-      await _firestore
+    if (email != null && email.isNotEmpty) {
+      QuerySnapshot querySnapshot = await _firestore
           .collection('user')
           .doc(email)
-          .collection(
-              "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-          .add({
-        'postRefPath': PostRef,
-        'status': "Pending",
-      });
-      // Fetch the updated list of candidates
-      await getCandidates(jobPostId);
-      // String token = await userController.getDeviceToken();
-      // notificationController.sendNotification(token);
-      var test = await getJobPostData(jobPostId);
-      DocumentSnapshot companyData = await getCompanyData(test!['company']);
-      DocumentSnapshot userData = await getUserData(companyData["user"]);
+          .collection("Application")
+          .where('postRefPath', isEqualTo: postRefPath)
+          .limit(
+              1) // Limit the query to 1 document, as we only need to check if any document exists
+          .get();
 
-      await postInsightController.saveApply(jobPostId);
-      notificationController.sendNotification(
-          "${userData["Token"]}",
-          "Congrates! You have a new application",
-          "You have a new application for the job ${companyData["name"]}");
+      if (querySnapshot.docs.isNotEmpty) {
+        print('Document with the same postRefPath already exists');
+        return false; // or you can throw an exception, depending on your requirements
+      } else {
+        await _firestore
+            .collection('user')
+            .doc(email)
+            .collection(
+                "Application") // Assuming email is a valid collection name
+            .add({
+          'postRefPath': postRefPath,
+          'status': "Pending",
+        });
+
+        // Fetch the updated list of candidates
+        await getCandidates(jobPostId);
+
+        // Fetch necessary data for notifications
+        var jobPostData = await getJobPostData(jobPostId);
+        DocumentSnapshot companyData =
+            await getCompanyData(jobPostData!['company']);
+        DocumentSnapshot userData = await getUserData(companyData["user"]);
+
+        // Save apply insight and send notification
+        await postInsightController.saveApply(jobPostId);
+        notificationController.sendNotification(
+            "${userData["Token"]}",
+            "Congrats! You have a new application",
+            "You have a new application for the job ${companyData["name"]}");
+      }
     }
 
     // Return the reference to the added document
