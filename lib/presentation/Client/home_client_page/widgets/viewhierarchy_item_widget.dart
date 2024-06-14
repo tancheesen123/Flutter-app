@@ -8,7 +8,6 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/widgets/custom_elevated_button.dart';
 import '../../../../core/app_export.dart'; // ignore: must_be_immutable
-import '../../post_insight_page/widgets/click_insight_item.dart';
 import '../../post_insight_page/post_insight_page.dart';
 import 'package:workwise/Controller/ViewHierarchyController.dart';
 
@@ -59,29 +58,25 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
             if (snapshot.hasError) {
               return Container();
             } else if (snapshot.hasData) {
-              data.clear();
               jobPostList.clear();
               List<dynamic> results = snapshot.data as List<dynamic>;
 
-              List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
-              List<DocumentSnapshot> candidateData =
-                  results[0]['candidateDetail']!;
+              jobPostList.addAll(results[0]);
+              company.addAll(results[1]);
 
-              company = results[1];
-              print("this is jobpost $jobPosts");
-              print("this is company $company");
-              data.addAll(jobPosts);
+              // List<DocumentSnapshot> jobPosts = results[0]['postDetail']!;
+              // List<DocumentSnapshot> candidateData = results[0]['candidateDetail']!;
 
-              data.forEach((job) {
-                jobPostList.add({
-                  "data": job.data(),
-                  "id": job.id,
-                  "candidateData": candidateData
-                      .where((candidate) =>
-                          candidate.reference.parent.parent!.id == job.id)
-                      .toList(),
-                });
-              });
+              // company = results[1];
+              // data.addAll(jobPosts);
+
+              // data.forEach((job) {
+              //   jobPostList.add({
+              //     "data": job.data(),
+              //     "id": job.id,
+              //     "candidateData": candidateData.where((candidate) => candidate.reference.parent.parent!.id == job.id).toList(),
+              //   });
+              // });
             }
           }
 
@@ -107,7 +102,13 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                           backgroundColor:
                                               WidgetStatePropertyAll(
                                                   Color(0xffEEEEF3))),
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.pushNamed(
+                                          context,
+                                          AppRoutes.candidatePage,
+                                          arguments: jobPostList[index]['data'],
+                                        );
+                                      },
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text("Open"),
@@ -131,7 +132,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                             TextSpan(children: [
                                               TextSpan(
                                                   text:
-                                                      "${jobPostList[index]['candidateData'].length}\n",
+                                                      "${jobPostList[index]['candidate'].length}\n",
                                                   style:
                                                       TextStyle(fontSize: 24)),
                                               TextSpan(text: "Applications")
@@ -341,6 +342,42 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
             ),
           );
         }));
+  }
+
+  Future getAllJobPost() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? companyID =
+        jsonDecode(prefs.getString("companyDetail")!)["id"];
+
+    DocumentReference companyRef =
+        await FirebaseFirestore.instance.collection("company").doc(companyID);
+    return await FirebaseFirestore.instance
+        .collection("jobPost")
+        .where("company", isEqualTo: companyRef)
+        .get()
+        .then((querySnapshot) async {
+      List tempAllJobPostList = [];
+
+      await Future.forEach<dynamic>(querySnapshot.docs, (job) async {
+        List tempAllCandidateList = [];
+        dynamic candidateList =
+            await job.reference.collection("candidate").get();
+
+        candidateList.docs.forEach((candidate) {
+          tempAllCandidateList
+              .add({"id": candidate.id, "detail": candidate.data()});
+        });
+
+        tempAllJobPostList.add({
+          "postReference": job,
+          "data": job.data(),
+          "id": job.id,
+          "candidate": tempAllCandidateList
+        });
+      });
+
+      return tempAllJobPostList;
+    });
   }
 
   Future showBottomSheetPreviewPost(
