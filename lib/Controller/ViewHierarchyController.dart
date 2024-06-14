@@ -151,11 +151,6 @@ class ViewHierarchyController extends GetxController {
 
       return tempAllJobPostList;
     });
-
-    // return {
-    //   'postDetail': jobPostDocs,
-    //   'candidateDetail': candidateDocs,
-    // };
   }
 
   Future<Map<String, dynamic>> getCompany() async {
