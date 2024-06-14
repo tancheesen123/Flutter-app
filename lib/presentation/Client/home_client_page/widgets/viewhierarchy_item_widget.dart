@@ -29,6 +29,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
   List<dynamic> jobPostList = [];
   late Future buildFuture;
   Widget? jobPostContainer;
+  Map<String, dynamic> company = {};
 
   late TabController tabviewController;
 
@@ -57,6 +58,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
               List<dynamic> results = snapshot.data as List<dynamic>;
 
               List<QueryDocumentSnapshot> jobPosts = results[0];
+              company = results[1];
+              print("this is company $company");
               data.addAll(jobPosts);
 
               data.forEach((job) {
@@ -198,7 +201,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                       return InkWell(
                           onTap: () {
                             showBottomSheetPreviewPost(
-                                context, jobPostList[index]);
+                                context, jobPostList[index], company);
                           },
                           child: Container(
                             width: double.infinity,
@@ -239,8 +242,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
 
                                         onSelected: (item) {
                                           if (item == 1) {
-                                            showBottomSheetPreviewPost(
-                                                context, jobPostList[index]);
+                                            showBottomSheetPreviewPost(context,
+                                                jobPostList[index], company);
                                           }
                                         },
                                         itemBuilder: (BuildContext context) =>
@@ -285,7 +288,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
   }
 
   Future showBottomSheetPreviewPost(
-      BuildContext context, dynamic jobPostDetail) {
+      BuildContext context, dynamic jobPostDetail, dynamic company) {
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -352,7 +355,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                           SizedBox(height: 20.v),
                           RichText(
                             text: TextSpan(
-                              text: "Chargee MY -",
+                              text: "${company["name"]} -",
                               style: Theme.of(context).textTheme.bodyLarge,
                               children: [
                                 WidgetSpan(
@@ -442,7 +445,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
                                     child: SizedBox(
-                                      height: 200.v,
+                                      height: 500.v,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -471,7 +474,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
                                     child: SizedBox(
-                                      height: 200.v,
+                                      height: 500.v,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -486,8 +489,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget>
                                           Expanded(
                                             child: SingleChildScrollView(
                                               child: Text(
-                                                jobPostDetail["data"]
-                                                    ["description"],
+                                                "${company["CompanyDetail"]}",
                                               ),
                                             ),
                                           ),
