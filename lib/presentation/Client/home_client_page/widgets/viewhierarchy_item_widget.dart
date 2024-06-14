@@ -44,6 +44,12 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
     super.initState();
   }
 
+  Future<void> refreshData() async {
+    setState(() {
+      buildFuture = viewHierarchyController.getAllData();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -142,13 +148,15 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                 ),
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  child: jobPostList.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: Column(
-                              children: List.generate(search_results.isEmpty ? jobPostList.length : search_results.length, (index) {
-                            Widget buttonType;
+                child: RefreshIndicator(
+            onRefresh: refreshData,
+            child: SingleChildScrollView(
+                    child: jobPostList.isNotEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                            child: Column(
+                                children: List.generate(search_results.isEmpty ? jobPostList.length : search_results.length, (index) {
+                              Widget buttonType;
 
                             List currentJobPost = search_results.isEmpty ? jobPostList : search_results;
 
