@@ -24,6 +24,15 @@ class ViewHierarchyController extends GetxController {
     return await Future.wait([jobPostsFuture, companyFuture /*, otherFuture*/]);
   }
 
+  Future<void> updatePostStatus(String postId, String status) async {
+    DocumentReference jobPostRef =
+        FirebaseFirestore.instance.collection("jobPost").doc(postId);
+
+    await jobPostRef.update({
+      "postStatus": status,
+    });
+  }
+
   Future<Map<String, List<DocumentSnapshot>>> getAllJobPost() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     final String? companyID =

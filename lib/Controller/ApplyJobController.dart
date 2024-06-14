@@ -42,7 +42,8 @@ class ApplyJobController extends GetxController {
 
         DocumentReference companyRef = data['company'];
         DocumentSnapshot companyData = await getCompanyData(companyRef);
-
+        print("Data in controller $data");
+        print("companyData in controller ${companyData.data()}");
         return {
           'jobpostData': data,
           'companyData': companyData.data(),
@@ -82,7 +83,6 @@ class ApplyJobController extends GetxController {
     await candidateRef.set(candidateData);
 
     DocumentReference postRef = _firestore.collection('jobPost').doc(jobPostId);
-    String postRefPath = postRef.path;
 
     // Store the reference path in another collection
     String email =
@@ -92,7 +92,7 @@ class ApplyJobController extends GetxController {
           .collection('user')
           .doc(email)
           .collection("Application")
-          .where('postRefPath', isEqualTo: postRefPath)
+          .where('postRefPath', isEqualTo: postRef)
           .limit(
               1) // Limit the query to 1 document, as we only need to check if any document exists
           .get();
@@ -107,7 +107,7 @@ class ApplyJobController extends GetxController {
             .collection(
                 "Application") // Assuming email is a valid collection name
             .add({
-          'postRefPath': postRefPath,
+          'postRefPath': postRef,
           'status': "Pending",
         });
 
