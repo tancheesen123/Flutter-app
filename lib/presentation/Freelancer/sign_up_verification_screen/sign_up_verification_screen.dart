@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import '../../../core/app_export.dart';
 import '../../../theme/custom_button_style.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:workwise/Controller/UserController.dart';
 
 class SignUpVerificationScreen extends StatefulWidget {
   const SignUpVerificationScreen({Key? key}) : super(key: key);
@@ -20,21 +22,21 @@ class _SignUpVerificationScreenState extends State<SignUpVerificationScreen> {
   bool isVerified = false;
   Timer? timer;
   bool canResendEmail = false;
+  String? userEmail;
+
+  final UserController _userController = Get.put(UserController());
 
   @override
   void initState() {
     super.initState();
-    checkVerificationStatus();
+    userEmail = FirebaseAuth.instance.currentUser?.email;
+    checkVerificationStatus(userEmail);
     timer = Timer.periodic(
-        const Duration(seconds: 3), (timer) => checkVerificationStatus());
+        const Duration(seconds: 3), (timer) => checkVerificationStatus(userEmail));
     isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
     if (!isVerified) {
       sendVerificationEmail();
-      Timer.periodic(
-        const Duration(seconds: 3),
-        (timer) => checkVerificationStatus(),
-      );
     }
   }
 
@@ -145,12 +147,15 @@ class _SignUpVerificationScreenState extends State<SignUpVerificationScreen> {
     }
   }
 
-  Future checkVerificationStatus() async {
+  Future checkVerificationStatus(userEmail) async {
     await FirebaseAuth.instance.currentUser!.reload();
     setState(() {
       isVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     });
-    if (isVerified) Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
-    timer?.cancel();
+    await _userController.storeUserEmail(userEmail);
+    if (isVerified) {
+      timer?.cancel();
+      Navigator.pushNamed(context, AppRoutes.checkSession);
+    }
   }
 }

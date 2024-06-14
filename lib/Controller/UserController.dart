@@ -28,6 +28,7 @@ class UserController extends GetxController {
   Future<void> addToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('userEmail') ?? '';
+    print(email);
 
     DocumentReference documentReference =
         FirebaseFirestore.instance.collection('user').doc(email.toLowerCase());
@@ -49,5 +50,11 @@ class UserController extends GetxController {
 
   String getDeviceToken() {
     return deviceToken.value;
+  }
+
+  Future<void> storeUserEmail(String email) async {
+    updateEmail(email);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userEmail', email);
   }
 }
