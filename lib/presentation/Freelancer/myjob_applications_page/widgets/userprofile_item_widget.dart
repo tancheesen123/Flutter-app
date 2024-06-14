@@ -41,117 +41,118 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
           MaterialPageRoute(
             builder: (BuildContext context) {
               return ApplyJobScreen(
-                postId: postId,
+                postId: "$postId",
               );
             },
           ),
         );
       },
-      child:Padding(padding: EdgeInsets.symmetric(horizontal: 20.h),
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20.h,
-          vertical: 18.v,
-        ),
-        decoration: AppDecoration.outlineGray.copyWith(
-          borderRadius: BorderRadiusStyle.roundedBorder12,
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgRectangle5162,
-                  height: 50.adaptSize,
-                  width: 50.adaptSize,
-                  radius: BorderRadius.circular(
-                    15.h,
-                  ),
-                  margin: EdgeInsets.symmetric(vertical: 3.v),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "123",
-                        // "$CompanyId",
-                        style: theme.textTheme.bodySmall,
-                      ),
-                      Text(
-                        "$title",
-                        // "123",
-                        style: theme.textTheme.titleMedium,
-                      ),
-                      SizedBox(height: 1.v),
-                      Text(
-                        // "$location",
-                        "$location",
-                        style: theme.textTheme.bodySmall,
-                      )
-                    ],
-                  ),
-                ),
-                Spacer(),
-                CustomImageView(
-                  imagePath: ImageConstant.imgNotification,
-                  height: 18.v,
-                  width: 20.h,
-                  margin: EdgeInsets.only(
-                    top: 3.v,
-                    bottom: 35.v,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 14.v),
-            Padding(
-              padding: EdgeInsets.only(
-                left: 4.h,
-                right: 7.h,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.h),
+        child: Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.h,
+            vertical: 18.v,
+          ),
+          decoration: AppDecoration.outlineGray.copyWith(
+            borderRadius: BorderRadiusStyle.roundedBorder12,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // CustomElevatedButton(
-                  //   width: 135.h,
-                  //   text: "$status",
-                  //   // text: "123",
-                  //   buttonStyle: status == 'Pending'
-                  //       ? buildCustomPendingBtn(context),
-                  //       : status == 'Reject'
-                  //           ? CustomButtonStyles
-                  //               .fillOrangeA // Change to appropriate color for reject status
-                  //           : CustomButtonStyles
-                  //               .fillPrimary, // Change to appropriate color for accept status
-                  //   buttonTextStyle: CustomTextStyles.titleSmallBlack900,
-                  // ),
-                  if (status == 'Pending')
-                    buildCustomPendingBtn(context)
-                  else if (status == 'Reject')
-                    buildCustomRejectBtn(context)
-                  else
-                    buildCustomAcceptBtn(context),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 4.v,
-                      bottom: 2.v,
+                  CustomImageView(
+                    imagePath: ImageConstant.imgRectangle5162,
+                    height: 50.adaptSize,
+                    width: 50.adaptSize,
+                    radius: BorderRadius.circular(
+                      15.h,
                     ),
-                    child: Text(
-                      "RM$budget/$workingHours hours",
-                      // "RMhours",
-                      style: CustomTextStyles.titleMediumBluegray900,
+                    margin: EdgeInsets.symmetric(vertical: 3.v),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 20.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "123",
+                          // "$CompanyId",
+                          style: theme.textTheme.bodySmall,
+                        ),
+                        Text(
+                          "$title",
+                          // "123",
+                          style: theme.textTheme.titleMedium,
+                        ),
+                        SizedBox(height: 1.v),
+                        Text(
+                          // "$location",
+                          "$location",
+                          style: theme.textTheme.bodySmall,
+                        )
+                      ],
+                    ),
+                  ),
+                  Spacer(),
+                  CustomImageView(
+                    imagePath: ImageConstant.imgNotification,
+                    height: 18.v,
+                    width: 20.h,
+                    margin: EdgeInsets.only(
+                      top: 3.v,
+                      bottom: 35.v,
                     ),
                   )
                 ],
               ),
-            )
-          ],
+              SizedBox(height: 14.v),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 4.h,
+                  right: 7.h,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // CustomElevatedButton(
+                    //   width: 135.h,
+                    //   text: "$status",
+                    //   // text: "123",
+                    //   buttonStyle: status == 'Pending'
+                    //       ? buildCustomPendingBtn(context),
+                    //       : status == 'Reject'
+                    //           ? CustomButtonStyles
+                    //               .fillOrangeA // Change to appropriate color for reject status
+                    //           : CustomButtonStyles
+                    //               .fillPrimary, // Change to appropriate color for accept status
+                    //   buttonTextStyle: CustomTextStyles.titleSmallBlack900,
+                    // ),
+                    if (status == 'Pending')
+                      buildCustomPendingBtn(context)
+                    else if (status == 'Reject')
+                      buildCustomRejectBtn(context)
+                    else
+                      buildCustomAcceptBtn(context),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 4.v,
+                        bottom: 2.v,
+                      ),
+                      child: Text(
+                        "RM$budget/$workingHours hours",
+                        // "RMhours",
+                        style: CustomTextStyles.titleMediumBluegray900,
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
