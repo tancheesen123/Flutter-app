@@ -88,6 +88,7 @@ class MyJobController extends GetxController {
               'title': postData['title'],
               'workingHours': postData['workingHours'],
               'budget': postData['budget'],
+              'user': postData['user'],
             });
           } else {}
         }
