@@ -15,8 +15,7 @@ class CandidateScreen extends StatefulWidget {
 }
 
 class _CandidateScreenState extends State<CandidateScreen> {
-  final TextEditingController searchTextFieldController =
-      TextEditingController();
+  final TextEditingController searchTextFieldController = TextEditingController();
   bool validToSubmit = false;
   List chosenCheckbox = [];
 
@@ -103,11 +102,10 @@ class _CandidateScreenState extends State<CandidateScreen> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "${widget.postDetail["title"]}",
+                          "${widget.postDetail["data"]["title"]}",
                           style: theme.textTheme.titleMedium,
                         ),
-                        Text("${widget.postDetail["location"]}",
-                            style: Theme.of(context).textTheme.bodyLarge),
+                        Text("${widget.postDetail["data"]["location"]}", style: Theme.of(context).textTheme.bodyLarge),
                       ],
                     ),
                   )
@@ -120,13 +118,9 @@ class _CandidateScreenState extends State<CandidateScreen> {
               width: double.infinity,
               child: SingleChildScrollView(
                 child: Column(
-                  children: List.generate(widget.postDetail["candidate"].length,
-                      (index) {
+                  children: List.generate(widget.postDetail["candidate"].length, (index) {
                     //list job post yg kita nk tukar ke candidate list
-                    return CandidateContainer(
-                        widget.postDetail["candidate"][index],
-                        setChosenCheckbox,
-                        checkValidToSubmit);
+                    return CandidateContainer(widget.postDetail["candidate"][index], setChosenCheckbox, checkValidToSubmit);
                   }),
                 ),
               ),
@@ -135,9 +129,7 @@ class _CandidateScreenState extends State<CandidateScreen> {
           Container(
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
                     color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -152,22 +144,16 @@ class _CandidateScreenState extends State<CandidateScreen> {
                 child: Container(
                   child: Center(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                       child: Row(
                         children: [
                           Expanded(
                             child: ElevatedButton(
                               onPressed: validToSubmit
                                   ? () {
-                                      acceptCandidate(
-                                              widget.postDetail, chosenCheckbox)
-                                          .then((success) {
+                                      acceptCandidate(widget.postDetail, chosenCheckbox).then((success) {
                                         if (success) {
-                                          Navigator.of(context,
-                                                  rootNavigator: true)
-                                              .pushNamed(
-                                                  AppRoutes.homeClientPage);
+                                          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.homeClientPage);
                                         } else {
                                           print("Something went wrong");
                                         }
@@ -176,25 +162,16 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                   : null,
                               style: ButtonStyle(
                                 elevation: MaterialStatePropertyAll(0),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
+                                shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 )),
-                                backgroundColor: MaterialStatePropertyAll(
-                                    validToSubmit
-                                        ? Color(0xff5598FF)
-                                        : Color(0xffF4F6F8)),
+                                backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
                               ),
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 14),
                                 child: Text(
                                   "Employ",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: validToSubmit
-                                          ? Colors.white
-                                          : Color(0xffC2C2C2)),
+                                  style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
                                 ),
                               ),
                             ),
@@ -215,9 +192,7 @@ class CandidateContainer extends StatefulWidget {
   final dynamic candidateDetail;
   final Function setChosenCheckbox;
   final Function checkValidToSubmit;
-  CandidateContainer(
-      this.candidateDetail, this.setChosenCheckbox, this.checkValidToSubmit,
-      {Key? key});
+  CandidateContainer(this.candidateDetail, this.setChosenCheckbox, this.checkValidToSubmit, {Key? key});
 
   @override
   _CandidateContainerState createState() => _CandidateContainerState();
@@ -309,13 +284,9 @@ class _CandidateContainerState extends State<CandidateContainer> {
   }
 }
 
-Future<bool> acceptCandidate(
-    dynamic postDetail, List listAcceptedCandidate) async {
+Future<bool> acceptCandidate(dynamic postDetail, List listAcceptedCandidate) async {
   try {
-    await FirebaseFirestore.instance
-        .collection('jobPost')
-        .doc(postDetail["id"])
-        .update({"postStatus": "EMPLOYED"});
+    await FirebaseFirestore.instance.collection('jobPost').doc(postDetail["id"]).update({"postStatus": "EMPLOYED"});
 
     await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
       FirebaseFirestore.instance
@@ -331,8 +302,7 @@ Future<bool> acceptCandidate(
           .collection('user')
           .doc(candidate["id"])
           .collection("Application")
-          .where("postRefPath",
-              isEqualTo: postDetail["postReference"].reference)
+          .where("postRefPath", isEqualTo: postDetail["postReference"].reference)
           .get();
 
       print(userApplication);
