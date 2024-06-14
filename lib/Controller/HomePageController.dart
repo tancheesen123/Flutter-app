@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/PostInsightController.dart';
+import 'package:workwise/Controller/UserController.dart';
 
 class HomePageController extends GetxController {
   final FirebaseFirestore firestore;
@@ -12,6 +14,8 @@ class HomePageController extends GetxController {
 
   late StreamSubscription<DocumentSnapshot> _userDataSubscription;
   late StreamSubscription<User?> _authSubscription;
+
+  final UserController userController = Get.put(UserController());
 
   HomePageController({
     required this.firestore,
@@ -138,4 +142,6 @@ Future<void> getUserData() async {
     _userDataSubscription.cancel();
     _authSubscription.cancel();
   }
+
+  
 }
