@@ -29,13 +29,30 @@ class ApplyJobController extends GetxController {
   }
 
   Future<Map<String, dynamic>?> getJobPostData(String postId) async {
-    final docRef = FirebaseFirestore.instance.collection('jobPost').doc(postId);
-    final doc = await docRef.get();
+    try {
+      final docRef =
+          FirebaseFirestore.instance.collection('jobPost').doc(postId);
+      final doc = await docRef.get();
 
-    if (doc.exists) {
-      return doc.data();
-    } else {
-      return null;
+      if (doc.exists) {
+        final data = doc.data();
+        if (data == null) {
+          return null; // Handle the case where data is null
+        }
+
+        DocumentReference companyRef = data['company'];
+        DocumentSnapshot companyData = await getCompanyData(companyRef);
+
+        return {
+          'jobpostData': data,
+          'companyData': companyData.data(),
+        };
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching job post data: $e');
+      return null; // Or handle the error as needed
     }
   }
 
@@ -99,8 +116,9 @@ class ApplyJobController extends GetxController {
 
         // Fetch necessary data for notifications
         var jobPostData = await getJobPostData(jobPostId);
+        print("Job Post Data: $jobPostData");
         DocumentSnapshot companyData =
-            await getCompanyData(jobPostData!['company']);
+            await getCompanyData(jobPostData!["jobpostData"]['company']);
         DocumentSnapshot userData = await getUserData(companyData["user"]);
 
         // Save apply insight and send notification
