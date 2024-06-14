@@ -25,41 +25,59 @@ class _ClickInsightLineChartState extends State<ClickInsightLineChart> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('7-Day Click Bar Chart'),
-      ),
-      body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: postInsightController
-            .getLast7DaysClicksData(widget.postInsightData),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text("Error loading clicks data"));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text("No clicks data available"));
-          } else {
-            List<Map<String, dynamic>> clickData = snapshot.data!;
-            List<SalesData> salesData = clickData.map((data) {
-              return SalesData(data['date'], data['value'].toDouble());
-            }).toList();
-            return Center(
-              child: SfCartesianChart(
-                isTransposed: true,
-                primaryXAxis: CategoryAxis(),
-                primaryYAxis: NumericAxis(),
-                series: <BarSeries<SalesData, String>>[
-                  BarSeries<SalesData, String>(
-                    dataSource: salesData,
-                    xValueMapper: (SalesData sales, _) => sales.month,
-                    yValueMapper: (SalesData sales, _) => sales.sales,
-                    dataLabelSettings: DataLabelSettings(isVisible: true),
-                  ),
-                ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Title Section
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                '7-Day Click Bar Chart',
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            );
-          }
-        },
+            ),
+            // Chart Section
+            Expanded(
+              child: FutureBuilder<List<Map<String, dynamic>>>(
+                future: postInsightController
+                    .getLast7DaysClicksData(widget.postInsightData),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error loading clicks data"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text("No clicks data available"));
+                  } else {
+                    List<Map<String, dynamic>> clickData = snapshot.data!;
+                    List<SalesData> salesData = clickData.map((data) {
+                      return SalesData(data['date'], data['value'].toDouble());
+                    }).toList();
+                    return Center(
+                      child: SfCartesianChart(
+                        isTransposed: true,
+                        primaryXAxis: CategoryAxis(),
+                        primaryYAxis: NumericAxis(),
+                        series: <BarSeries<SalesData, String>>[
+                          BarSeries<SalesData, String>(
+                            dataSource: salesData,
+                            xValueMapper: (SalesData sales, _) => sales.month,
+                            yValueMapper: (SalesData sales, _) => sales.sales,
+                            dataLabelSettings:
+                                DataLabelSettings(isVisible: true),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

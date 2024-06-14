@@ -100,48 +100,17 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                                   radius: BorderRadius.circular(40.h),
                                   alignment: Alignment.center,
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
-                                    height: 19.adaptSize,
-                                    width: 19.adaptSize,
-                                    margin: EdgeInsets.only(right: 6.h),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.h, vertical: 6.v),
-                                    decoration:
-                                        AppDecoration.outlineGray5001.copyWith(
-                                      borderRadius:
-                                          BorderRadiusStyle.roundedBorder9,
-                                    ),
-                                    child: CustomImageView(
-                                      imagePath: ImageConstant.imgFill244,
-                                      height: 5.v,
-                                      width: 6.h,
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
                           ),
-                          SizedBox(height: 10.v),
+                          SizedBox(height: 7.v),
                           Text(
                             jobPostData['title'] ?? "Job Title",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headlineLarge
-                                ?.copyWith(
-                                  fontWeight: FontWeight
-                                      .bold, // Example modification: Make text bold
-                                  fontSize:
-                                      24, // Example modification: Set font size to 24
-                                  color: Colors
-                                      .black, // Example modification: Set text color to black
-                                ),
+                            style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                          SizedBox(height: 20.v),
+                          SizedBox(height: 15.v),
                           _buildDivider(),
-                          SizedBox(height: 20.v),
+                          SizedBox(height: 15.v),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
