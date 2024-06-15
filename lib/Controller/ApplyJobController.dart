@@ -120,13 +120,13 @@ class ApplyJobController extends GetxController {
         DocumentSnapshot companyData =
             await getCompanyData(jobPostData!["jobpostData"]['company']);
         DocumentSnapshot userData = await getUserData(companyData["user"]);
-
         // Save apply insight and send notification
         await postInsightController.saveApply(jobPostId);
         notificationController.sendNotification(
             "${userData["Token"]}",
             "Congrats! You have a new application",
-            "You have a new application for the job ${companyData["name"]}");
+            "You have a new application for the job ${companyData["name"]}",
+            email);
       }
     }
 
