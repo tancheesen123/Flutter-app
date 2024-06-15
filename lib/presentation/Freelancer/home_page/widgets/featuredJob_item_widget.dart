@@ -68,9 +68,11 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       Map<String, dynamic> data = snapshot.data![index];
-                      DocumentSnapshot userSnapshot = userSnapshots.data![index];
+                      DocumentSnapshot userSnapshot =
+                          userSnapshots.data![index];
 
-                      String? profileImageUrl = userSnapshot.get('profileImageUrl');
+                      String? profileImageUrl =
+                          userSnapshot.get('profileImageUrl');
                       String? companyName = data['companyName'];
 
                       return GestureDetector(
@@ -88,7 +90,8 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                             alignment: Alignment.centerRight,
                             child: Container(
                               padding: EdgeInsets.all(10.h),
-                              decoration: AppDecoration.outlineBlack900.copyWith(
+                              decoration:
+                                  AppDecoration.outlineBlack900.copyWith(
                                 borderRadius: BorderRadiusStyle.roundedBorder20,
                               ),
                               child: Column(
@@ -96,13 +99,17 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CircleAvatar(
                                         radius: 20.h,
                                         backgroundImage: profileImageUrl != null
-                                            ? CachedNetworkImageProvider(profileImageUrl)
-                                            : AssetImage(ImageConstant.imgRectangle382) as ImageProvider<Object>,
+                                            ? CachedNetworkImageProvider(
+                                                profileImageUrl)
+                                            : AssetImage(ImageConstant
+                                                    .imgRectangle382)
+                                                as ImageProvider<Object>,
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(
@@ -115,7 +122,8 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                           width: 28.adaptSize,
                                           padding: EdgeInsets.all(6.h),
                                           child: CustomImageView(
-                                            imagePath: ImageConstant.imgFavorite,
+                                            imagePath:
+                                                ImageConstant.imgFavorite,
                                           ),
                                         ),
                                       )
@@ -137,8 +145,9 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                       Padding(
                                         padding: EdgeInsets.only(bottom: 1.v),
                                         child: Text(
-                                          "RM${data['budget']}/${data['workinghours']}",
-                                          style: CustomTextStyles.labelLargeGray900,
+                                          "RM${data['budget']}/${data['workingHours']}",
+                                          style: CustomTextStyles
+                                              .labelLargeGray900,
                                         ),
                                       ),
                                       Padding(
@@ -194,5 +203,5 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
         },
       ),
     );
-}
+  }
 }
