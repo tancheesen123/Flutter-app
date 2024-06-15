@@ -5,17 +5,22 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageJobPostController extends GetxController {
-  Future<bool> submitJobPost(String title, String location, String budget, String description, String messageTitle, String messageBody) async {
+  Future<bool> submitJobPost(String title, String location, String budget,
+      String description, String messageTitle, String messageBody) async {
     try {
       final now = DateTime.now(); // Replace with current date in production
       final month = now.month;
       final day = now.day;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
-      final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
+      final String? clientUID =
+          jsonDecode(prefs.getString("clientDetail")!)["uid"];
+      final String? companyID =
+          jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-      DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
-      DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection("user").doc(clientUID);
+      DocumentReference companyRef =
+          FirebaseFirestore.instance.collection("company").doc(companyID);
 
       Map<String, dynamic> notificationData = {
         "notification": {
@@ -58,14 +63,18 @@ class ManageJobPostController extends GetxController {
         "description": description,
         "insight": json.encode(insightData),
         // "status": "Part Time",
-        // "workingHours": 20,
+        "workingHours": 12,
         "user": userRef,
         "company": companyRef,
         "postStatus": "OPEN",
+        "status": "Part Time",
         "Notification": json.encode(notificationData)
       };
 
-      await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
+      await FirebaseFirestore.instance
+          .collection("jobPost")
+          .add(data)
+          .then((value) {
         return true;
       });
     } catch (e) {
@@ -76,15 +85,25 @@ class ManageJobPostController extends GetxController {
   }
 
   Future<bool> editJobPost(
-      String postId, String title, String location, String budget, String description, String messageTitle, String messageBody) async {
+      String postId,
+      String title,
+      String location,
+      String budget,
+      String description,
+      String messageTitle,
+      String messageBody) async {
     bool success = false;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
-      final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
+      final String? clientUID =
+          jsonDecode(prefs.getString("clientDetail")!)["uid"];
+      final String? companyID =
+          jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-      DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
-      DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection("user").doc(clientUID);
+      DocumentReference companyRef =
+          FirebaseFirestore.instance.collection("company").doc(companyID);
 
       Map<String, dynamic> notificationData = {
         "notification": {
@@ -103,11 +122,15 @@ class ManageJobPostController extends GetxController {
         "Notification": json.encode(notificationData)
       };
 
-      await FirebaseFirestore.instance.collection("jobPost").doc(postId).update(data).then((value) {
+      await FirebaseFirestore.instance
+          .collection("jobPost")
+          .doc(postId)
+          .update(data)
+          .then((value) {
         success = true;
       });
     } catch (e) {
-      success =  false;
+      success = false;
     }
 
     return success;
