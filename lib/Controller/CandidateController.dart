@@ -115,4 +115,13 @@ class CandidateController extends GetxController {
       rethrow;
     }
   }
+
+  Future<void> getCandidateDetail(String userId) async {
+    dynamic candidateDetail;
+    await FirebaseFirestore.instance.collection('user').doc(userId).get().then((value) {
+      candidateDetail = value.data();
+    });
+
+    return candidateDetail;
+  }
 }
