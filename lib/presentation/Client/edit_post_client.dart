@@ -654,8 +654,33 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                     ),
                                   ),
                                 ),
-                                // CompanyMenuPage(),
-                                Container()
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                "${widget.postDetail["companyDetail"]["CompanyDetail"]}",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ))
@@ -747,7 +772,7 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
-                                          "Post",
+                                          "Update",
                                           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                                         ),
                                       ),
