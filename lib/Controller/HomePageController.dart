@@ -46,7 +46,10 @@ class HomePageController extends GetxController {
     final PostInsightController postInsightController =
         Get.put(PostInsightController());
     List<Map<String, dynamic>> dataList = [];
-    var querySnapshot = await firestore.collection('jobPost').get();
+    var querySnapshot = await firestore
+        .collection('jobPost')
+        .where("postStatus", isEqualTo: "OPEN")
+        .get();
 
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -58,7 +61,7 @@ class HomePageController extends GetxController {
       if (companyRef != null) {
         DocumentSnapshot companySnapshot = await getCompanyData(companyRef);
         if (companySnapshot.exists) {
-          data['companyName'] = companySnapshot.get('name'); 
+          data['companyName'] = companySnapshot.get('name');
         }
       }
     }
