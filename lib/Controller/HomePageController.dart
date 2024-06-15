@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:workwise/Controller/PostInsightController.dart';
+import 'package:workwise/Controller/UserController.dart';
 
 class HomePageController extends GetxController {
   final FirebaseFirestore firestore;
@@ -11,6 +14,8 @@ class HomePageController extends GetxController {
 
   late StreamSubscription<DocumentSnapshot> _userDataSubscription;
   late StreamSubscription<User?> _authSubscription;
+
+  final UserController userController = Get.put(UserController());
 
   HomePageController({
     required this.firestore,
@@ -38,16 +43,58 @@ class HomePageController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> fetchJobPostData() async {
+    final PostInsightController postInsightController =
+        Get.put(PostInsightController());
     List<Map<String, dynamic>> dataList = [];
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('jobPost').get();
+    var querySnapshot = await firestore.collection('jobPost').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      data['postId'] = doc.id;
       dataList.add(data);
-    });
+      // postInsightController.saveImpression(doc.id);
 
+      DocumentReference? companyRef = data['company'] as DocumentReference?;
+      if (companyRef != null) {
+        DocumentSnapshot companySnapshot = await getCompanyData(companyRef);
+        if (companySnapshot.exists) {
+          data['companyName'] = companySnapshot.get('name'); 
+        }
+      }
+    }
     return dataList;
+  }
+
+  Future<DocumentSnapshot> getCompanyData(DocumentReference companyRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot companySnapshot = await companyRef.get();
+      return companySnapshot;
+    } catch (e) {
+      print('Error fetching company document: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserDataById(String userId) async {
+    try {
+      DocumentSnapshot userSnapshot =
+          await firestore.collection('user').doc(userId).get();
+      return userSnapshot;
+    } catch (e) {
+      print('Error fetching user document: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserDataByRef(DocumentReference userRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await userRef.get();
+      return userSnapshot;
+    } catch (e) {
+      print('Error fetching user document: $e');
+      rethrow;
+    }
   }
 
   Future<void> getUserData() async {
