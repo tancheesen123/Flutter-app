@@ -30,7 +30,8 @@ class _CandidateProfileState extends State<CandidateProfile> {
   @override
   void initState() {
     super.initState();
-    _userDataFuture = _candidateController.getCandidateDetail(widget.candidateDetail["id"]);
+    _userDataFuture =
+        _candidateController.getCandidateDetail(widget.candidateDetail["id"]);
   }
 
   String? username;
@@ -52,7 +53,8 @@ class _CandidateProfileState extends State<CandidateProfile> {
     return FutureBuilder(
       future: _userDataFuture,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting || _isUpdating) {
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            _isUpdating) {
           return LoadingScreen();
         } else {
           if (snapshot.hasError) {
@@ -68,6 +70,7 @@ class _CandidateProfileState extends State<CandidateProfile> {
   }
 
   Widget _buildProfileScreen(BuildContext context) {
+    String? profileImageUrl = userDetail['profileImageUrl'];
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
@@ -75,7 +78,10 @@ class _CandidateProfileState extends State<CandidateProfile> {
         body: Stack(
           children: [
             SingleChildScrollView(
-              padding: EdgeInsets.only(top: 33.v, bottom: 80.v), // Added bottom padding to avoid overlapping with the button
+              padding: EdgeInsets.only(
+                  top: 33.v,
+                  bottom: 80
+                      .v), // Added bottom padding to avoid overlapping with the button
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -88,17 +94,18 @@ class _CandidateProfileState extends State<CandidateProfile> {
                         children: [
                           CircleAvatar(
                             radius: 40.h,
-                            backgroundImage: _image != null
-                                ? FileImage(File(_image!.path))
-                                : profileImageUrl != null
-                                    ? CachedNetworkImageProvider(profileImageUrl!)
-                                    : AssetImage(ImageConstant.imgRectangle382) as ImageProvider<Object>,
+                            backgroundImage: profileImageUrl != null
+                                ? CachedNetworkImageProvider(profileImageUrl)
+                                : AssetImage(ImageConstant.imgRectangle515)
+                                    as ImageProvider<Object>,
                           ),
                         ],
                       ),
                     ),
                     SizedBox(height: 10.v),
-                    Text(userDetail["username"], style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                    Text(userDetail["username"],
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500)),
                     SizedBox(height: 34.v),
                     _buildNameColumn(context),
                     SizedBox(height: 24.v),
@@ -161,9 +168,13 @@ class _CandidateProfileState extends State<CandidateProfile> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20), border: Border.all(color: Color.fromARGB(43, 26, 29, 30)), color: Colors.white),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: Color.fromARGB(43, 26, 29, 30)),
+                            color: Colors.white),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 21.h, vertical: 19.v),
                           child: Text(
                             userDetail["username"],
                             style: TextStyle(color: Color(0xFF1A1D1E)),
@@ -200,9 +211,13 @@ class _CandidateProfileState extends State<CandidateProfile> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20), border: Border.all(color: Color.fromARGB(43, 26, 29, 30)), color: Colors.white),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: Color.fromARGB(43, 26, 29, 30)),
+                            color: Colors.white),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 21.h, vertical: 19.v),
                           child: Text(
                             userDetail["email"],
                             style: TextStyle(color: Color(0xFF1A1D1E)),
@@ -239,9 +254,13 @@ class _CandidateProfileState extends State<CandidateProfile> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20), border: Border.all(color: Color.fromARGB(43, 26, 29, 30)), color: Colors.white),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: Color.fromARGB(43, 26, 29, 30)),
+                            color: Colors.white),
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 21.h, vertical: 19.v),
                           child: Text(
                             userDetail["dateOfBirth"],
                             style: TextStyle(color: Color(0xFF1A1D1E)),
@@ -279,9 +298,13 @@ class _CandidateProfileState extends State<CandidateProfile> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20), border: Border.all(color: Color.fromARGB(43, 26, 29, 30)), color: Colors.white),
+                          borderRadius: BorderRadius.circular(20),
+                          border:
+                              Border.all(color: Color.fromARGB(43, 26, 29, 30)),
+                          color: Colors.white),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 21.h, vertical: 19.v),
                         child: Text(
                           userDetail["gender"],
                           style: TextStyle(color: Color(0xFF1A1D1E)),
@@ -318,9 +341,13 @@ class _CandidateProfileState extends State<CandidateProfile> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20), border: Border.all(color: Color.fromARGB(43, 26, 29, 30)), color: Colors.white),
+                          borderRadius: BorderRadius.circular(20),
+                          border:
+                              Border.all(color: Color.fromARGB(43, 26, 29, 30)),
+                          color: Colors.white),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 21.h, vertical: 19.v),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 21.h, vertical: 19.v),
                         child: Text(
                           userDetail["Nationality"],
                           style: TextStyle(color: Color(0xFF1A1D1E)),
