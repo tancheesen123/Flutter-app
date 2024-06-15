@@ -155,4 +155,16 @@ class ApplyJobController extends GetxController {
       rethrow;
     }
   }
+
+  Future<String?> getProfileImageUrl(DocumentReference userRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        return userSnapshot['profileImageUrl'];
+      }
+    } catch (e) {
+      print('Error fetching user profile image: $e');
+    }
+    return null;
+  }
 }
