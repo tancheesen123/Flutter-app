@@ -32,7 +32,6 @@ class FirebaseApiController extends GetxController {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       final token = await _firebaseMessaging.getToken();
-      print('FirebaseMessaging token: $token');
       userController.addToken("$token");
 
       await initLocalNotification();
@@ -75,12 +74,9 @@ class FirebaseApiController extends GetxController {
   Future<void> loadPendingNotifications() async {
     final List<PendingNotificationRequest> pendingNotificationRequests =
         await localNotification.pendingNotificationRequests();
-    print("This is pendingNotificationRequests: $pendingNotificationRequests");
 
     final List<ActiveNotification> activeNotifications =
         await localNotification.getActiveNotifications();
-
-    print("This is activeNotifications: ${activeNotifications.length}");
     for (var notification in activeNotifications) {
       print('ActiveNotification ID: ${notification.id}');
       print('ActiveNotification Title: ${notification.title}');
@@ -90,30 +86,11 @@ class FirebaseApiController extends GetxController {
     _activeNotificationRequests = activeNotifications;
   }
 
-  // Future<void> addnotificationIntoFirebase() async {
-  //   final List<PendingNotificationRequest> pendingNotificationRequests =
-  //       await localNotification.pendingNotificationRequests();
-  //   print("This is pendingNotificationRequests: $pendingNotificationRequests");
-
-  //   final List<ActiveNotification> activeNotifications =
-  //       await localNotification.getActiveNotifications();
-
-  //   print("This is activeNotifications: ${activeNotifications.length}");
-  //   for (var notification in activeNotifications) {
-  //     print('ActiveNotification ID: ${notification.id}');
-  //     print('ActiveNotification Title: ${notification.title}');
-  //     print('ActiveNotification Body: ${notification.body}');
-  //   }
-  //   _pendingNotificationRequests = pendingNotificationRequests;
-  //   _activeNotificationRequests = activeNotifications;
-  // }
-
   List<PendingNotificationRequest> get pendingNotificationRequests {
     return _pendingNotificationRequests;
   }
 
   List<ActiveNotification> get activeNotificationRequests {
-    print("is the value empty? $_activeNotificationRequests");
     return _activeNotificationRequests;
   }
 
