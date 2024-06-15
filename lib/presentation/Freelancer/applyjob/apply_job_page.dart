@@ -217,83 +217,70 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                             ),
                           ),
                           SizedBox(
-                            height: 300.v,
+                            height: 400.v,
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                // descriptionMenuPage(
-                                //     description: jobPostData["jobpostData"]
-                                //             ['description'] ??
-                                //         "No description available"), // Pass description here
-                                // CompanyMenuPage(
-                                //     description: jobPostData["companyData"]
-                                //             ['CompanyDetail'] ??
-                                //         "No Company Detail available"),
-                                Expanded(
-                                    child: Container(
-                                  child: TabBarView(
-                                    controller: tabviewController,
-                                    children: [
-                                      SingleChildScrollView(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(32.0),
-                                          child: SizedBox(
-                                            height: 500.v,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Job Descriptions",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SingleChildScrollView(
-                                                    child: Text(
-                                                      jobPostData["jobpostData"]
-                                                          ["description"],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Job Descriptions",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                      SingleChildScrollView(
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(32.0),
-                                          child: SizedBox(
-                                            height: 500.v,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Company Detail",
-                                                  style: TextStyle(
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w600,
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: SingleChildScrollView(
-                                                    child: Text(
-                                                      "${jobPostData["companyData"]["CompanyDetail"]}",
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostData["jobpostData"]
+                                                        ["description"] ??
+                                                    "No description available",
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                ))
+                                ),
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostData["companyData"]
+                                                        ["CompanyDetail"] ??
+                                                    "No Company Detail available",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -319,6 +306,9 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                         buttonTextStyle:
                             CustomTextStyles.titleSmallWhiteA700SemiBold,
                         onPressed: () async {
+                          DocumentReference userRef = FirebaseFirestore.instance
+                              .doc('/user/${userData["email"]}');
+
                           Map<String, dynamic> candidateData = {
                             'label': "${userData["email"]}",
                             'name': "${userData["username"]}",
