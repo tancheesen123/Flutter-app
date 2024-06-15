@@ -5,22 +5,18 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ManageJobPostController extends GetxController {
-  Future<bool> submitJobPost(String title, String location, String budget,
-      String description, String messageTitle, String messageBody) async {
+  Future<bool> submitJobPost(String title, String location, String budget, String description, String messageTitle, String messageBody) async {
+    bool success = false;
     try {
       final now = DateTime.now(); // Replace with current date in production
       final month = now.month;
       final day = now.day;
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? clientUID =
-          jsonDecode(prefs.getString("clientDetail")!)["uid"];
-      final String? companyID =
-          jsonDecode(prefs.getString("companyDetail")!)["id"];
+      final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
+      final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-      DocumentReference userRef =
-          FirebaseFirestore.instance.collection("user").doc(clientUID);
-      DocumentReference companyRef =
-          FirebaseFirestore.instance.collection("company").doc(companyID);
+      DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
+      DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
 
       Map<String, dynamic> notificationData = {
         "notification": {
@@ -71,39 +67,26 @@ class ManageJobPostController extends GetxController {
         "Notification": json.encode(notificationData)
       };
 
-      await FirebaseFirestore.instance
-          .collection("jobPost")
-          .add(data)
-          .then((value) {
-        return true;
+      await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
+        success = true;
       });
     } catch (e) {
-      return false;
+      success = false;
     }
 
-    return false;
+    return success;
   }
 
   Future<bool> editJobPost(
-      String postId,
-      String title,
-      String location,
-      String budget,
-      String description,
-      String messageTitle,
-      String messageBody) async {
+      String postId, String title, String location, String budget, String description, String messageTitle, String messageBody) async {
     bool success = false;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      final String? clientUID =
-          jsonDecode(prefs.getString("clientDetail")!)["uid"];
-      final String? companyID =
-          jsonDecode(prefs.getString("companyDetail")!)["id"];
+      final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
+      final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
 
-      DocumentReference userRef =
-          FirebaseFirestore.instance.collection("user").doc(clientUID);
-      DocumentReference companyRef =
-          FirebaseFirestore.instance.collection("company").doc(companyID);
+      DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
+      DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
 
       Map<String, dynamic> notificationData = {
         "notification": {
@@ -122,11 +105,7 @@ class ManageJobPostController extends GetxController {
         "Notification": json.encode(notificationData)
       };
 
-      await FirebaseFirestore.instance
-          .collection("jobPost")
-          .doc(postId)
-          .update(data)
-          .then((value) {
+      await FirebaseFirestore.instance.collection("jobPost").doc(postId).update(data).then((value) {
         success = true;
       });
     } catch (e) {
