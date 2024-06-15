@@ -18,8 +18,10 @@ class CandidateScreen extends StatefulWidget {
 }
 
 class _CandidateScreenState extends State<CandidateScreen> {
-  final CandidateController candidateController = Get.put(CandidateController());
-  final TextEditingController searchTextFieldController = TextEditingController();
+  final CandidateController candidateController =
+      Get.put(CandidateController());
+  final TextEditingController searchTextFieldController =
+      TextEditingController();
   bool validToSubmit = false;
   List chosenCheckbox = [];
   List acceptCandidateList = [];
@@ -60,7 +62,8 @@ class _CandidateScreenState extends State<CandidateScreen> {
     (widget.postDetail["post"]["candidate"] as List).forEach((candidate) {
       if (candidate["detail"]["status"].toString().toUpperCase() == "ACCEPT") {
         acceptCandidateList.add(candidate);
-      } else if (candidate["detail"]["status"].toString().toUpperCase() == "PENDING") {
+      } else if (candidate["detail"]["status"].toString().toUpperCase() ==
+          "PENDING") {
         pendingCandidateList.add(candidate);
       } else {
         rejectCandidateList.add(candidate);
@@ -125,7 +128,8 @@ class _CandidateScreenState extends State<CandidateScreen> {
                           "${widget.postDetail["post"]["data"]["title"]}",
                           style: theme.textTheme.titleMedium,
                         ),
-                        Text("${widget.postDetail["post"]["data"]["location"]}", style: Theme.of(context).textTheme.bodyLarge),
+                        Text("${widget.postDetail["post"]["data"]["location"]}",
+                            style: Theme.of(context).textTheme.bodyLarge),
                       ],
                     ),
                   )
@@ -140,13 +144,25 @@ class _CandidateScreenState extends State<CandidateScreen> {
                 child: Column(
                   children: [
                     ...List.generate(pendingCandidateList.length, (index) {
-                      return CandidateContainer(pendingCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                      return CandidateContainer(
+                          pendingCandidateList[index],
+                          setChosenCheckbox,
+                          checkValidToSubmit,
+                          widget.postDetail["view"]);
                     }),
                     ...List.generate(acceptCandidateList.length, (index) {
-                      return CandidateContainer(acceptCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                      return CandidateContainer(
+                          acceptCandidateList[index],
+                          setChosenCheckbox,
+                          checkValidToSubmit,
+                          widget.postDetail["view"]);
                     }),
                     ...List.generate(rejectCandidateList.length, (index) {
-                      return CandidateContainer(rejectCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                      return CandidateContainer(
+                          rejectCandidateList[index],
+                          setChosenCheckbox,
+                          checkValidToSubmit,
+                          widget.postDetail["view"]);
                     })
                   ],
                 ),
@@ -157,7 +173,9 @@ class _CandidateScreenState extends State<CandidateScreen> {
               ? Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30)),
                     boxShadow: [
                       BoxShadow(
                         color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -172,7 +190,8 @@ class _CandidateScreenState extends State<CandidateScreen> {
                     child: Container(
                       child: Center(
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 20),
                           child: IntrinsicHeight(
                             child: Row(
                               children: [
@@ -181,12 +200,21 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                         child: ElevatedButton(
                                           onPressed: () {
                                             candidateController
-                                                .acceptCandidate(widget.postDetail["post"], [...chosenCheckbox, ...acceptCandidateList], true)
+                                                .acceptCandidate(
+                                                    widget.postDetail["post"],
+                                                    [
+                                                      ...chosenCheckbox,
+                                                      ...acceptCandidateList
+                                                    ],
+                                                    true)
                                                 .then((success) {
                                               if (success) {
-                                                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pushAndRemoveUntil(
                                                   MaterialPageRoute(
-                                                    builder: (BuildContext context) {
+                                                    builder:
+                                                        (BuildContext context) {
                                                       return HomeClientPage();
                                                     },
                                                   ),
@@ -198,18 +226,28 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                             });
                                           },
                                           style: ButtonStyle(
-                                            elevation: MaterialStatePropertyAll(0),
-                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(15),
+                                            elevation:
+                                                MaterialStatePropertyAll(0),
+                                            shape: MaterialStateProperty.all<
+                                                    RoundedRectangleBorder>(
+                                                RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
                                             )),
-                                            backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 155, 211, 136)),
+                                            backgroundColor:
+                                                MaterialStatePropertyAll(
+                                                    Color.fromARGB(
+                                                        255, 155, 211, 136)),
                                           ),
                                           child: Padding(
-                                            padding: EdgeInsets.symmetric(vertical: 14),
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 14),
                                             child: Text(
                                               "Stop accepting candidate",
                                               textAlign: TextAlign.center,
-                                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Colors.white),
                                             ),
                                           ),
                                         ),
@@ -223,12 +261,21 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                     onPressed: validToSubmit
                                         ? () {
                                             candidateController
-                                                .acceptCandidate(widget.postDetail["post"], [...chosenCheckbox, ...acceptCandidateList], false)
+                                                .acceptCandidate(
+                                                    widget.postDetail["post"],
+                                                    [
+                                                      ...chosenCheckbox,
+                                                      ...acceptCandidateList
+                                                    ],
+                                                    false)
                                                 .then((success) {
                                               if (success) {
-                                                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pushAndRemoveUntil(
                                                   MaterialPageRoute(
-                                                    builder: (BuildContext context) {
+                                                    builder:
+                                                        (BuildContext context) {
                                                       return HomeClientPage();
                                                     },
                                                   ),
@@ -242,16 +289,26 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                         : null,
                                     style: ButtonStyle(
                                       elevation: MaterialStatePropertyAll(0),
-                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                      shape: MaterialStateProperty.all<
+                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(15),
                                       )),
-                                      backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
+                                      backgroundColor: MaterialStatePropertyAll(
+                                          validToSubmit
+                                              ? Color(0xff5598FF)
+                                              : Color(0xffF4F6F8)),
                                     ),
                                     child: Padding(
-                                      padding: EdgeInsets.symmetric(vertical: 14),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 14),
                                       child: Text(
                                         "Employ",
-                                        style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            color: validToSubmit
+                                                ? Colors.white
+                                                : Color(0xffC2C2C2)),
                                       ),
                                     ),
                                   ),
@@ -275,7 +332,9 @@ class CandidateContainer extends StatefulWidget {
   final Function setChosenCheckbox;
   final Function checkValidToSubmit;
   final bool viewOnly;
-  CandidateContainer(this.candidateDetail, this.setChosenCheckbox, this.checkValidToSubmit, this.viewOnly, {Key? key});
+  CandidateContainer(this.candidateDetail, this.setChosenCheckbox,
+      this.checkValidToSubmit, this.viewOnly,
+      {Key? key});
 
   @override
   _CandidateContainerState createState() => _CandidateContainerState();
@@ -336,16 +395,24 @@ class _CandidateContainerState extends State<CandidateContainer> {
                       borderRadius: BorderRadius.all(Radius.circular(6)),
                     ),
                     child: InkWell(
-                      onTap: (widget.candidateDetail["detail"]["status"].toString().toUpperCase() != "ACCEPT")
+                      onTap: (widget.candidateDetail["detail"]["status"]
+                                  .toString()
+                                  .toUpperCase() !=
+                              "ACCEPT")
                           ? () {
                               setState(() {
                                 isChecked = !isChecked;
-                                widget.setChosenCheckbox(widget.candidateDetail);
+                                widget
+                                    .setChosenCheckbox(widget.candidateDetail);
                                 widget.checkValidToSubmit();
                               });
                             }
                           : () {},
-                      child: (isChecked || (widget.candidateDetail["detail"]["status"].toString().toUpperCase() == "ACCEPT"))
+                      child: (isChecked ||
+                              (widget.candidateDetail["detail"]["status"]
+                                      .toString()
+                                      .toUpperCase() ==
+                                  "ACCEPT"))
                           ? const Icon(Icons.check_rounded, color: Colors.white)
                           : Padding(
                               padding: const EdgeInsets.all(2.5),

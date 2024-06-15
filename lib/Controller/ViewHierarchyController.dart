@@ -18,11 +18,14 @@ class ViewHierarchyController extends GetxController {
   Future<List> getAllData() async {
     final jobPostsFuture = getAllJobPost();
     final companyFuture = getCompany();
+    final clientData = getUserInformation();
+
     // Add other futures here
     // final otherFuture = getOtherData();
 
     // Return a list of futures
-    return await Future.wait([jobPostsFuture, companyFuture /*, otherFuture*/]);
+    return await Future.wait(
+        [jobPostsFuture, companyFuture, clientData /*, otherFuture*/]);
   }
 
   Future<void> updatePostStatus(String postId, String status) async {
@@ -200,6 +203,20 @@ class ViewHierarchyController extends GetxController {
     } catch (e) {
       print('Error fetching application documents: $e');
       rethrow; // Optionally rethrow to handle error higher up in the call stack
+    }
+  }
+
+  Future<Map<String, dynamic>?> getUserInformation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userEmail = prefs.getString('userEmail');
+    final docRef = FirebaseFirestore.instance.collection('user').doc(userEmail);
+    final doc = await docRef.get();
+
+    print("This is user information $doc");
+    if (doc.exists) {
+      return doc.data();
+    } else {
+      return null;
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
@@ -17,8 +18,9 @@ import 'widgets/apply_insight_item.dart';
 
 class PostInsightScreen extends StatefulWidget {
   final String? postId;
+  final Map<String, dynamic>? clientData;
 
-  PostInsightScreen({Key? key, this.postId}) : super(key: key);
+  PostInsightScreen({Key? key, this.postId, this.clientData}) : super(key: key);
 
   @override
   State<PostInsightScreen> createState() => _PostInsightScreenState();
@@ -74,7 +76,7 @@ class _PostInsightScreenState extends State<PostInsightScreen>
               print("jobposadstData ${jobPostData["jobpostData"]["title"]}");
               Map<String, dynamic> postInsightData = data[1];
               Map<String, int> totalValues = data[2];
-
+              String? profileImageUrl = widget.clientData!["profileImageUrl"];
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
               return Stack(
@@ -92,12 +94,14 @@ class _PostInsightScreenState extends State<PostInsightScreen>
                             child: Stack(
                               alignment: Alignment.bottomRight,
                               children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle515,
-                                  height: 80.adaptSize,
-                                  width: 80.adaptSize,
-                                  radius: BorderRadius.circular(40.h),
-                                  alignment: Alignment.center,
+                                CircleAvatar(
+                                  radius: 40.h,
+                                  backgroundImage: profileImageUrl != null
+                                      ? CachedNetworkImageProvider(
+                                          profileImageUrl)
+                                      : AssetImage(
+                                              ImageConstant.imgRectangle515)
+                                          as ImageProvider<Object>,
                                 ),
                               ],
                             ),
