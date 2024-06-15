@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:workwise/presentation/Client/home_client_page/home_client_page.dart';
 import '../../../core/app_export.dart';
 import 'package:workwise/Controller/CandidateController.dart';
 
@@ -18,12 +18,13 @@ class CandidateScreen extends StatefulWidget {
 }
 
 class _CandidateScreenState extends State<CandidateScreen> {
-  final CandidateController candidateController =
-      Get.put(CandidateController());
-  final TextEditingController searchTextFieldController =
-      TextEditingController();
+  final CandidateController candidateController = Get.put(CandidateController());
+  final TextEditingController searchTextFieldController = TextEditingController();
   bool validToSubmit = false;
   List chosenCheckbox = [];
+  List acceptCandidateList = [];
+  List pendingCandidateList = [];
+  List rejectCandidateList = [];
 
   void setChosenCheckbox(dynamic checkboxValue) {
     bool alreadyExist = false;
@@ -55,8 +56,21 @@ class _CandidateScreenState extends State<CandidateScreen> {
   }
 
   @override
+  void initState() {
+    (widget.postDetail["post"]["candidate"] as List).forEach((candidate) {
+      if (candidate["detail"]["status"].toString().toUpperCase() == "ACCEPT") {
+        acceptCandidateList.add(candidate);
+      } else if (candidate["detail"]["status"].toString().toUpperCase() == "PENDING") {
+        pendingCandidateList.add(candidate);
+      } else {
+        rejectCandidateList.add(candidate);
+      }
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    print("This is widget ${widget.postDetail}");
     return Scaffold(
       body: Column(
         children: [
@@ -108,11 +122,10 @@ class _CandidateScreenState extends State<CandidateScreen> {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          "${widget.postDetail["data"]["title"]}",
+                          "${widget.postDetail["post"]["data"]["title"]}",
                           style: theme.textTheme.titleMedium,
                         ),
-                        Text("${widget.postDetail["data"]["location"]}",
-                            style: Theme.of(context).textTheme.bodyLarge),
+                        Text("${widget.postDetail["post"]["data"]["location"]}", style: Theme.of(context).textTheme.bodyLarge),
                       ],
                     ),
                   )
@@ -125,92 +138,132 @@ class _CandidateScreenState extends State<CandidateScreen> {
               width: double.infinity,
               child: SingleChildScrollView(
                 child: Column(
-                  children: List.generate(widget.postDetail["candidate"].length,
-                      (index) {
-                    //list job post yg kita nk tukar ke candidate list
-                    return CandidateContainer(
-                        widget.postDetail["candidate"][index],
-                        setChosenCheckbox,
-                        checkValidToSubmit);
-                  }),
+                  children: [
+                    ...List.generate(pendingCandidateList.length, (index) {
+                      return CandidateContainer(pendingCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                    }),
+                    ...List.generate(acceptCandidateList.length, (index) {
+                      return CandidateContainer(acceptCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                    }),
+                    ...List.generate(rejectCandidateList.length, (index) {
+                      return CandidateContainer(rejectCandidateList[index], setChosenCheckbox, checkValidToSubmit, widget.postDetail["view"]);
+                    })
+                  ],
                 ),
               ),
             ),
           ),
-          Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(30),
-                    topRight: Radius.circular(30)),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color(0xffB3BAC3).withOpacity(0.25),
-                    spreadRadius: 0,
-                    blurRadius: 4,
-                    offset: Offset(0, -4),
+          widget.postDetail["view"] == false
+              ? Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color(0xffB3BAC3).withOpacity(0.25),
+                        spreadRadius: 0,
+                        blurRadius: 4,
+                        offset: Offset(0, -4),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Container(
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 20),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: validToSubmit
-                                  ? () {
-                                      candidateController
-                                          .acceptCandidate(
-                                              widget.postDetail, chosenCheckbox)
-                                          .then((success) {
-                                        // if (success) {
-                                        //   Navigator.of(context,
-                                        //           rootNavigator: true)
-                                        //       .pushNamed(
-                                        //           AppRoutes.homeClientPage);
-                                        // } else {
-                                        //   print("Something went wrong");
-                                        // }
-                                      });
-                                    }
-                                  : null,
-                              style: ButtonStyle(
-                                elevation: MaterialStatePropertyAll(0),
-                                shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                )),
-                                backgroundColor: MaterialStatePropertyAll(
-                                    validToSubmit
-                                        ? Color(0xff5598FF)
-                                        : Color(0xffF4F6F8)),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 14),
-                                child: Text(
-                                  "Employ",
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: validToSubmit
-                                          ? Colors.white
-                                          : Color(0xffC2C2C2)),
+                  child: Align(
+                    alignment: FractionalOffset.bottomCenter,
+                    child: Container(
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                          child: IntrinsicHeight(
+                            child: Row(
+                              children: [
+                                acceptCandidateList.isNotEmpty
+                                    ? Expanded(
+                                        child: ElevatedButton(
+                                          onPressed: () {
+                                            candidateController
+                                                .acceptCandidate(widget.postDetail["post"], [...chosenCheckbox, ...acceptCandidateList], true)
+                                                .then((success) {
+                                              if (success) {
+                                                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext context) {
+                                                      return HomeClientPage();
+                                                    },
+                                                  ),
+                                                  (_) => false,
+                                                );
+                                              } else {
+                                                print("Something went wrong");
+                                              }
+                                            });
+                                          },
+                                          style: ButtonStyle(
+                                            elevation: MaterialStatePropertyAll(0),
+                                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(15),
+                                            )),
+                                            backgroundColor: MaterialStatePropertyAll(Color.fromARGB(255, 155, 211, 136)),
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(vertical: 14),
+                                            child: Text(
+                                              "Stop accepting candidate",
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    : Container(),
+                                SizedBox(
+                                  width: 16,
                                 ),
-                              ),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: validToSubmit
+                                        ? () {
+                                            candidateController
+                                                .acceptCandidate(widget.postDetail["post"], [...chosenCheckbox, ...acceptCandidateList], false)
+                                                .then((success) {
+                                              if (success) {
+                                                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext context) {
+                                                      return HomeClientPage();
+                                                    },
+                                                  ),
+                                                  (_) => false,
+                                                );
+                                              } else {
+                                                print("Something went wrong");
+                                              }
+                                            });
+                                          }
+                                        : null,
+                                    style: ButtonStyle(
+                                      elevation: MaterialStatePropertyAll(0),
+                                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                      )),
+                                      backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.symmetric(vertical: 14),
+                                      child: Text(
+                                        "Employ",
+                                        style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ))
+                  ))
+              : Container()
         ],
       ),
     );
@@ -221,9 +274,8 @@ class CandidateContainer extends StatefulWidget {
   final dynamic candidateDetail;
   final Function setChosenCheckbox;
   final Function checkValidToSubmit;
-  CandidateContainer(
-      this.candidateDetail, this.setChosenCheckbox, this.checkValidToSubmit,
-      {Key? key});
+  final bool viewOnly;
+  CandidateContainer(this.candidateDetail, this.setChosenCheckbox, this.checkValidToSubmit, this.viewOnly, {Key? key});
 
   @override
   _CandidateContainerState createState() => _CandidateContainerState();
@@ -272,42 +324,42 @@ class _CandidateContainerState extends State<CandidateContainer> {
               ),
             ),
             Spacer(),
-            Container(
-              //container utk kotak checkbox
-              //alignment: Alignment.topRight,
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-                //checkbox
-                color: Color.fromARGB(255, 90, 151, 229),
-                borderRadius: BorderRadius.all(Radius.circular(6)),
-              ),
-              child: InkWell(
-                onTap: () {
-                  setState(() {
-                    isChecked = !isChecked;
-                    widget.setChosenCheckbox(widget.candidateDetail);
-                    widget.checkValidToSubmit();
-                  });
-                },
-                child: isChecked
-                    ? const Icon(Icons.check_rounded, color: Colors.white)
-                    : Padding(
-                        padding: const EdgeInsets.all(2.5),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                        ),
-                      ),
-              ),
-            ),
+            !widget.viewOnly
+                ? Container(
+                    //container utk kotak checkbox
+                    //alignment: Alignment.topRight,
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      //checkbox
+                      color: Color.fromARGB(255, 90, 151, 229),
+                      borderRadius: BorderRadius.all(Radius.circular(6)),
+                    ),
+                    child: InkWell(
+                      onTap: (widget.candidateDetail["detail"]["status"].toString().toUpperCase() != "ACCEPT")
+                          ? () {
+                              setState(() {
+                                isChecked = !isChecked;
+                                widget.setChosenCheckbox(widget.candidateDetail);
+                                widget.checkValidToSubmit();
+                              });
+                            }
+                          : () {},
+                      child: (isChecked || (widget.candidateDetail["detail"]["status"].toString().toUpperCase() == "ACCEPT"))
+                          ? const Icon(Icons.check_rounded, color: Colors.white)
+                          : Padding(
+                              padding: const EdgeInsets.all(2.5),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                            ),
+                    ),
+                  )
+                : Container(),
             SizedBox(width: 10),
-            // Column(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [Align()],
-            // ),
           ],
         ),
       ),
