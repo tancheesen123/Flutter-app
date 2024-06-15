@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:workwise/presentation/Client/post_list_page/post_list_page.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/custom_bottom_bar.dart';
 import '../home_client_page/home_client_page.dart';
 import '../../Freelancer/notification_screen/notification.dart';
-import '../../Freelancer/settings_screen/settings_screen.dart';
+import '../client_settings_screen/client_settings_screen.dart';
 
 class HomeClientContainerScreen extends StatefulWidget {
   HomeClientContainerScreen({Key? key})
@@ -91,7 +89,7 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
                 setNavBarIndex(value);
                 break;
               case 2:
-                setScreen(SettingsScreen());
+                setScreen(ClientSettingsScreen());
                 setNavBarIndex(value);
                 break;
               default:
@@ -122,7 +120,7 @@ class _HomeClientContainerScreenState extends State<HomeClientContainerScreen> {
       case BottomBarEnum.Notifications:
         return AppRoutes.notificationScreen;
       case BottomBarEnum.Settings:
-        return AppRoutes.settingsScreen;
+        return AppRoutes.clientSettingsScreen;
       default:
         return "/";
     }
