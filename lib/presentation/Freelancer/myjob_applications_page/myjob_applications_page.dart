@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -31,7 +31,7 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
               .fetchData(), 
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return buildShimmer(context);
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else {
@@ -87,4 +87,96 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
   onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
   }
+
+  Widget buildShimmer(BuildContext context) {
+    return ListView.builder(
+      itemCount: 4,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 10.v), // Adjust spacing between each card
+          child: Shimmer.fromColors(
+            baseColor: Colors.grey[300]!,
+            highlightColor: Colors.grey[100]!,
+            child: Container(
+              height: 150.h, // Adjust the height of the shimmer loading item
+              padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 18.v),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadiusStyle.roundedBorder12,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 50.h,
+                        height: 50.h,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 20.h),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              width: 120.h,
+                              height: 10.v,
+                              color: Colors.grey[300],
+                            ),
+                            SizedBox(height: 1.v),
+                            Container(
+                              width: 150.h,
+                              height: 10.v,
+                              color: Colors.grey[300],
+                            ),
+                            SizedBox(height: 1.v),
+                            Container(
+                              width: 100.h,
+                              height: 10.v,
+                              color: Colors.grey[300],
+                            ),
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        width: 20.h,
+                        height: 20.v,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10.h),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 14.v),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 100.h,
+                        height: 30.v,
+                        color: Colors.grey[300],
+                      ),
+                      Container(
+                        width: 150.h,
+                        height: 30.v,
+                        color: Colors.grey[300],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 }
