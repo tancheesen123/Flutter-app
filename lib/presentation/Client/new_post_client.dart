@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:workwise/Controller/ManageJobPostController.dart';
+import 'package:workwise/presentation/Client/success_post_client.dart';
 import '../../../core/app_export.dart';
 
 class NewPostScreen extends StatefulWidget {
@@ -709,7 +710,14 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                             .then(
                                           (success) {
                                             if (success) {
-                                              Navigator.pushNamed(context, AppRoutes.successPostClientScreen);
+                                              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                  builder: (BuildContext context) {
+                                                    return SuccessPostClientScreen();
+                                                  },
+                                                ),
+                                                (_) => false,
+                                              );
                                             }
                                           },
                                         );
