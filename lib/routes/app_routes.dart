@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Client/candidate_profile.dart';
 import 'package:workwise/presentation/Client/edit_post_client.dart';
 import 'package:workwise/presentation/Client/success_post_client.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_two_screen/forgot_password_two_screen.dart';
 import 'package:workwise/presentation/Freelancer/home_page/home_page.dart';
-import '../core/app_export.dart';
 import '../presentation/Freelancer/home_page/home_container_screen.dart';
 import '../presentation/Freelancer/applyjob/apply_job_page.dart';
 import '../presentation/log_in_screen/log_in_screen.dart';
@@ -21,7 +21,6 @@ import '../presentation/Freelancer/notification_screen/notification.dart';
 import '../presentation/Freelancer/notification_detail_screen/notification_detail.dart';
 
 // Client import
-import 'package:workwise/presentation/Client/success_post_client.dart';
 import '../presentation/Client/home_client_container_screen/home_client_container_screen.dart';
 import '../presentation/Client/post_list_page/post_list_page.dart';
 import 'package:workwise/presentation/Client/new_post_client.dart';
@@ -29,7 +28,6 @@ import '../presentation/Client/home_client_page/home_client_page.dart';
 import '../presentation/loading_screen/loading_screen.dart';
 import '../presentation/Client/client_profile_screen/client_profile_screen.dart';
 
-import '../presentation/Client/insight_page/insight_page.dart';
 import '../presentation/Client/candidate_page/candidate_page.dart';
 
 class AppRoutes {
@@ -49,6 +47,7 @@ class AppRoutes {
   static const String newPostClientScreen = '/new_post_client_screen';
 
   static const String successPostClientScreen = '/success_post_client_screen';
+  static const String viewEmployeeProfileScreen = '/view_employee_profile_screen';
 
   //Freelancer Routes
   static const String changePasswordScreen = '/change_password_screen';
@@ -144,6 +143,10 @@ class AppRoutes {
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
     clientProfileScreen: (context) => ClientProfileScreen(),
+    viewEmployeeProfileScreen: (context) {
+      final dynamic candidateDetail = ModalRoute.of(context)?.settings.arguments;
+      return CandidateProfile(candidateDetail);
+    },
 
     // initialRoute: (context) => CheckSession()
     initialRoute: (context) => CheckSession()
