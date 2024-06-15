@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/ManageJobPostController.dart';
 import '../../../core/app_export.dart';
 
@@ -748,70 +744,4 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
       },
     );
   }
-
-  // Future<bool> submitJobPost() async {
-  //   final now = DateTime.now(); // Replace with current date in production
-  //   final month = now.month;
-  //   final day = now.day;
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
-  //   final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
-
-  //   DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
-  //   DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
-
-  //   Map<String, dynamic> notificationData = {
-  //     "notification": {
-  //       "title": titleMessageTextFieldController.text,
-  //       "body": bodyMessageTextFieldController.text,
-  //     }
-  //   };
-
-  //   Map<String, dynamic> insightData = {
-  //     'impression': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //     'clicks': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //     'apply': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //   };
-
-  //   Map<String, dynamic> data = {
-  //     "title": titleTextFieldController.text,
-  //     "location": locationTextFieldController.text,
-  //     "budget": int.parse(budgetTextFieldController.text),
-  //     "description": descriptionTextFieldController.text,
-  //     "insight": json.encode(insightData),
-  //     // "status": "Part Time",
-  //     // "workingHours": 20,
-  //     "user": userRef,
-  //     "company": companyRef,
-  //     "postStatus": "OPEN",
-  //     "Notification": json.encode(notificationData)
-  //   };
-
-  //   await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
-  //     return true;
-  //   });
-
-  //   return true;
-  // }
 }
