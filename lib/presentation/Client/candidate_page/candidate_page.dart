@@ -305,7 +305,6 @@ Future<bool> acceptCandidate(dynamic postDetail, List listAcceptedCandidate) asy
           .where("postRefPath", isEqualTo: postDetail["postReference"].reference)
           .get();
 
-      print(userApplication);
       await FirebaseFirestore.instance
           .collection('user')
           .doc(candidate["id"])
