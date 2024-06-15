@@ -173,7 +173,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                               Navigator.pushNamed(
                                                 context,
                                                 AppRoutes.candidatePage,
-                                                arguments: currentJobPost[index],
+                                                arguments: {"view": false, "post": currentJobPost[index]},
                                               );
                                             },
                                             child: Padding(
@@ -267,7 +267,8 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
 
                               return InkWell(
                                   onTap: () {
-                                    showBottomSheetPreviewPost(context, currentJobPost[index], company);
+                                    showBottomSheetPreviewPost(context, currentJobPost[index], company,
+                                        (currentJobPost[index]['data']["postStatus"].toString().toUpperCase() == "OPEN") ? false : true);
                                   },
                                   child: Container(
                                     width: double.infinity,
@@ -305,7 +306,13 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                                 elevation: 2,
                                                 onSelected: (item) async {
                                                   if (item == 1) {
-                                                    showBottomSheetPreviewPost(context, jobPostList[index], company);
+                                                    showBottomSheetPreviewPost(
+                                                        context,
+                                                        jobPostList[index],
+                                                        company,
+                                                        (currentJobPost[index]['data']["postStatus"].toString().toUpperCase() == "OPEN")
+                                                            ? false
+                                                            : true);
                                                   } else if (item == 2) {
                                                     print("click 2");
                                                     await viewHierarchyController.deletePostStatus(jobPostList[index]['id']);
@@ -376,7 +383,7 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
         }));
   }
 
-  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail, dynamic company) {
+  Future showBottomSheetPreviewPost(BuildContext context, dynamic jobPostDetail, dynamic company, bool viewOnly) {
     return showModalBottomSheet(
       isScrollControlled: true,
       context: context,
@@ -666,12 +673,10 @@ class _ViewhierarchyItemWidgetState extends State<ViewhierarchyItemWidget> with 
                                   text: "Candidate",
                                   buttonTextStyle: CustomTextStyles.titleSmallWhiteA700SemiBold,
                                   onPressed: () async {
-                                    Navigator.of(context, rootNavigator: true).push(
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) {
-                                          return PostInsightScreen(postId: jobPostDetail["id"]);
-                                        },
-                                      ),
+                                    Navigator.pushNamed(
+                                      context,
+                                      AppRoutes.candidatePage,
+                                      arguments: {"view": viewOnly, "post": jobPostDetail},
                                     );
                                   },
                                 ),
