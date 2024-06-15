@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:workwise/Controller/ApplyJobController.dart';
 import '../../../../core/app_export.dart';
 import '../../../../widgets/custom_icon_button.dart';
 import '../../applyjob/apply_job_page.dart';
@@ -33,36 +32,46 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return SizedBox(
-            width: 370.h,
-            child: ListView.separated(
-              padding: EdgeInsets.only(left: 20.h),
-              scrollDirection: Axis.horizontal,
-              separatorBuilder: (context, index) {
+          // Extract all user reference futures
+          List<Future<DocumentSnapshot>> userFutures = [];
+          snapshot.data!.forEach((data) {
+            DocumentReference? userRef = data['user'] as DocumentReference?;
+            if (userRef != null) {
+              userFutures.add(_homePageController.getUserDataByRef(userRef));
+            }
+          });
+
+          // Check if there are no users to load
+          if (userFutures.isEmpty) {
+            return Center(child: Text('No user data found'));
+          }
+
+          // Combine all futures using Future.wait
+          return FutureBuilder<List<DocumentSnapshot>>(
+            future: Future.wait(userFutures),
+            builder: (context, userSnapshots) {
+              if (userSnapshots.connectionState == ConnectionState.waiting) {
+                return _buildShimmerLoading();
+              } else if (userSnapshots.hasError) {
+                return Text('Error: ${userSnapshots.error}');
+              } else {
                 return SizedBox(
-                  width: 20.h,
-                );
-              },
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> data = snapshot.data![index];
-                DocumentReference? userRef = data['user'] as DocumentReference?;
+                  width: 370.h,
+                  child: ListView.separated(
+                    padding: EdgeInsets.only(left: 20.h),
+                    scrollDirection: Axis.horizontal,
+                    separatorBuilder: (context, index) {
+                      return SizedBox(
+                        width: 20.h,
+                      );
+                    },
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> data = snapshot.data![index];
+                      DocumentSnapshot userSnapshot = userSnapshots.data![index];
 
-                if (userRef == null) {
-                  return Text('User reference is null');
-                }
-
-                return FutureBuilder<DocumentSnapshot>(
-                  future: _homePageController.getUserDataByRef(userRef),
-                  builder: (context, userSnapshot) {
-                    if (userSnapshot.connectionState == ConnectionState.waiting) {
-                      return _buildShimmerLoading();
-                    } else if (userSnapshot.hasError) {
-                      return Text('Error: ${userSnapshot.error}');
-                    } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-                      return Text('No user data found');
-                    } else {
-                      String? profileImageUrl = userSnapshot.data!.get('profileImageUrl');
+                      String? profileImageUrl = userSnapshot.get('profileImageUrl');
+                      String? companyName = data['companyName'];
 
                       return GestureDetector(
                         onTap: () {
@@ -114,7 +123,7 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                   ),
                                   SizedBox(height: 3.v),
                                   Text(
-                                    "${data['title']}",
+                                    "$companyName",
                                     style: theme.textTheme.bodySmall,
                                   ),
                                   SizedBox(height: 11.v),
@@ -148,11 +157,11 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                           ),
                         ),
                       );
-                    }
-                  },
+                    },
+                  ),
                 );
-              },
-            ),
+              }
+            },
           );
         }
       },
