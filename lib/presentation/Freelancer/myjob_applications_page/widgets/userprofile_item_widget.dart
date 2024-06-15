@@ -1,33 +1,49 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:workwise/presentation/Freelancer/applyjob/apply_job_page.dart';
 import '../../../../core/app_export.dart';
-import '../../../../theme/custom_button_style.dart';
-import '../../../../widgets/custom_elevated_button.dart'; // ignore: must_be_immutable
-import 'package:workwise/Controller/UserController.dart';
+import 'package:workwise/Controller/ApplyJobController.dart';
 
 class UserprofileItemWidget extends StatefulWidget {
   final Map<String, dynamic> data;
-  const UserprofileItemWidget({Key? key, required this.data})
-      : super(
-          key: key,
-        );
+
+  const UserprofileItemWidget({Key? key, required this.data}) : super(key: key);
 
   @override
   State<UserprofileItemWidget> createState() => _UserprofileItemWidgetState();
 }
 
 class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
-  final UserController userController = Get.put(UserController());
+  final ApplyJobController applyJobController = Get.put(ApplyJobController());
+  String? profileImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserProfileImage();
+  }
+
+  Future<void> fetchUserProfileImage() async {
+    try {
+      DocumentReference userRef = widget.data['user'] as DocumentReference;
+      String? url = await applyJobController.getProfileImageUrl(userRef);
+      if (url != null) {
+        setState(() {
+          profileImageUrl = url;
+        });
+      }
+    } catch (e) {
+      print('Error fetching user profile image: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // String postRefPath = data['postRefPath'];
-    print("this is widget data ${widget.data['postId']}");
-    String email = userController.getEmail();
     String location = widget.data['location'];
     String postId = widget.data['postId'];
-    // print("Locationasd: $location");
     String title = widget.data['title'];
     String status = widget.data['statusApplication'];
     int workingHours = 12;
@@ -35,8 +51,6 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
 
     return GestureDetector(
       onTap: () {
-        print('Post ID: $postId');
-
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
@@ -63,15 +77,16 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgRectangle5162,
-                    height: 50.adaptSize,
-                    width: 50.adaptSize,
-                    radius: BorderRadius.circular(
-                      15.h,
-                    ),
-                    margin: EdgeInsets.symmetric(vertical: 3.v),
-                  ),
+                  if (profileImageUrl != null)
+                    CircleAvatar(
+                      radius: 25.h,
+                      backgroundImage: profileImageUrl != null
+                          ? CachedNetworkImageProvider(profileImageUrl!)
+                          : AssetImage(ImageConstant.imgRectangle382)
+                              as ImageProvider<Object>,
+                    )
+                  else
+                    _buildShimmerLoading_CompanyLogo(),
                   Padding(
                     padding: EdgeInsets.only(left: 20.h),
                     child: Column(
@@ -101,35 +116,16 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
                     imagePath: ImageConstant.imgNotification,
                     height: 18.v,
                     width: 20.h,
-                    margin: EdgeInsets.only(
-                      top: 3.v,
-                      bottom: 35.v,
-                    ),
+                    margin: EdgeInsets.only(top: 3.v, bottom: 35.v),
                   )
                 ],
               ),
               SizedBox(height: 14.v),
               Padding(
-                padding: EdgeInsets.only(
-                  left: 4.h,
-                  right: 7.h,
-                ),
+                padding: EdgeInsets.only(left: 4.h, right: 7.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // CustomElevatedButton(
-                    //   width: 135.h,
-                    //   text: "$status",
-                    //   // text: "123",
-                    //   buttonStyle: status == 'Pending'
-                    //       ? buildCustomPendingBtn(context),
-                    //       : status == 'Reject'
-                    //           ? CustomButtonStyles
-                    //               .fillOrangeA // Change to appropriate color for reject status
-                    //           : CustomButtonStyles
-                    //               .fillPrimary, // Change to appropriate color for accept status
-                    //   buttonTextStyle: CustomTextStyles.titleSmallBlack900,
-                    // ),
                     if (status == 'Pending')
                       buildCustomPendingBtn(context)
                     else if (status == 'Reject')
@@ -137,13 +133,9 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
                     else
                       buildCustomAcceptBtn(context),
                     Padding(
-                      padding: EdgeInsets.only(
-                        top: 4.v,
-                        bottom: 2.v,
-                      ),
+                      padding: EdgeInsets.only(top: 4.v, bottom: 2.v),
                       child: Text(
                         "RM$budget/$workingHours hours",
-                        // "RMhours",
                         style: CustomTextStyles.titleMediumBluegray900,
                       ),
                     )
@@ -231,4 +223,22 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
       ),
     );
   }
+
+  Widget _buildShimmerLoading_CompanyLogo() {
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: SizedBox(
+      height: 50.v,
+      width: 50.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: CircleAvatar(
+          radius: 25.h,
+          backgroundColor: Colors.white,
+        ),
+      ),
+    ),
+  );
+}
 }
