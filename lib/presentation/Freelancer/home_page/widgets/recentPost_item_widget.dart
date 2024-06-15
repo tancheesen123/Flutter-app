@@ -31,37 +31,42 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         } else {
-          return SizedBox(
-            width: 370.h,
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 1.0),
-              child: ListView.separated(
-                shrinkWrap: true,
-                separatorBuilder: (context, index) {
-                  return SizedBox(
-                    height: 10,
-                  );
-                },
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> post = snapshot.data![index];
-                  DocumentReference? userRef = post['user'] as DocumentReference?;
+          // Extract user references and fetch user data
+          List<Future<DocumentSnapshot>> userFutures = [];
+          List<Map<String, dynamic>> posts = snapshot.data!;
 
-                  if (userRef == null) {
-                    return Text('User reference is null');
-                  }
+          for (var post in posts) {
+            DocumentReference? userRef = post['user'] as DocumentReference?;
+            if (userRef != null) {
+              userFutures.add(_homePageController.getUserDataByRef(userRef));
+            }
+          }
 
-                  return FutureBuilder<DocumentSnapshot>(
-                    future: _homePageController.getUserDataByRef(userRef),
-                    builder: (context, userSnapshot) {
-                      if (userSnapshot.connectionState == ConnectionState.waiting) {
-                        return _buildShimmerLoading_CompanyLogo();
-                      }else if (userSnapshot.hasError) {
-                        return Text('Error: ${userSnapshot.error}');
-                      } else if (!userSnapshot.hasData || !userSnapshot.data!.exists) {
-                        return Text('No user data found');
-                      } else {
-                        String? profileImageUrl = userSnapshot.data!.get('profileImageUrl');
+          return FutureBuilder<List<DocumentSnapshot>>(
+            future: Future.wait(userFutures),
+            builder: (context, userSnapshots) {
+              if (userSnapshots.connectionState == ConnectionState.waiting) {
+                return _buildShimmerLoading();
+              } else if (userSnapshots.hasError) {
+                return Text('Error: ${userSnapshots.error}');
+              } else {
+                return SizedBox(
+                  width: 370.h,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 1.0),
+                    child: ListView.separated(
+                      shrinkWrap: true,
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: 10,
+                        );
+                      },
+                      itemCount: posts.length,
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> post = posts[index];
+                        DocumentSnapshot userSnapshot = userSnapshots.data![index];
+
+                        String? profileImageUrl = userSnapshot.get('profileImageUrl');
 
                         return GestureDetector(
                           onTap: () {
@@ -117,12 +122,12 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
                             ),
                           ),
                         );
-                      }
-                    },
-                  );
-                },
-              ),
-            ),
+                      },
+                    ),
+                  ),
+                );
+              }
+            },
           );
         }
       },
@@ -203,23 +208,5 @@ class _RecentPostItemWidgetState extends State<RecentPostItemWidget> {
       ),
     );
   }
-
-  Widget _buildShimmerLoading_CompanyLogo() {
-  return Align(
-    alignment: Alignment.centerLeft,
-    child: SizedBox(
-      height: 50.v,
-      width: 50.h,
-      child: Shimmer.fromColors(
-        baseColor: Colors.grey[300]!,
-        highlightColor: Colors.grey[100]!,
-        child: CircleAvatar(
-          radius: 25.h,
-          backgroundColor: Colors.white,
-        ),
-      ),
-    ),
-  );
-}
 
 }
