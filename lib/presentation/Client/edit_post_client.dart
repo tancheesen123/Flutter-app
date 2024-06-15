@@ -3,21 +3,24 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/ManageJobPostController.dart';
+import 'package:workwise/presentation/Client/home_client_page/home_client_page.dart';
 import '../../../core/app_export.dart';
 
-class NewPostScreen extends StatefulWidget {
-  NewPostScreen({Key? key});
+class EditPostScreen extends StatefulWidget {
+  final dynamic postDetail;
+  EditPostScreen(this.postDetail, {Key? key});
 
   @override
-  State<NewPostScreen> createState() => _NewPostScreenState();
+  State<EditPostScreen> createState() => _EditPostScreenState();
 }
 
-class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateMixin {
+class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStateMixin {
   bool validToSubmit = false;
   late TabController tabviewController;
+
+  ManageJobPostController _manageJobPostController = ManageJobPostController();
 
   TextEditingController titleTextFieldController = TextEditingController();
   TextEditingController locationTextFieldController = TextEditingController();
@@ -29,6 +32,16 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
   @override
   void initState() {
     // TODO: implement initState
+
+    titleTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["title"];
+    locationTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["location"];
+    budgetTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["budget"].toString();
+    descriptionTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["description"];
+
+    Map notificationDetail = jsonDecode(widget.postDetail["jobPostDetail"]["data"]["Notification"]);
+    titleMessageTextFieldController.text = notificationDetail["notification"]["title"];
+    bodyMessageTextFieldController.text = notificationDetail["notification"]["body"];
+
     tabviewController = TabController(length: 2, vsync: this);
 
     super.initState();
@@ -543,7 +556,7 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('Chagee MY ', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                  Text(widget.postDetail["companyDetail"]["name"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
                                   Text(
                                     '-',
                                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
@@ -584,7 +597,7 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                     ],
                                   ),
                                   Text(
-                                    "RM15/h",
+                                    "RM${budgetTextFieldController.text}/h",
                                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
                                   )
                                 ],
@@ -641,8 +654,33 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                     ),
                                   ),
                                 ),
-                                // CompanyMenuPage(),
-                                Container()
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                "${widget.postDetail["companyDetail"]["CompanyDetail"]}",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ))
@@ -700,23 +738,29 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                   Expanded(
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        ManageJobPostController _manageJobPostController = Get.put(ManageJobPostController());
-
                                         _manageJobPostController
-                                            .submitJobPost(
+                                            .editJobPost(
+                                                widget.postDetail["jobPostDetail"]["id"],
                                                 titleTextFieldController.text,
                                                 locationTextFieldController.text,
                                                 budgetTextFieldController.text,
                                                 descriptionTextFieldController.text,
                                                 titleMessageTextFieldController.text,
                                                 bodyMessageTextFieldController.text)
-                                            .then(
-                                          (success) {
-                                            if (success) {
-                                              Navigator.pushNamed(context, AppRoutes.successPostClientScreen);
-                                            }
-                                          },
-                                        );
+                                            .then((success) {
+                                          if (success) {
+                                            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                              MaterialPageRoute(
+                                                builder: (BuildContext context) {
+                                                  return HomeClientPage();
+                                                },
+                                              ),
+                                              (_) => false,
+                                            );
+                                          } else {
+                                            print("Something went wrong");
+                                          }
+                                        });
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
@@ -728,7 +772,7 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
                                       child: Padding(
                                         padding: EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
-                                          "Post",
+                                          "Update",
                                           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                                         ),
                                       ),
@@ -748,70 +792,4 @@ class _NewPostScreenState extends State<NewPostScreen> with TickerProviderStateM
       },
     );
   }
-
-  // Future<bool> submitJobPost() async {
-  //   final now = DateTime.now(); // Replace with current date in production
-  //   final month = now.month;
-  //   final day = now.day;
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   final String? clientUID = jsonDecode(prefs.getString("clientDetail")!)["uid"];
-  //   final String? companyID = jsonDecode(prefs.getString("companyDetail")!)["id"];
-
-  //   DocumentReference userRef = FirebaseFirestore.instance.collection("user").doc(clientUID);
-  //   DocumentReference companyRef = FirebaseFirestore.instance.collection("company").doc(companyID);
-
-  //   Map<String, dynamic> notificationData = {
-  //     "notification": {
-  //       "title": titleMessageTextFieldController.text,
-  //       "body": bodyMessageTextFieldController.text,
-  //     }
-  //   };
-
-  //   Map<String, dynamic> insightData = {
-  //     'impression': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //     'clicks': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //     'apply': {
-  //       '$month': {
-  //         '$day': {
-  //           'dayDate': "$day",
-  //           'value': "0",
-  //         },
-  //       },
-  //     },
-  //   };
-
-  //   Map<String, dynamic> data = {
-  //     "title": titleTextFieldController.text,
-  //     "location": locationTextFieldController.text,
-  //     "budget": int.parse(budgetTextFieldController.text),
-  //     "description": descriptionTextFieldController.text,
-  //     "insight": json.encode(insightData),
-  //     // "status": "Part Time",
-  //     // "workingHours": 20,
-  //     "user": userRef,
-  //     "company": companyRef,
-  //     "postStatus": "OPEN",
-  //     "Notification": json.encode(notificationData)
-  //   };
-
-  //   await FirebaseFirestore.instance.collection("jobPost").add(data).then((value) {
-  //     return true;
-  //   });
-
-  //   return true;
-  // }
 }
