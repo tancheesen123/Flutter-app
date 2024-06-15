@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,10 @@ import 'package:workwise/presentation/Client/success_post_client.dart';
 import '../../../core/app_export.dart';
 
 class NewPostScreen extends StatefulWidget {
-  NewPostScreen({Key? key});
+  final Map<String, dynamic>? clientData;
+  final Map<String, dynamic>? companyData;
+  NewPostScreen({Key? key, this.clientData, this.companyData})
+      : super(key: key);
 
   @override
   State<NewPostScreen> createState() => _NewPostScreenState();
@@ -528,7 +532,7 @@ class _NewPostScreenState extends State<NewPostScreen>
       clipBehavior: Clip.antiAlias,
       builder: (BuildContext context) {
         final Size screenSize = MediaQuery.of(context).size;
-
+        String? profileImageUrl = widget.clientData!['profileImageUrl'];
         return StatefulBuilder(
           builder: (context, setState) {
             return Container(
@@ -565,12 +569,14 @@ class _NewPostScreenState extends State<NewPostScreen>
                             child: Stack(
                               alignment: Alignment.bottomRight,
                               children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle515,
-                                  height: 80.adaptSize,
-                                  width: 80.adaptSize,
-                                  radius: BorderRadius.circular(40.h),
-                                  alignment: Alignment.center,
+                                CircleAvatar(
+                                  radius: 40.h,
+                                  backgroundImage: profileImageUrl != null
+                                      ? CachedNetworkImageProvider(
+                                          profileImageUrl)
+                                      : AssetImage(
+                                              ImageConstant.imgRectangle515)
+                                          as ImageProvider<Object>,
                                 ),
                               ],
                             ),
@@ -592,7 +598,7 @@ class _NewPostScreenState extends State<NewPostScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('Chagee MY ',
+                                  Text('${widget.companyData!["name"]} ',
                                       style: TextStyle(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500)),
