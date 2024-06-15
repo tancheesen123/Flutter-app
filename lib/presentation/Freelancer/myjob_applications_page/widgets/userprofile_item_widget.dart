@@ -54,7 +54,9 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
         Navigator.of(context, rootNavigator: true).push(
           MaterialPageRoute(
             builder: (BuildContext context) {
-              return ApplyJobScreen(postId: postId);
+              return ApplyJobScreen(
+                postId: "$postId",
+              );
             },
           ),
         );
@@ -62,7 +64,10 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.h),
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.h, vertical: 18.v),
+          padding: EdgeInsets.symmetric(
+            horizontal: 20.h,
+            vertical: 18.v,
+          ),
           decoration: AppDecoration.outlineGray.copyWith(
             borderRadius: BorderRadiusStyle.roundedBorder12,
           ),
@@ -89,14 +94,17 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
                       children: [
                         Text(
                           "123",
+                          // "$CompanyId",
                           style: theme.textTheme.bodySmall,
                         ),
                         Text(
                           "$title",
+                          // "123",
                           style: theme.textTheme.titleMedium,
                         ),
                         SizedBox(height: 1.v),
                         Text(
+                          // "$location",
                           "$location",
                           style: theme.textTheme.bodySmall,
                         )
