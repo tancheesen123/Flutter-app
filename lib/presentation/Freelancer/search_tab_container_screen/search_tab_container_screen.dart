@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../Controller/SearchPageController.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
@@ -144,7 +145,7 @@ class SearchTabContainerScreenState extends State<SearchTabContainerScreen>
                 future: userRef.get(),
                 builder: (context, userSnapshot) {
                   if (userSnapshot.connectionState == ConnectionState.waiting) {
-                    return _buildShimmerLoading();
+                    return _buildShimmerJobCard(context);
                   } else if (userSnapshot.hasError) {
                     return Text('Error: ${userSnapshot.error}');
                   } else if (!userSnapshot.hasData ||
@@ -272,14 +273,95 @@ class SearchTabContainerScreenState extends State<SearchTabContainerScreen>
     Navigator.pop(context);
   }
 
-  Widget _buildShimmerLoading() {
-    return Container(
-      height: 50.adaptSize,
-      width: 50.adaptSize,
-      decoration: BoxDecoration(
-        color: Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(15.h),
-      ),
-    );
-  }
+  Widget _buildShimmerJobCard(BuildContext context) {
+  return Shimmer.fromColors(
+    baseColor: Colors.grey[300]!,
+    highlightColor: Colors.grey[100]!,
+    child: Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(vertical: 12.v),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadiusStyle.roundedBorder20,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 60.h,
+                height: 60.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  shape: BoxShape.circle,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 5.v),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 233.h,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 150.h,
+                            height: 10.v,
+                            color: Colors.grey[300],
+                          ),
+                          Container(
+                            width: 28.adaptSize,
+                            height: 28.adaptSize,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(14.h),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 233.h,
+                      height: 20.v,
+                      color: Colors.grey[300],
+                      margin: EdgeInsets.symmetric(vertical: 4.v),
+                    ),
+                    SizedBox(
+                      width: 231.h,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            width: 70.h,
+                            height: 14.v,
+                            color: Colors.grey[300],
+                          ),
+                          Container(
+                            width: 80.h,
+                            height: 14.v,
+                            color: Colors.grey[300],
+                          ),
+                          Container(
+                            width: 30.h,
+                            height: 14.v,
+                            color: Colors.grey[300],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: 15.v),
+      ],
+    ),
+  );
+}
+
 }
