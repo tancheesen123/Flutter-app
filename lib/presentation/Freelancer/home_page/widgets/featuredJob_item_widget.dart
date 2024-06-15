@@ -23,7 +23,6 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
   ));
 
   @override
-  @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: _homePageController.fetchJobPostData(),
