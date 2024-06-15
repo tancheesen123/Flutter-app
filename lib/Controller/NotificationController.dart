@@ -40,7 +40,7 @@ class NotificationController extends GetxController {
   }
 
   Future<void> sendNotification(
-      String deviceToken, String title, String body) async {
+      String deviceToken, String title, String body, String email) async {
     final String projectId = 'flutter-mango'; // Replace with your project ID
 
     // Get the OAuth token
@@ -73,35 +73,15 @@ class NotificationController extends GetxController {
 
     if (response.statusCode == 200) {
       print('Notification sent successfully');
-      saveNotification(notification);
-      // how to get id, title and body value?
-      // print(' Encode notification: ${jsonEncode(notification)}');
-      // String jsonString = jsonEncode(notification);
-      // final Map<String, dynamic> data = jsonDecode(jsonString);
-      // print("Decode notification $data");
-
-      // final String token = notification['message']['token'];
-      // final String title = notification['message']['notification']['title'];
-      // final String body = notification['message']['notification']['body'];
-
-      // print('Token: $token');
-      // print('Title: $title');
-      // print('Body: $body');
+      saveNotification(notification, email);
     } else {
       print('Error sending notification: ${response.statusCode}');
       print('Response: ${response.body}');
     }
   }
 
-  Future<void> saveNotification(Map<String, dynamic> notification) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String email = prefs.getString('userEmail') ?? '';
-
-    if (email.isEmpty) {
-      print('User email not found in SharedPreferences');
-      return;
-    }
-
+  Future<void> saveNotification(
+      Map<String, dynamic> notification, String email) async {
     String jsonString = jsonEncode(notification);
 
     // Reference to the user's notification collection
