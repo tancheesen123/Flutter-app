@@ -25,6 +25,18 @@ class UserController extends GetxController {
     }
   }
 
+  Future<Map<String, dynamic>?> getSpecificUserInformation(
+      String userEmail) async {
+    final docRef = FirebaseFirestore.instance.collection('user').doc(userEmail);
+    final doc = await docRef.get();
+
+    if (doc.exists) {
+      return doc.data();
+    } else {
+      return null;
+    }
+  }
+
   Future<void> addToken(String token) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('userEmail') ?? '';
