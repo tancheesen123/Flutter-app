@@ -23,7 +23,7 @@ class SearchPageController extends GetxController {
 
       searchResults.value = filteredResults;
       searchResults.forEach((snapshot) {
-        print("Search result: ${snapshot.data()}");
+        print("Search result: ${snapshot.id}");
       });
     } else {
       // Clear the search results when searchText is empty
