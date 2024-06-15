@@ -71,6 +71,7 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                       DocumentSnapshot userSnapshot = userSnapshots.data![index];
 
                       String? profileImageUrl = userSnapshot.get('profileImageUrl');
+                      String? companyName = data['companyName'];
 
                       return GestureDetector(
                         onTap: () {
@@ -122,7 +123,7 @@ class _FeaturedJobItemWidgetState extends State<FeaturedJobItemWidget> {
                                   ),
                                   SizedBox(height: 3.v),
                                   Text(
-                                    "${data['title']}",
+                                    "$companyName",
                                     style: theme.textTheme.bodySmall,
                                   ),
                                   SizedBox(height: 11.v),
