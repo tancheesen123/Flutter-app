@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/ManageJobPostController.dart';
 import 'package:workwise/presentation/Client/home_client_page/home_client_page.dart';
 import '../../../core/app_export.dart';
