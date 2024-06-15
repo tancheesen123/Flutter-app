@@ -35,7 +35,6 @@ class _HomeClientPageState extends State<HomeClientPage> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: Container(
-          width: double.maxFinite,
           decoration: AppDecoration.fillGray,
           child: Column(
             children: [
@@ -44,72 +43,6 @@ class _HomeClientPageState extends State<HomeClientPage> {
               SizedBox(height: 33.v),
               _buildYourJobPost(context),
               SizedBox(height: 17.v),
-              Padding(
-                padding: EdgeInsets.only(
-                  left: 33.h,
-                  right: 20.h,
-                ),
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Expanded(
-                            child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color(0xffB3BAC3).withOpacity(0.25),
-                                spreadRadius: 0,
-                                blurRadius: 4,
-                                offset: Offset(0, 4),
-                              ),
-                            ],
-                          ),
-                          child: TextField(
-                            controller: searchTextFieldController,
-                            decoration: InputDecoration(
-                                filled: true,
-                                // focusColor: Colors.amber,
-                                fillColor: Colors.white,
-                                hintText: "Search here...",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
-                                contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
-                          ),
-                        )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-                              elevation: MaterialStateProperty.all<double>(0.5),
-                            ),
-                            child: SvgPicture.asset(
-                              ImageConstant.imgGoBtn,
-                              colorFilter: ColorFilter.mode(Color(0xff007BFF), BlendMode.srcIn),
-                            )),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushNamed(context, AppRoutes.newPostPage);
-                            },
-                            child: Icon(
-                              Icons.add,
-                              color: Colors.white,
-                            ))
-                      ],
-                    ),
-                  ),
-                ),
-              ),
               Expanded(child: ViewhierarchyItemWidget()),
             ],
           ),
@@ -126,7 +59,8 @@ class _HomeClientPageState extends State<HomeClientPage> {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.clientProfileScreen);
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.clientProfileScreen);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,22 +100,24 @@ class _HomeClientPageState extends State<HomeClientPage> {
                 shape: BoxShape.circle,
               ),
               child: ClipOval(
-                child: Obx(() => _homePageController.profileImageUrl.value.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: _homePageController.profileImageUrl.value,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          child: Container(color: Colors.grey),
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                        ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      )
-                    : Shimmer.fromColors(
-                        child: Container(color: Colors.grey),
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                      )),
+                child: Obx(
+                    () => _homePageController.profileImageUrl.value.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: _homePageController.profileImageUrl.value,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              child: Container(color: Colors.grey),
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          )
+                        : Shimmer.fromColors(
+                            child: Container(color: Colors.grey),
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                          )),
               ),
             ),
           ],
@@ -203,24 +139,8 @@ class _HomeClientPageState extends State<HomeClientPage> {
             "Your Job Post",
             style: CustomTextStyles.titleLargeSemiBold,
           ),
-          GestureDetector(
-            onTap: () {
-              onTapTxtShowall(context);
-            },
-            child: Padding(
-              padding: EdgeInsets.only(top: 11.v),
-              child: Text(
-                "Show All",
-                style: theme.textTheme.bodySmall,
-              ),
-            ),
-          ),
         ],
       ),
     );
-  }
-
-  onTapTxtShowall(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.postListPage);
   }
 }

@@ -5,12 +5,15 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workwise/Controller/UserController.dart';
 import 'package:workwise/Controller/NotificationController.dart';
+import 'package:workwise/Controller/PostInsightController.dart';
 
 class ApplyJobController extends GetxController {
   static ApplyJobController instance = Get.find();
   final UserController userController = Get.put(UserController());
   final NotificationController notificationController =
       Get.put(NotificationController());
+  final PostInsightController postInsightController =
+      Get.put(PostInsightController());
 
   DateTime? lastEmailSentTime;
 
@@ -26,14 +29,31 @@ class ApplyJobController extends GetxController {
   }
 
   Future<Map<String, dynamic>?> getJobPostData(String postId) async {
-    final docRef = FirebaseFirestore.instance.collection('jobPost').doc(postId);
-    final doc = await docRef.get();
+    try {
+      final docRef =
+          FirebaseFirestore.instance.collection('jobPost').doc(postId);
+      final doc = await docRef.get();
 
-    if (doc.exists) {
-      // print(doc.data());
-      return doc.data();
-    } else {
-      return null;
+      if (doc.exists) {
+        final data = doc.data();
+        if (data == null) {
+          return null; // Handle the case where data is null
+        }
+
+        DocumentReference companyRef = data['company'];
+        DocumentSnapshot companyData = await getCompanyData(companyRef);
+        print("Data in controller $data");
+        print("companyData in controller ${companyData.data()}");
+        return {
+          'jobpostData': data,
+          'companyData': companyData.data(),
+        };
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching job post data: $e');
+      return null; // Or handle the error as needed
     }
   }
 
@@ -51,20 +71,6 @@ class ApplyJobController extends GetxController {
     candidates.value = candidatesList;
   }
 
-  // Future<void> addCandidate(
-  //     String jobPostId, Map<String, dynamic> candidateData) async {
-  //   String label = candidateData["label"];
-  //   await _firestore
-  //       .collection('jobPost')
-  //       .doc(jobPostId)
-  //       .collection('candidate')
-  //       .doc(label) // Use the new label here
-  //       .set(
-  //           candidateData); // Use set instead of add to set data with specified document ID
-  //   // Fetch the updated list of candidates
-  //   await getCandidates(jobPostId);
-  // }
-
   Future<bool> addCandidate2(
       String jobPostId, Map<String, dynamic> candidateData) async {
     String label = candidateData["label"];
@@ -72,57 +78,105 @@ class ApplyJobController extends GetxController {
         .collection('jobPost')
         .doc(jobPostId)
         .collection('candidate')
-        .doc(label); // Use the new label here
+        .doc(label);
 
     await candidateRef.set(candidateData);
 
-    DocumentReference PostRef = _firestore
-        .collection('jobPost')
-        .doc(jobPostId); // Use the new label here
-
-    String postRefPath = PostRef.path;
+    DocumentReference postRef = _firestore.collection('jobPost').doc(jobPostId);
 
     // Store the reference path in another collection
     String email =
         candidateData['email']; // Assuming email is a field in candidateData
-    // if (email != null && email.isNotEmpty) {
-    QuerySnapshot querySnapshot = await _firestore
-        .collection('user')
-        .doc(email)
-        .collection("Application")
-        .where('postRefPath', isEqualTo: postRefPath)
-        .limit(
-            1) // Limit the query to 1 document, as we only need to check if any document exists
-        .get();
-    // String token = await userController.getDeviceToken();
-    // notificationController.sendNotification(token);
-    notificationController.sendNotification(
-        "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
+    if (email != null && email.isNotEmpty) {
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('user')
+          .doc(email)
+          .collection("Application")
+          .where('postRefPath', isEqualTo: postRef)
+          .limit(
+              1) // Limit the query to 1 document, as we only need to check if any document exists
+          .get();
 
-    // if (querySnapshot.docs.isNotEmpty) {
-    //   print('Document with the same postRefPath already exists');
-    //   return false; // or you can throw an exception, depending on your requirements
-    // } else {
-    //   await _firestore
-    //       .collection('user')
-    //       .doc(email)
-    //       .collection(
-    //           "Application") // Assuming email is a valid collection name // Assuming label can be used as the document ID
-    //       .add({
-    //     'companyId': "a1",
-    //     'postRefPath': postRefPath,
-    //     'status': "Pending",
-    //   });
-    //   // Fetch the updated list of candidates
-    //   await getCandidates(jobPostId);
+      if (querySnapshot.docs.isNotEmpty) {
+        print('Document with the same postRefPath already exists');
+        return false; // or you can throw an exception, depending on your requirements
+      } else {
+        await _firestore
+            .collection('user')
+            .doc(email)
+            .collection(
+                "Application") // Assuming email is a valid collection name
+            .add({
+          'postRefPath': postRef,
+          'status': "Pending",
+        });
 
-    //   // String token = await userController.getDeviceToken();
-    //   // notificationController.sendNotification(token);
-    //   notificationController.sendNotification(
-    //       "eHmCoIcVRDO6ndFlCY8EGA:APA91bHkwdg1h2ADvDXAoLzM5qZSkC8DcJo6cGyw6XFo4Uqg_SdF46Aom0OZ9Tazn7Z-jG5JysoWRJpXc3036UUD53Q91BdGHoT_LZIJxH6vBBcWzf7efVGe4X_d19kCMU_36VOzhy8A");
-    // }
+        // Fetch the updated list of candidates
+        await getCandidates(jobPostId);
+
+        // Fetch necessary data for notifications
+        var jobPostData = await getJobPostData(jobPostId);
+        print("Job Post Data: $jobPostData");
+        DocumentSnapshot companyData =
+            await getCompanyData(jobPostData!["jobpostData"]['company']);
+        DocumentSnapshot userData = await getUserData(companyData["user"]);
+        // Save apply insight and send notification
+        await postInsightController.saveApply(jobPostId);
+        notificationController.sendNotification(
+            "${userData["Token"]}",
+            "Congrats! You have a new application",
+            "You have a new application for the job ${companyData["name"]}",
+            email);
+      }
+    }
 
     // Return the reference to the added document
     return true;
+  }
+
+  Future<DocumentSnapshot> getCompanyData(DocumentReference companyRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot companySnapshot = await companyRef.get();
+      return companySnapshot;
+    } catch (e) {
+      print('Error fetching company document: $e');
+      rethrow;
+    }
+  }
+
+  Future<DocumentSnapshot> getUserData(DocumentReference userRef) async {
+    try {
+      // Fetch the company document snapshot
+      DocumentSnapshot userSnapshot = await userRef.get();
+      return userSnapshot;
+    } catch (e) {
+      print('Error fetching userSnapshot document: $e');
+      rethrow;
+    }
+  }
+
+  Future<String?> getProfileImageUrl(DocumentReference userRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await userRef.get();
+      if (userSnapshot.exists) {
+        return userSnapshot['profileImageUrl'];
+      }
+    } catch (e) {
+      print('Error fetching user profile image: $e');
+    }
+    return null;
+  }
+
+  Future<String?> getCompanyName(DocumentReference companyRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await companyRef.get();
+      if (userSnapshot.exists) {
+        return userSnapshot['name'];
+      }
+    } catch (e) {
+      print('Error fetching company name: $e');
+    }
+    return null;
   }
 }
