@@ -29,6 +29,7 @@ import '../presentation/loading_screen/loading_screen.dart';
 import '../presentation/Client/client_profile_screen/client_profile_screen.dart';
 
 import '../presentation/Client/candidate_page/candidate_page.dart';
+import '../presentation/Client/client_settings_screen/client_settings_screen.dart';
 
 class AppRoutes {
   //Client Routes
@@ -102,6 +103,8 @@ class AppRoutes {
 
   static const String insightJobScreen = '/insight_job_page';
 
+  static const String clientSettingsScreen = '/client_settings_screen';
+
   static Map<String, WidgetBuilder> routes = {
     logInScreen: (context) => LogInScreen(),
 
@@ -147,6 +150,7 @@ class AppRoutes {
       final dynamic candidateDetail = ModalRoute.of(context)?.settings.arguments;
       return CandidateProfile(candidateDetail);
     },
+    clientSettingsScreen: (context) => ClientSettingsScreen(),
 
     // initialRoute: (context) => CheckSession()
     initialRoute: (context) => CheckSession()
