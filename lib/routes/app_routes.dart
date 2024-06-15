@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:workwise/presentation/Client/edit_post_client.dart';
 import 'package:workwise/presentation/Client/success_post_client.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_one_screen/forgot_password_one_screen.dart';
 import 'package:workwise/presentation/Freelancer/forgot_password_two_screen/forgot_password_two_screen.dart';
@@ -42,6 +43,8 @@ class AppRoutes {
   static const String candidatePage = '/candidate_page';
 
   static const String newPostPage = '/preview_post_screen';
+
+  static const String editPostPage = '/edit_post_screen';
 
   static const String newPostClientScreen = '/new_post_client_screen';
 
@@ -134,6 +137,10 @@ class AppRoutes {
       return CandidateScreen(postDetail);
     },
     newPostPage: (context) => NewPostScreen(),
+    editPostPage: (context) {
+      final dynamic postDetail = ModalRoute.of(context)?.settings.arguments;
+      return EditPostScreen(postDetail);
+    },
     homeClientPage: (context) => HomeClientPage(),
     successPostClientScreen: (context) => SuccessPostClientScreen(),
     clientProfileScreen: (context) => ClientProfileScreen(),
