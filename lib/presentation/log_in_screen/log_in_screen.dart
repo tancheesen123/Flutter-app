@@ -37,7 +37,8 @@ class _LogInScreenState extends State<LogInScreen> {
   bool _isPasswordVisible = false;
   Map<String, dynamic>? _userData;
   String welcome = "Facebook";
-  final FirebaseApiController firebaseApiController = Get.put(FirebaseApiController());
+  final FirebaseApiController firebaseApiController =
+      Get.put(FirebaseApiController());
   final UserController userController = Get.put(UserController());
   @override
   void initState() {
@@ -121,7 +122,9 @@ class _LogInScreenState extends State<LogInScreen> {
                       prefixConstraints: BoxConstraints(
                         maxHeight: 54.v,
                       ),
-                      borderDecoration: _emailError != null && _passwordError != "Email or password is incorrect. Please try again."
+                      borderDecoration: _emailError != null &&
+                              _passwordError !=
+                                  "Email or password is incorrect. Please try again."
                           ? OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               borderSide: BorderSide(color: Colors.red),
@@ -129,7 +132,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           : null,
                       onChanged: (value) {
                         setState(() {
-                          _emailError = null; // Clear error message when text changes
+                          _emailError =
+                              null; // Clear error message when text changes
                         });
                       },
                       textStyle: TextStyle(color: Colors.black),
@@ -155,8 +159,11 @@ class _LogInScreenState extends State<LogInScreen> {
                       ),
                       suffix: IconButton(
                         icon: Icon(
-                          _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                          color: Colors.grey, // Explicitly use the default icon color
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors
+                              .grey, // Explicitly use the default icon color
                         ),
                         onPressed: () {
                           setState(() {
@@ -164,7 +171,9 @@ class _LogInScreenState extends State<LogInScreen> {
                           });
                         },
                       ),
-                      borderDecoration: _passwordError != null && _passwordError != "Email or password is incorrect. Please try again."
+                      borderDecoration: _passwordError != null &&
+                              _passwordError !=
+                                  "Email or password is incorrect. Please try again."
                           ? OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8.0),
                               borderSide: BorderSide(color: Colors.red),
@@ -172,7 +181,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           : null,
                       onChanged: (value) {
                         setState(() {
-                          _passwordError = null; // Clear error message when text changes
+                          _passwordError =
+                              null; // Clear error message when text changes
                         });
                       },
                       textStyle: TextStyle(color: Colors.black),
@@ -199,7 +209,8 @@ class _LogInScreenState extends State<LogInScreen> {
                     SizedBox(height: 35.v),
                     CustomElevatedButton(
                       text: "LOG IN",
-                      buttonTextStyle: CustomTextStyles.titleMediumOnErrorContainer,
+                      buttonTextStyle:
+                          CustomTextStyles.titleMediumOnErrorContainer,
                       onPressed: () {
                         _signIn(context);
                       },
@@ -279,7 +290,8 @@ class _LogInScreenState extends State<LogInScreen> {
                           ),
                           TextSpan(
                             text: "Create Account",
-                            style: CustomTextStyles.titleMediumPrimaryContainer_1,
+                            style:
+                                CustomTextStyles.titleMediumPrimaryContainer_1,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 navigateToSignUp(context);
@@ -331,15 +343,19 @@ class _LogInScreenState extends State<LogInScreen> {
 
     // If no errors, proceed with sign-in
     if (_emailError == null && _passwordError == null) {
-      _firebaseAuthService.signInWithEmailAndPassword(emailController.text, passwordController.text).then((user) async {
+      _firebaseAuthService
+          .signInWithEmailAndPassword(
+              emailController.text, passwordController.text)
+          .then((user) async {
         if (user != null) {
           await firebaseApiController.initNotification();
-          getRoleType(emailController.text.toLowerCase()).then((roleType) async {
+          getRoleType(emailController.text.toLowerCase())
+              .then((roleType) async {
             if (roleType == 1) {
               Navigator.pushNamed(context, AppRoutes.homeContainerScreen);
             } else if (roleType == 2) {
               String uid = user.providerData[0].uid as String;
-              storeClientDetail(uid);
+              await storeClientDetail(uid);
               Navigator.pushNamed(context, AppRoutes.homeClientContainerScreen);
             }
           }).catchError((error) {
@@ -348,7 +364,8 @@ class _LogInScreenState extends State<LogInScreen> {
           });
         } else {
           setState(() {
-            _passwordError = "Email or password is incorrect. Please try again.";
+            _passwordError =
+                "Email or password is incorrect. Please try again.";
           });
         }
       }).catchError((error) {
@@ -363,12 +380,16 @@ class _LogInScreenState extends State<LogInScreen> {
     final GoogleSignIn _googleSignIn = GoogleSignIn();
 
     try {
-      final GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSignInAccount =
+          await _googleSignIn.signIn();
       if (googleSignInAccount != null) {
-        final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAccount.authentication;
-        final AuthCredential authCredential =
-            GoogleAuthProvider.credential(accessToken: googleSignInAuthentication.accessToken, idToken: googleSignInAuthentication.idToken);
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(authCredential);
+        final GoogleSignInAuthentication googleSignInAuthentication =
+            await googleSignInAccount.authentication;
+        final AuthCredential authCredential = GoogleAuthProvider.credential(
+            accessToken: googleSignInAuthentication.accessToken,
+            idToken: googleSignInAuthentication.idToken);
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithCredential(authCredential);
         User? user = userCredential.user;
         if (user != null) {
           print("User sign in successfully");
@@ -384,7 +405,10 @@ class _LogInScreenState extends State<LogInScreen> {
 
   Future<int> getRoleType(String email) async {
     print("This is email intextbox $email");
-    final snapshot = await FirebaseFirestore.instance.collection('user').where('email', isEqualTo: email.toLowerCase()).get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('user')
+        .where('email', isEqualTo: email.toLowerCase())
+        .get();
 
     if (snapshot.docs.isNotEmpty) {
       final userData = snapshot.docs.first.data();
@@ -402,7 +426,8 @@ class _LogInScreenState extends State<LogInScreen> {
   }
 
   Future<UserCredential> signInFacebook() async {
-    final LoginResult result = await FacebookAuth.instance.login(permissions: ['email']);
+    final LoginResult result =
+        await FacebookAuth.instance.login(permissions: ['email']);
 
     if (result.status == LoginStatus.success) {
       final userData = await FacebookAuth.instance.getUserData();
@@ -416,7 +441,8 @@ class _LogInScreenState extends State<LogInScreen> {
       welcome = _userData?['email'];
     });
 
-    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(result.accessToken!.token);
+    final OAuthCredential facebookAuthCredential =
+        FacebookAuthProvider.credential(result.accessToken!.token);
 
     return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
   }
@@ -429,7 +455,8 @@ class _LogInScreenState extends State<LogInScreen> {
 
   Future<bool> storeClientDetail(String uid) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    dynamic clientRef = await FirebaseFirestore.instance.collection("user").doc(uid);
+    dynamic clientRef =
+        await FirebaseFirestore.instance.collection("user").doc(uid);
 
     await clientRef.get().then((DocumentSnapshot doc) async {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
@@ -447,11 +474,13 @@ class _LogInScreenState extends State<LogInScreen> {
 
   Future<bool> storeCompanyDetail(String id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    dynamic companyRef = await FirebaseFirestore.instance.collection("company").doc(id);
+    dynamic companyRef =
+        await FirebaseFirestore.instance.collection("company").doc(id);
 
     await companyRef.get().then((DocumentSnapshot doc) {
       final data = doc.data() as Map<String, dynamic>;
 
+      data.remove("user");
       data.addAll({"id": id});
 
       String jsonCompanyDetail = json.encode(data);

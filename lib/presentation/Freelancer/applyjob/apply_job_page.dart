@@ -1,9 +1,11 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -11,6 +13,7 @@ import '../../../widgets/app_bar/custom_app_bar.dart';
 import '../../../widgets/custom_elevated_button.dart';
 import 'package:workwise/Controller/ApplyJobController.dart';
 import 'package:workwise/Controller/UserController.dart'; // Import the JobPost model
+import 'package:workwise/Controller/PostInsightController.dart';
 import 'descriptionMenu.dart';
 import 'companyMenu.dart';
 import "../myjob_applications_page/myjob_applications_page.dart";
@@ -29,12 +32,16 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
   late TabController tabviewController;
   final ApplyJobController applyJobController = Get.put(ApplyJobController());
   final UserController userController = Get.put(UserController());
+  final PostInsightController postInsightController =
+      Get.put(PostInsightController());
   String? postId;
   @override
   void initState() {
     super.initState();
     tabviewController = TabController(length: 2, vsync: this);
     postId = widget.postId;
+    print("This is postId in applyJobPage $postId");
+    postInsightController.saveClicks(postId ?? "");
   }
 
   @override
@@ -46,13 +53,14 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    print("This is widget postId ${widget.postId}");
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: _buildAppBar(context),
         body: FutureBuilder(
           future: Future.wait([
-            applyJobController.getJobPostData(widget.postId!),
+            applyJobController.getJobPostData(widget.postId ?? ""),
             userController.getUserInformation(),
             // Add your second future here
             // FutureOperation2()
@@ -66,8 +74,11 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
               return Center(child: Text("Job post not found"));
             } else {
               final data = snapshot.data!;
+              print("This is Data $data");
               Map<String, dynamic> jobPostData = data[0];
               Map<String, dynamic> userData = data[1];
+              DocumentReference? userRef =
+                  jobPostData["jobpostData"]['user'] as DocumentReference?;
               // Add your logic to handle the data from the second future
               // var secondFutureData = data[1];
               return Stack(
@@ -82,49 +93,47 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                           SizedBox(
                             height: 82.v,
                             width: 80.h,
-                            child: Stack(
-                              alignment: Alignment.bottomRight,
-                              children: [
-                                CustomImageView(
-                                  imagePath: ImageConstant.imgRectangle515,
-                                  height: 80.adaptSize,
-                                  width: 80.adaptSize,
-                                  radius: BorderRadius.circular(40.h),
-                                  alignment: Alignment.center,
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Container(
-                                    height: 19.adaptSize,
-                                    width: 19.adaptSize,
-                                    margin: EdgeInsets.only(right: 6.h),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 5.h, vertical: 6.v),
-                                    decoration:
-                                        AppDecoration.outlineGray5001.copyWith(
-                                      borderRadius:
-                                          BorderRadiusStyle.roundedBorder9,
-                                    ),
-                                    child: CustomImageView(
-                                      imagePath: ImageConstant.imgFill244,
-                                      height: 5.v,
-                                      width: 6.h,
-                                      alignment: Alignment.centerLeft,
-                                    ),
-                                  ),
-                                )
-                              ],
+                            child: FutureBuilder<DocumentSnapshot>(
+                              future: applyJobController.getUserData(userRef!),
+                              builder: (context, userSnapshot) {
+                                if (userSnapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return _buildShimmerLoading_CompanyLogo();
+                                } else if (userSnapshot.hasError) {
+                                  return Text('Error: ${userSnapshot.error}');
+                                } else if (!userSnapshot.hasData ||
+                                    !userSnapshot.data!.exists) {
+                                  return Text('No user data found');
+                                } else {
+                                  String? profileImageUrl =
+                                      userSnapshot.data!.get('profileImageUrl');
+                                  return Stack(
+                                    alignment: Alignment.bottomRight,
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 40.h,
+                                        backgroundImage: profileImageUrl != null
+                                            ? CachedNetworkImageProvider(
+                                                profileImageUrl)
+                                            : AssetImage(ImageConstant
+                                                    .imgRectangle515)
+                                                as ImageProvider<Object>,
+                                      ),
+                                    ],
+                                  );
+                                }
+                              },
                             ),
                           ),
                           SizedBox(height: 10.v),
                           Text(
-                            jobPostData['title'] ?? "Job Title",
+                            jobPostData["jobpostData"]['title'] ?? "Job Title",
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           SizedBox(height: 20.v),
                           RichText(
                             text: TextSpan(
-                              text: "Chargee MY -",
+                              text: "${jobPostData['companyData']['name']} -",
                               style: Theme.of(context).textTheme.bodyLarge,
                               children: [
                                 WidgetSpan(
@@ -134,7 +143,9 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                                   ),
                                 ),
                                 TextSpan(
-                                  text: jobPostData['location'] ?? "Location",
+                                  text: jobPostData["jobpostData"]
+                                          ['location'] ??
+                                      "Location",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -156,12 +167,13 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                                   ),
                                 ),
                                 TextSpan(
-                                  text: jobPostData['status'] ?? "status",
+                                  text: jobPostData["jobpostData"]['status'] ??
+                                      "status",
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
                                 TextSpan(
                                   text:
-                                      "                   RM${jobPostData['budget'] ?? "123"}/${jobPostData['workingHours'] ?? "123"}h  ",
+                                      "                   RM${jobPostData["jobpostData"]['budget'] ?? "123"}/${jobPostData["jobpostData"]['workingHours'] ?? "123"}h  ",
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyLarge
@@ -205,14 +217,70 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                             ),
                           ),
                           SizedBox(
-                            height: 557.v,
+                            height: 400.v,
                             child: TabBarView(
                               controller: tabviewController,
                               children: [
-                                descriptionMenuPage(
-                                    description: jobPostData['description'] ??
-                                        "No description available"), // Pass description here
-                                CompanyMenuPage(),
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Job Descriptions",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostData["jobpostData"]
+                                                        ["description"] ??
+                                                    "No description available",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(32.0),
+                                    child: SizedBox(
+                                      height: 500.v,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Company Detail",
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Text(
+                                                jobPostData["companyData"]
+                                                        ["CompanyDetail"] ??
+                                                    "No Company Detail available",
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -238,24 +306,15 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                         buttonTextStyle:
                             CustomTextStyles.titleSmallWhiteA700SemiBold,
                         onPressed: () async {
-                          // await applyJobController.getCandidates("$postId");
-                          // // Print candidates' data to console
-                          // for (var candidate in applyJobController.candidates) {
-                          //   print(
-                          //       'Candidate: ${candidate['name']}, Email: ${candidate['email']}, status: ${candidate['status']}');
-                          // }
-                          // print("clicked");
-                          // print('Post ID in ApplyJobScreen: $postId');
-                          // String username =
-                          //     await applyJobController.loadUsername();
-                          // print("Loaded Username: $username");
-                          // // Add the logic to save the form data
+                          DocumentReference userRef = FirebaseFirestore.instance
+                              .doc('/user/${userData["email"]}');
 
                           Map<String, dynamic> candidateData = {
                             'label': "${userData["email"]}",
                             'name': "${userData["username"]}",
                             'email': "${userData["email"]}",
                             'status': "pending",
+                            'user': userRef,
                           };
 
                           // await applyJobController.addCandidate(
@@ -341,5 +400,20 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
 
   void onTapArrowleftone(BuildContext context) {
     Navigator.pop(context);
+  }
+
+  Widget _buildShimmerLoading_CompanyLogo() {
+    return SizedBox(
+      height: 50.v,
+      width: 50.h,
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300]!,
+        highlightColor: Colors.grey[100]!,
+        child: CircleAvatar(
+          radius: 40.h,
+          backgroundColor: Colors.white,
+        ),
+      ),
+    );
   }
 }
