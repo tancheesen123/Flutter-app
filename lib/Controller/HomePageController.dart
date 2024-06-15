@@ -53,6 +53,14 @@ class HomePageController extends GetxController {
       data['postId'] = doc.id;
       dataList.add(data);
       // postInsightController.saveImpression(doc.id);
+
+      DocumentReference? companyRef = data['company'] as DocumentReference?;
+      if (companyRef != null) {
+        DocumentSnapshot companySnapshot = await getCompanyData(companyRef);
+        if (companySnapshot.exists) {
+          data['companyName'] = companySnapshot.get('name'); 
+        }
+      }
     }
     return dataList;
   }
