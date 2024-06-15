@@ -37,6 +37,7 @@ class _MyjobApplicationsPageState extends State<MyjobApplicationsPage> {
             } else {
               // Use the data returned by the future
               List<Map<String, dynamic>> dataList = snapshot.data ?? [];
+              print("this is dataList $dataList");
               return Padding(
                 padding: EdgeInsets.only(top: 4.v),
                 child: ListView.separated(
