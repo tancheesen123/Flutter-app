@@ -146,10 +146,8 @@ class _HomePageState extends State<HomePage> {
                         errorWidget: (context, url, error) => Icon(Icons.error),
                         fit: BoxFit.cover,
                       )
-                    : Shimmer.fromColors(
-                        child: Container(color: Colors.grey),
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
+                    : Image.asset(
+                        ImageConstant.imgRectangle382,
                       ),
               ),
             )
@@ -161,68 +159,69 @@ class _HomePageState extends State<HomePage> {
 
   /// Section Widget
   Widget _buildSearchBoxSection(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20.h),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 54.adaptSize, // Adjust the height as needed
-            child: TextButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true)
-                  .pushNamed(AppRoutes.searchTabContainerScreen);
-              },
-              style: ButtonStyle(
-                backgroundColor: WidgetStateProperty.all(Colors.white),
-                padding: WidgetStateProperty.all(
-                  EdgeInsets.symmetric(vertical: 10.h),
-                ),
-                shape: WidgetStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.h),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20.h),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: SizedBox(
+              height: 54.adaptSize, // Adjust the height as needed
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true)
+                      .pushNamed(AppRoutes.searchTabContainerScreen);
+                },
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all(Colors.white),
+                  padding: WidgetStateProperty.all(
+                    EdgeInsets.symmetric(vertical: 10.h),
                   ),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 15.0),
-                    child: Icon(
-                      Icons.search,
-                      color: Colors.grey.shade600,
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.h),
                     ),
                   ),
-                  SizedBox(width: 8), 
-                  Text(
-                    "Search here...",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 16,
+                ),
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(left: 15.0),
+                      child: Icon(
+                        Icons.search,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
-                  ),
-                ],
+                    SizedBox(width: 8),
+                    Text(
+                      "Search here...",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 15.h),
-          child: CustomIconButton(
-            height: 54.adaptSize,
-            width: 54.adaptSize,
-            padding: EdgeInsets.all(17.h),
-            decoration: IconButtonStyleHelper.fillPrimary,
-            child: CustomImageView(
-              imagePath: ImageConstant.imgUser,
+          Padding(
+            padding: EdgeInsets.only(left: 15.h),
+            child: CustomIconButton(
+              height: 54.adaptSize,
+              width: 54.adaptSize,
+              padding: EdgeInsets.all(17.h),
+              decoration: IconButtonStyleHelper.fillPrimary,
+              child: CustomImageView(
+                imagePath: ImageConstant.imgUser,
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
+
   /// Section Widget
   Widget _buildFeaturedJobSection(BuildContext context) {
     return Column(
@@ -284,28 +283,28 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Section Widget
-  Widget _buildUserProfile(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 1.0),
-        child: ListView.separated(
-          // Remove physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              height: 10,
-            );
-          },
-          itemCount: 8,
-          itemBuilder: (context, index) {
-            return RecentPostItemWidget();
-          },
-        ),
-      ),
-    );
-  }
+  // /// Section Widget
+  // Widget _buildUserProfile(BuildContext context) {
+  //   return Align(
+  //     alignment: Alignment.topCenter,
+  //     child: Padding(
+  //       padding: EdgeInsets.only(bottom: 1.0),
+  //       child: ListView.separated(
+  //         // Remove physics: NeverScrollableScrollPhysics(),
+  //         shrinkWrap: true,
+  //         separatorBuilder: (context, index) {
+  //           return SizedBox(
+  //             height: 10,
+  //           );
+  //         },
+  //         itemCount: 8,
+  //         itemBuilder: (context, index) {
+  //           return RecentPostItemWidget();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   /// Common widget
   Widget _buildRecentPostSection(
@@ -337,8 +336,6 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
-  
 
   Future<List<Map<String, dynamic>>> fetchData() async {
     List<Map<String, dynamic>> dataList = [];
