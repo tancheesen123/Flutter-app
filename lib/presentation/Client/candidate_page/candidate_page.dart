@@ -164,13 +164,13 @@ class _CandidateScreenState extends State<CandidateScreen> {
                           checkValidToSubmit,
                           widget.postDetail["view"]);
                     }),
-                    ...List.generate(rejectCandidateList.length, (index) {
-                      return CandidateContainer(
-                          rejectCandidateList[index],
-                          setChosenCheckbox,
-                          checkValidToSubmit,
-                          widget.postDetail["view"]);
-                    })
+                    // ...List.generate(rejectCandidateList.length, (index) {
+                    //   return CandidateContainer(
+                    //       rejectCandidateList[index],
+                    //       setChosenCheckbox,
+                    //       checkValidToSubmit,
+                    //       widget.postDetail["view"]);
+                    // })
                   ],
                 ),
               ),
