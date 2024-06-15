@@ -59,7 +59,8 @@ class _HomeClientPageState extends State<HomeClientPage> {
       ),
       child: GestureDetector(
         onTap: () {
-          Navigator.of(context, rootNavigator: true).pushNamed(AppRoutes.clientProfileScreen);
+          Navigator.of(context, rootNavigator: true)
+              .pushNamed(AppRoutes.clientProfileScreen);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,22 +100,24 @@ class _HomeClientPageState extends State<HomeClientPage> {
                 shape: BoxShape.circle,
               ),
               child: ClipOval(
-                child: Obx(() => _homePageController.profileImageUrl.value.isNotEmpty
-                    ? CachedNetworkImage(
-                        imageUrl: _homePageController.profileImageUrl.value,
-                        placeholder: (context, url) => Shimmer.fromColors(
-                          child: Container(color: Colors.grey),
-                          baseColor: Colors.grey[300]!,
-                          highlightColor: Colors.grey[100]!,
-                        ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      )
-                    : Shimmer.fromColors(
-                        child: Container(color: Colors.grey),
-                        baseColor: Colors.grey[300]!,
-                        highlightColor: Colors.grey[100]!,
-                      )),
+                child: Obx(
+                    () => _homePageController.profileImageUrl.value.isNotEmpty
+                        ? CachedNetworkImage(
+                            imageUrl: _homePageController.profileImageUrl.value,
+                            placeholder: (context, url) => Shimmer.fromColors(
+                              child: Container(color: Colors.grey),
+                              baseColor: Colors.grey[300]!,
+                              highlightColor: Colors.grey[100]!,
+                            ),
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                            fit: BoxFit.cover,
+                          )
+                        : Shimmer.fromColors(
+                            child: Container(color: Colors.grey),
+                            baseColor: Colors.grey[300]!,
+                            highlightColor: Colors.grey[100]!,
+                          )),
               ),
             ),
           ],
