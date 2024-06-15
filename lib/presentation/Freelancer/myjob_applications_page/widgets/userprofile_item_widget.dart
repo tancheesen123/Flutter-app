@@ -19,11 +19,13 @@ class UserprofileItemWidget extends StatefulWidget {
 class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
   final ApplyJobController applyJobController = Get.put(ApplyJobController());
   String? profileImageUrl;
+  String? companyName;
 
   @override
   void initState() {
     super.initState();
     fetchUserProfileImage();
+    fetchCompanyName();
   }
 
   Future<void> fetchUserProfileImage() async {
@@ -40,6 +42,24 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
     }
   }
 
+  Future<void> fetchCompanyName() async {
+    try {
+      DocumentReference companyRef = widget.data['company'] as DocumentReference;
+      DocumentSnapshot companySnapshot = await applyJobController.getCompanyData(companyRef);
+      
+      if (companySnapshot.exists) {
+        String companyname = companySnapshot.get('name'); // Replace 'name' with your actual field name
+        setState(() {
+          companyName = companyname;
+        });
+      } else {
+        print('Company document does not exist');
+      }
+    } catch (e) {
+      print('Error fetching company data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     String location = widget.data['location'];
@@ -48,6 +68,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
     String status = widget.data['statusApplication'];
     int workingHours = 12;
     int budget = widget.data['budget'];
+    
 
     return GestureDetector(
       onTap: () {
@@ -93,7 +114,7 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "123",
+                          "$companyName",
                           // "$CompanyId",
                           style: theme.textTheme.bodySmall,
                         ),
@@ -241,4 +262,6 @@ class _UserprofileItemWidgetState extends State<UserprofileItemWidget> {
     ),
   );
 }
+
+
 }
