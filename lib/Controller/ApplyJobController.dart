@@ -167,4 +167,16 @@ class ApplyJobController extends GetxController {
     }
     return null;
   }
+
+  Future<String?> getCompanyName(DocumentReference companyRef) async {
+    try {
+      DocumentSnapshot userSnapshot = await companyRef.get();
+      if (userSnapshot.exists) {
+        return userSnapshot['name'];
+      }
+    } catch (e) {
+      print('Error fetching company name: $e');
+    }
+    return null;
+  }
 }
