@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:workwise/presentation/Client/home_client_container_screen/home_client_container_screen.dart';
 import 'package:workwise/presentation/Client/home_client_page/home_client_page.dart';
 import '../../../core/app_export.dart';
 import 'package:workwise/Controller/CandidateController.dart';
@@ -222,7 +223,7 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                                   MaterialPageRoute(
                                                     builder:
                                                         (BuildContext context) {
-                                                      return HomeClientPage();
+                                                      return HomeClientContainerScreen();
                                                     },
                                                   ),
                                                   (_) => false,
@@ -283,7 +284,7 @@ class _CandidateScreenState extends State<CandidateScreen> {
                                                   MaterialPageRoute(
                                                     builder:
                                                         (BuildContext context) {
-                                                      return HomeClientPage();
+                                                      return HomeClientContainerScreen();
                                                     },
                                                   ),
                                                   (_) => false,
