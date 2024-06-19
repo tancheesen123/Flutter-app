@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:workwise/Controller/NotificationController.dart';
@@ -25,7 +27,7 @@ class CandidateController extends GetxController {
 
           notificationController.sendNotification(
               "${userData["Token"]}",
-              "Your application for ${postDetail["data"]["title"]} has been accepted",
+              "Your application for ${postDetail["data"]["title"]} has been Rejected",
               "Sorry! You have been rejected for the job ${postDetail["data"]["title"]}",
               userData["email"]);
         }
@@ -81,40 +83,43 @@ class CandidateController extends GetxController {
           print("this is doc's user ${doc["detail"]["user"]}");
 
           DocumentSnapshot userData = await getData(doc["detail"]["user"]);
+          var notification = jsonDecode(postDetail["data"]["Notification"]);
 
           notificationController.sendNotification(
               "${userData["Token"]}",
               "Your application for ${postDetail["data"]["title"]} has been accepted",
-              "Congratulations! You have been accepted for the job ${postDetail["data"]["title"]} your Next step are:\n${postDetail["data"]["description"]} ",
+              "Congratulations! You have been accepted for the job ${postDetail["data"]["title"]} your Next step are:\n${notification["notification"]["body"]} ",
               userData["email"]);
         }
       }
 
-      await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
-        FirebaseFirestore.instance
-            .collection('jobPost')
-            .doc(postDetail["id"])
-            .collection("candidate")
-            .doc(candidate["id"])
-            .update({"status": "Accept"});
-      });
+      // await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
+      //   FirebaseFirestore.instance
+      //       .collection('jobPost')
+      //       .doc(postDetail["id"])
+      //       .collection("candidate")
+      //       .doc(candidate["id"])
+      //       .update({"status": "Accept"});
+      // });
 
-      await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
-        dynamic userApplication = await FirebaseFirestore.instance
-            .collection('user')
-            .doc(candidate["id"])
-            .collection("Application")
-            .where("postRefPath",
-                isEqualTo: postDetail["postReference"].reference)
-            .get();
+      // await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
+      //   dynamic userApplication = await FirebaseFirestore.instance
+      //       .collection('user')
+      //       .doc(candidate["id"])
+      //       .collection("Application")
+      //       .where("postRefPath",
+      //           isEqualTo: postDetail["postReference"].reference)
+      //       .get();
 
-        await FirebaseFirestore.instance
-            .collection('user')
-            .doc(candidate["id"])
-            .collection("Application")
-            .doc(userApplication.docs[0].id)
-            .update({"status": "Accept"});
-      });
+      //   await FirebaseFirestore.instance
+      //       .collection('user')
+      //       .doc(candidate["id"])
+      //       .collection("Application")
+      //       .doc(userApplication.docs[0].id)
+      //       .update({"status": "Accept"});
+      // }
+
+      // );
 
       success = true;
     } catch (e) {
