@@ -29,12 +29,18 @@ class ViewHierarchyController extends GetxController {
   }
 
   Future<void> updatePostStatus(String postId, String status) async {
+    print("Post ID: $postId, Status: $status");
     DocumentReference jobPostRef =
         FirebaseFirestore.instance.collection("jobPost").doc(postId);
 
-    await jobPostRef.update({
-      "postStatus": status,
-    });
+    try {
+      await jobPostRef.update({
+        "postStatus": status,
+      });
+      print("Update successful");
+    } catch (e) {
+      print("Failed to update post status: $e");
+    }
   }
 
   Future<void> deletePostStatus(String postId) async {
