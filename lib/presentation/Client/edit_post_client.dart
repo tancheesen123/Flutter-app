@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:workwise/Controller/ManageJobPostController.dart';
+import 'package:workwise/presentation/Client/home_client_container_screen/home_client_container_screen.dart';
 import 'package:workwise/presentation/Client/home_client_page/home_client_page.dart';
 import '../../../core/app_export.dart';
 
@@ -14,7 +15,8 @@ class EditPostScreen extends StatefulWidget {
   State<EditPostScreen> createState() => _EditPostScreenState();
 }
 
-class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStateMixin {
+class _EditPostScreenState extends State<EditPostScreen>
+    with TickerProviderStateMixin {
   bool validToSubmit = false;
   late TabController tabviewController;
 
@@ -23,22 +25,32 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
   TextEditingController titleTextFieldController = TextEditingController();
   TextEditingController locationTextFieldController = TextEditingController();
   TextEditingController budgetTextFieldController = TextEditingController();
-  TextEditingController descriptionTextFieldController = TextEditingController();
-  TextEditingController titleMessageTextFieldController = TextEditingController();
-  TextEditingController bodyMessageTextFieldController = TextEditingController();
+  TextEditingController descriptionTextFieldController =
+      TextEditingController();
+  TextEditingController titleMessageTextFieldController =
+      TextEditingController();
+  TextEditingController bodyMessageTextFieldController =
+      TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
 
-    titleTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["title"];
-    locationTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["location"];
-    budgetTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["budget"].toString();
-    descriptionTextFieldController.text = widget.postDetail["jobPostDetail"]["data"]["description"];
+    titleTextFieldController.text =
+        widget.postDetail["jobPostDetail"]["data"]["title"];
+    locationTextFieldController.text =
+        widget.postDetail["jobPostDetail"]["data"]["location"];
+    budgetTextFieldController.text =
+        widget.postDetail["jobPostDetail"]["data"]["budget"].toString();
+    descriptionTextFieldController.text =
+        widget.postDetail["jobPostDetail"]["data"]["description"];
 
-    Map notificationDetail = jsonDecode(widget.postDetail["jobPostDetail"]["data"]["Notification"]);
-    titleMessageTextFieldController.text = notificationDetail["notification"]["title"];
-    bodyMessageTextFieldController.text = notificationDetail["notification"]["body"];
+    Map notificationDetail =
+        jsonDecode(widget.postDetail["jobPostDetail"]["data"]["Notification"]);
+    titleMessageTextFieldController.text =
+        notificationDetail["notification"]["title"];
+    bodyMessageTextFieldController.text =
+        notificationDetail["notification"]["body"];
 
     tabviewController = TabController(length: 2, vsync: this);
 
@@ -134,10 +146,15 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the job title",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -181,10 +198,15 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the location",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -233,10 +255,15 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter your budget",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -284,11 +311,17 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 filled: true,
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
-                                hintText: "Describe the rules, requirement and detail about this job ",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintText:
+                                    "Describe the rules, requirement and detail about this job ",
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -339,10 +372,15 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the message title",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -387,10 +425,15 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 // focusColor: Colors.amber,
                                 fillColor: Colors.white,
                                 hintText: "Enter the message body",
-                                hintStyle: TextStyle(fontWeight: FontWeight.w300),
+                                hintStyle:
+                                    TextStyle(fontWeight: FontWeight.w300),
                                 contentPadding: EdgeInsets.all(8),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-                                focusedBorder: OutlineInputBorder(borderSide: BorderSide(width: 1, color: Color(0xff007BFF)))),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: BorderSide.none),
+                                focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 1, color: Color(0xff007BFF)))),
                           ),
                         ),
                       ],
@@ -404,7 +447,8 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
         Container(
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30), topRight: Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
                   color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -428,16 +472,21 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                             onPressed: validToSubmit ? () {} : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                              backgroundColor:
+                                  MaterialStatePropertyAll(Colors.transparent),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Cancel",
-                                style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -456,16 +505,25 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                 : null,
                             style: ButtonStyle(
                               elevation: MaterialStatePropertyAll(0),
-                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                              shape: MaterialStateProperty.all<
+                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               )),
-                              backgroundColor: MaterialStatePropertyAll(validToSubmit ? Color(0xff5598FF) : Color(0xffF4F6F8)),
+                              backgroundColor: MaterialStatePropertyAll(
+                                  validToSubmit
+                                      ? Color(0xff5598FF)
+                                      : Color(0xffF4F6F8)),
                             ),
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 14),
                               child: Text(
                                 "Preview",
-                                style: TextStyle(fontWeight: FontWeight.w600, color: validToSubmit ? Colors.white : Color(0xffC2C2C2)),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: validToSubmit
+                                        ? Colors.white
+                                        : Color(0xffC2C2C2)),
                               ),
                             ),
                           ),
@@ -543,21 +601,31 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                             margin: EdgeInsets.only(bottom: 20),
                             child: Text(
                               titleTextFieldController.text,
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.w500),
                             ),
                           ),
                           Container(
                             margin: EdgeInsets.only(bottom: 20),
-                            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 25, vertical: 20),
                             child: Center(
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(widget.postDetail["companyDetail"]["name"], style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+                                  Text(
+                                      widget.postDetail["companyDetail"]
+                                          ["name"],
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
                                   Text(
                                     '-',
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff6A6A6A)),
                                   ),
                                   Icon(
                                     Icons.location_on_outlined,
@@ -566,7 +634,10 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                   ),
                                   Text(
                                     locationTextFieldController.text,
-                                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff6A6A6A)),
                                   ),
                                 ],
                               ),
@@ -577,7 +648,8 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                             child: Center(
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Row(
                                     children: [
@@ -590,13 +662,19 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                       ),
                                       Text(
                                         "Part Time",
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                        style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w500,
+                                            color: Color(0xff6A6A6A)),
                                       )
                                     ],
                                   ),
                                   Text(
                                     "RM${budgetTextFieldController.text}/h",
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500, color: Color(0xff6A6A6A)),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        color: Color(0xff6A6A6A)),
                                   )
                                 ],
                               ),
@@ -641,13 +719,17 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                   child: Padding(
                                     padding: const EdgeInsets.all(32.0),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           "Job Descriptions",
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w600),
                                         ),
-                                        Text(descriptionTextFieldController.text)
+                                        Text(
+                                            descriptionTextFieldController.text)
                                       ],
                                     ),
                                   ),
@@ -658,7 +740,8 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                     child: SizedBox(
                                       height: 500.v,
                                       child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             "Company Detail",
@@ -690,7 +773,9 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                   Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30)),
                         boxShadow: [
                           BoxShadow(
                             color: Color(0xffB3BAC3).withOpacity(0.25),
@@ -706,7 +791,8 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                         child: Container(
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -716,16 +802,24 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         )),
-                                        backgroundColor: MaterialStatePropertyAll(Colors.transparent),
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Colors.transparent),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 14),
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Edit",
-                                          style: TextStyle(fontWeight: FontWeight.w600, color: Color(0xffC2C2C2)),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xffC2C2C2)),
                                         ),
                                       ),
                                     ),
@@ -738,19 +832,27 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                       onPressed: () {
                                         _manageJobPostController
                                             .editJobPost(
-                                                widget.postDetail["jobPostDetail"]["id"],
+                                                widget.postDetail[
+                                                    "jobPostDetail"]["id"],
                                                 titleTextFieldController.text,
-                                                locationTextFieldController.text,
+                                                locationTextFieldController
+                                                    .text,
                                                 budgetTextFieldController.text,
-                                                descriptionTextFieldController.text,
-                                                titleMessageTextFieldController.text,
-                                                bodyMessageTextFieldController.text)
+                                                descriptionTextFieldController
+                                                    .text,
+                                                titleMessageTextFieldController
+                                                    .text,
+                                                bodyMessageTextFieldController
+                                                    .text)
                                             .then((success) {
                                           if (success) {
-                                            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pushAndRemoveUntil(
                                               MaterialPageRoute(
-                                                builder: (BuildContext context) {
-                                                  return HomeClientPage();
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return HomeClientContainerScreen();
                                                 },
                                               ),
                                               (_) => false,
@@ -762,16 +864,24 @@ class _EditPostScreenState extends State<EditPostScreen> with TickerProviderStat
                                       },
                                       style: ButtonStyle(
                                         elevation: MaterialStatePropertyAll(0),
-                                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(15),
+                                        shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
                                         )),
-                                        backgroundColor: MaterialStatePropertyAll(Color(0xff5598FF)),
+                                        backgroundColor:
+                                            MaterialStatePropertyAll(
+                                                Color(0xff5598FF)),
                                       ),
                                       child: Padding(
-                                        padding: EdgeInsets.symmetric(vertical: 14),
+                                        padding:
+                                            EdgeInsets.symmetric(vertical: 14),
                                         child: Text(
                                           "Update",
-                                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white),
                                         ),
                                       ),
                                     ),
