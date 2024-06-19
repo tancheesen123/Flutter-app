@@ -189,7 +189,7 @@ class PostInsightController extends GetxController {
       // Save the updated insight data back to Firestore
       final jsonString = jsonEncode(insightData);
       await docRef.set({'insight': jsonString}, SetOptions(merge: true));
-      // print("Insight data successfully updated for $field.");
+      print("Insight data successfully updated for $field.");
     } catch (e) {
       print("Failed to update insight data for $field: $e");
     }
