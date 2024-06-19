@@ -10,25 +10,30 @@ class CandidateController extends GetxController {
   var candidates = <Map<String, dynamic>>[].obs;
   var email = ''.obs;
   var deviceToken = ''.obs;
-  final NotificationController notificationController = Get.put(NotificationController());
+  final NotificationController notificationController =
+      Get.put(NotificationController());
 
-  Future<bool> acceptCandidate(dynamic postDetail, List listAcceptedCandidate, bool stopAcceptCandidate) async {
+  Future<bool> acceptCandidate(dynamic postDetail, List listAcceptedCandidate,
+      bool stopAcceptCandidate) async {
     bool success = false;
     try {
-      for (var doc in listAcceptedCandidate) {
-        print("this is doc's user ${doc["detail"]["user"]}");
-
-        DocumentSnapshot userData = await getData(doc["detail"]["user"]);
-
-        notificationController.sendNotification(
-            "${userData["Token"]}",
-            "Your application for ${postDetail["data"]["title"]} has been accepted",
-            "Congratulations! You have been accepted for the job ${postDetail["data"]["title"]} your Next step are:\n${postDetail["data"]["description"]} ",
-            userData["email"]);
-      }
-
       if (stopAcceptCandidate) {
-        FirebaseFirestore.instance.collection('jobPost').doc(postDetail["id"]).update({"postStatus": "EMPLOYED"});
+        for (var doc in listAcceptedCandidate) {
+          print("this is doc's user ${doc["detail"]["user"]}");
+
+          DocumentSnapshot userData = await getData(doc["detail"]["user"]);
+
+          notificationController.sendNotification(
+              "${userData["Token"]}",
+              "Your application for ${postDetail["data"]["title"]} has been accepted",
+              "Sorry! You have been rejected for the job ${postDetail["data"]["title"]}",
+              userData["email"]);
+        }
+
+        FirebaseFirestore.instance
+            .collection('jobPost')
+            .doc(postDetail["id"])
+            .update({"postStatus": "EMPLOYED"});
 
         List acceptedUserRefList = [];
 
@@ -59,7 +64,8 @@ class CandidateController extends GetxController {
                 .collection('user')
                 .doc(candidate.id)
                 .collection("Application")
-                .where("postRefPath", isEqualTo: postDetail["postReference"].reference)
+                .where("postRefPath",
+                    isEqualTo: postDetail["postReference"].reference)
                 .get();
 
             await FirebaseFirestore.instance
@@ -70,6 +76,18 @@ class CandidateController extends GetxController {
                 .update({"status": "Reject"});
           });
         });
+      } else {
+        for (var doc in listAcceptedCandidate) {
+          print("this is doc's user ${doc["detail"]["user"]}");
+
+          DocumentSnapshot userData = await getData(doc["detail"]["user"]);
+
+          notificationController.sendNotification(
+              "${userData["Token"]}",
+              "Your application for ${postDetail["data"]["title"]} has been accepted",
+              "Congratulations! You have been accepted for the job ${postDetail["data"]["title"]} your Next step are:\n${postDetail["data"]["description"]} ",
+              userData["email"]);
+        }
       }
 
       await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
@@ -86,7 +104,8 @@ class CandidateController extends GetxController {
             .collection('user')
             .doc(candidate["id"])
             .collection("Application")
-            .where("postRefPath", isEqualTo: postDetail["postReference"].reference)
+            .where("postRefPath",
+                isEqualTo: postDetail["postReference"].reference)
             .get();
 
         await FirebaseFirestore.instance
@@ -118,7 +137,11 @@ class CandidateController extends GetxController {
 
   Future<void> getCandidateDetail(String userId) async {
     dynamic candidateDetail;
-    await FirebaseFirestore.instance.collection('user').doc(userId).get().then((value) {
+    await FirebaseFirestore.instance
+        .collection('user')
+        .doc(userId)
+        .get()
+        .then((value) {
       candidateDetail = value.data();
     });
 

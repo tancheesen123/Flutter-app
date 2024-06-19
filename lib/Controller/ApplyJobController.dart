@@ -96,7 +96,6 @@ class ApplyJobController extends GetxController {
           .limit(
               1) // Limit the query to 1 document, as we only need to check if any document exists
           .get();
-
       if (querySnapshot.docs.isNotEmpty) {
         print('Document with the same postRefPath already exists');
         return false; // or you can throw an exception, depending on your requirements
@@ -126,7 +125,7 @@ class ApplyJobController extends GetxController {
             "${userData["Token"]}",
             "Congrats! You have a new application",
             "You have a new application for the job ${companyData["name"]}",
-            email);
+            "${userData["email"]}");
       }
     }
 
