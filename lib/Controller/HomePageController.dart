@@ -55,7 +55,7 @@ class HomePageController extends GetxController {
       Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
       data['postId'] = doc.id;
       dataList.add(data);
-      // postInsightController.saveImpression(doc.id);
+      postInsightController.saveImpression(doc.id);
 
       DocumentReference? companyRef = data['company'] as DocumentReference?;
       if (companyRef != null) {
