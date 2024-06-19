@@ -93,33 +93,31 @@ class CandidateController extends GetxController {
         }
       }
 
-      // await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
-      //   FirebaseFirestore.instance
-      //       .collection('jobPost')
-      //       .doc(postDetail["id"])
-      //       .collection("candidate")
-      //       .doc(candidate["id"])
-      //       .update({"status": "Accept"});
-      // });
+      await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
+        FirebaseFirestore.instance
+            .collection('jobPost')
+            .doc(postDetail["id"])
+            .collection("candidate")
+            .doc(candidate["id"])
+            .update({"status": "Accept"});
+      });
 
-      // await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
-      //   dynamic userApplication = await FirebaseFirestore.instance
-      //       .collection('user')
-      //       .doc(candidate["id"])
-      //       .collection("Application")
-      //       .where("postRefPath",
-      //           isEqualTo: postDetail["postReference"].reference)
-      //       .get();
+      await Future.forEach<dynamic>(listAcceptedCandidate, (candidate) async {
+        dynamic userApplication = await FirebaseFirestore.instance
+            .collection('user')
+            .doc(candidate["id"])
+            .collection("Application")
+            .where("postRefPath",
+                isEqualTo: postDetail["postReference"].reference)
+            .get();
 
-      //   await FirebaseFirestore.instance
-      //       .collection('user')
-      //       .doc(candidate["id"])
-      //       .collection("Application")
-      //       .doc(userApplication.docs[0].id)
-      //       .update({"status": "Accept"});
-      // }
-
-      // );
+        await FirebaseFirestore.instance
+            .collection('user')
+            .doc(candidate["id"])
+            .collection("Application")
+            .doc(userApplication.docs[0].id)
+            .update({"status": "Accept"});
+      });
 
       success = true;
     } catch (e) {
