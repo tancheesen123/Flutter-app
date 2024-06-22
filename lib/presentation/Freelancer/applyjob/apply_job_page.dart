@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elegant_notification/elegant_notification.dart';
 import 'package:elegant_notification/resources/arrays.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/app_export.dart';
 import '../../../widgets/app_bar/appbar_leading_image.dart';
 import '../../../widgets/app_bar/appbar_title.dart';
@@ -239,7 +241,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
                                           ),
                                           Expanded(
                                             child: SingleChildScrollView(
-                                              child: Text(
+                                              child: _buildBodyText(
                                                 jobPostData["jobpostData"]
                                                         ["description"] ??
                                                     "No description available",
@@ -415,5 +417,53 @@ class _ApplyJobScreenState extends State<ApplyJobScreen>
         ),
       ),
     );
+  }
+}
+
+Widget _buildBodyText(String body) {
+  final RegExp linkRegExp = RegExp(r'http[s]?:\/\/[^\s]+');
+  final Iterable<RegExpMatch> matches = linkRegExp.allMatches(body);
+
+  if (matches.isEmpty) {
+    return Text(body);
+  }
+
+  List<TextSpan> textSpans = [];
+  int lastMatchEnd = 0;
+
+  for (final match in matches) {
+    if (match.start != lastMatchEnd) {
+      textSpans.add(TextSpan(text: body.substring(lastMatchEnd, match.start)));
+    }
+    final String linkText = match.group(0)!;
+    textSpans.add(
+      TextSpan(
+        text: linkText,
+        style:
+            TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+        recognizer: TapGestureRecognizer()..onTap = () => _launchURL(linkText),
+      ),
+    );
+    lastMatchEnd = match.end;
+  }
+
+  if (lastMatchEnd != body.length) {
+    textSpans.add(TextSpan(text: body.substring(lastMatchEnd)));
+  }
+
+  return RichText(
+    text: TextSpan(
+      style: CustomTextStyles.bodyMediumOnPrimary_1.copyWith(fontSize: 15.0),
+      children: textSpans,
+    ),
+  );
+}
+
+void _launchURL(String url) async {
+  Uri uri = Uri.parse(url);
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(uri);
+  } else {
+    throw 'Could not launch $url';
   }
 }
