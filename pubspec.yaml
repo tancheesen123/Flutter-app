@@ -17,7 +17,6 @@ dependencies:
   firebase_auth: ^4.19.2
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^6.2.0
-  fluttertoast: ^8.2.5
   flutter_svg_provider: ^1.0.7
   firebase_database: ^10.5.5
   get: ^4.6.6
@@ -34,15 +33,21 @@ dependencies:
   googleapis_auth: ^1.6.0
   http: ^1.2.1
   flutter_local_notifications: ^17.1.2
-  url_launcher: ^6.2.6
+  url_launcher: ^6.3.1
+  url_launcher_ios: ^6.3.2
   loader_overlay: ^4.0.0
   fl_chart: ^0.68.0
   sizer: ^2.0.15
   syncfusion_flutter_charts: ^26.1.35
+  fluttertoast: ^8.2.8
 dev_dependencies: 
   flutter_test: 
     sdk: flutter
   flutter_launcher_icons: ^0.13.1
+
+dependency_overrides:
+  flutter_local_notifications_linux: any
+
 
 flutter_launcher_icons:
   android: "launcher_icon"

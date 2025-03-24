@@ -1,6 +1,35 @@
-/.dart_tool/
-/.idea/
+# Ignore build files
 /build/
+/out/
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Ignore local environment files
+.env
+.env.local
+
+# Ignore dependency directories
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+flutter-plugins
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
 /.vscode/
 
 /.flutter-plugins
@@ -10,3 +39,6 @@
 /pubspec.lock
 .git.zip
 .git
+
+/.dart_tool/
+/.idea/
