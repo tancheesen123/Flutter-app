@@ -31,7 +31,7 @@ class FirebaseApiController extends GetxController {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      final token = await _firebaseMessaging.getToken();
+      final token = await _firebaseMessaging.getAPNSToken();
       userController.addToken("$token");
 
       await initLocalNotification();
