@@ -60,7 +60,6 @@ flutter:
   assets: 
     - assets/
     - assets/images/
-    - assets/config/flutter-mango-firebase-adminsdk-bj9c2-dbc3986369.json
   fonts: 
     - family: Poppins
       fonts: 
