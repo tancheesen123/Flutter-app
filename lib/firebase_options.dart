@@ -41,47 +41,47 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBsVUJwZHob7_QL1Y46VtX_adavvJ47E0Y',
-    appId: '1:751042445266:web:119f37c913fa1b72ee120b',
-    messagingSenderId: '751042445266',
-    projectId: 'flutter-mango',
-    authDomain: 'flutter-mango.firebaseapp.com',
-    storageBucket: 'flutter-mango.appspot.com',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_WEB'),
+    appId: const String.fromEnvironment('FIREBASE_APP_ID_WEB'),
+    messagingSenderId: const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_WEB'),
+    projectId: const String.fromEnvironment('FIREBASE_PROJECT_ID_WEB'),
+    authDomain: const String.fromEnvironment('FIREBASE_AUTH_DOMAIN_WEB'),
+    storageBucket: const String.fromEnvironment('FIREBASE_STORAGE_BUCKET_WEB'),
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDKB1iZ5EIUbf3VSgaXyOiVT7Ev9VoHgeA',
-    appId: '1:751042445266:android:5ab5150049a7a147ee120b',
-    messagingSenderId: '751042445266',
-    projectId: 'flutter-mango',
-    storageBucket: 'flutter-mango.appspot.com',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_ANDROID'),
+    appId: const String.fromEnvironment('FIREBASE_APP_ID_ANDROID'),
+    messagingSenderId: const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_ANDROID'),
+    projectId: const String.fromEnvironment('FIREBASE_PROJECT_ID_ANDROID'),
+    storageBucket: const String.fromEnvironment('FIREBASE_STORAGE_BUCKET_ANDROID'),
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBlHO3moBiPGqx6RF013PaAsbsSn0YbJgU',
-    appId: '1:751042445266:ios:53560d4afbf219feee120b',
-    messagingSenderId: '751042445266',
-    projectId: 'flutter-mango',
-    storageBucket: 'flutter-mango.appspot.com',
-    iosBundleId: 'com.workwise.app.testProject',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_IOS'),
+    appId: const String.fromEnvironment('FIREBASE_APP_ID_IOS'),
+    messagingSenderId: const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_IOS'),
+    projectId: const String.fromEnvironment('FIREBASE_PROJECT_ID_IOS'),
+    storageBucket: const String.fromEnvironment('FIREBASE_STORAGE_BUCKET_IOS'),
+    iosBundleId: const String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID_IOS'),
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyBlHO3moBiPGqx6RF013PaAsbsSn0YbJgU',
-    appId: '1:751042445266:ios:4589159a8597633cee120b',
-    messagingSenderId: '751042445266',
-    projectId: 'flutter-mango',
-    storageBucket: 'flutter-mango.appspot.com',
-    iosBundleId: 'com.WorkWise.app',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_MACOS'),
+    appId: const String.fromEnvironment('FIREBASE_APP_ID_MACOS'),
+    messagingSenderId: const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_MACOS'),
+    projectId: const String.fromEnvironment('FIREBASE_PROJECT_ID_MACOS'),
+    storageBucket: const String.fromEnvironment('FIREBASE_STORAGE_BUCKET_MACOS'),
+    iosBundleId: const String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID_MACOS'),
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyBsVUJwZHob7_QL1Y46VtX_adavvJ47E0Y',
-    appId: '1:751042445266:web:dde1cec9e15450e9ee120b',
-    messagingSenderId: '751042445266',
-    projectId: 'flutter-mango',
-    authDomain: 'flutter-mango.firebaseapp.com',
-    storageBucket: 'flutter-mango.appspot.com',
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_WINDOWS'),
+    appId: const String.fromEnvironment('FIREBASE_APP_ID_WINDOWS'),
+    messagingSenderId: const String.fromEnvironment('FIREBASE_MESSAGING_SENDER_ID_WINDOWS'),
+    projectId: const String.fromEnvironment('FIREBASE_PROJECT_ID_WINDOWS'),
+    authDomain: const String.fromEnvironment('FIREBASE_AUTH_DOMAIN_WINDOWS'),
+    storageBucket: const String.fromEnvironment('FIREBASE_STORAGE_BUCKET_WINDOWS'),
   );
 
 }

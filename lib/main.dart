@@ -11,10 +11,11 @@ var globalMessengerKey = GlobalKey<ScaffoldMessengerState>();
 final FirebaseApiController firebaseApiController = Get.put(FirebaseApiController());
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   ThemeHelper().changeTheme('primary');
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  
   await firebaseApiController.initNotification();
 
   //Check if the connection to Firebase was successful
