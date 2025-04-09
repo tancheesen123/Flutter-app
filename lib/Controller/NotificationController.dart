@@ -18,12 +18,19 @@ class NotificationController extends GetxController {
   var email = ''.obs;
 
   Future<String> getOAuthToken() async {
-    // Load the service account credentials from the JSON file
-    final String credentialsJson = await rootBundle.loadString(
-        'assets/config/flutter-mango-firebase-adminsdk-bj9c2-dbc3986369.json');
-    final serviceAccountCredentials = ServiceAccountCredentials.fromJson(
-      json.decode(credentialsJson),
-    );
+    // Load service account credentials from environment variables
+    final serviceAccountCredentials = ServiceAccountCredentials.fromJson({
+      'type': 'service_account',
+      'project_id': Platform.environment['FIREBASE_PROJECT_ID'],
+      'private_key_id': Platform.environment['FIREBASE_PRIVATE_KEY_ID'],
+      'private_key': Platform.environment['FIREBASE_PRIVATE_KEY']?.replaceAll(r'\n', '\n'),
+      'client_email': Platform.environment['FIREBASE_CLIENT_EMAIL'],
+      'client_id': Platform.environment['FIREBASE_CLIENT_ID'],
+      'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+      'token_uri': 'https://oauth2.googleapis.com/token',
+      'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+      'client_x509_cert_url': Platform.environment['FIREBASE_CLIENT_CERT_URL']
+    });
 
     // Define the required scopes
     final List<String> scopes = [
@@ -41,7 +48,7 @@ class NotificationController extends GetxController {
 
   Future<void> sendNotification(
       String deviceToken, String title, String body, String email) async {
-    final String projectId = 'flutter-mango'; // Replace with your project ID
+    final String projectId = Platform.environment['FIREBASE_PROJECT_ID'] ?? 'flutter-mango';
 
     // Get the OAuth token
     final String oauthToken = await getOAuthToken();
@@ -77,6 +84,7 @@ class NotificationController extends GetxController {
     } else {
       print('Error sending notification: ${response.statusCode}');
       print('Response: ${response.body}');
+      throw Exception('Failed to send notification: ${response.statusCode} - ${response.body}');
     }
   }
 
@@ -115,59 +123,89 @@ class NotificationController extends GetxController {
   }
 
   Future<List<Map<String, dynamic>>> fetchNotifications() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String email = prefs.getString('userEmail') ?? '';
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString('userEmail') ?? '';
 
-    if (email.isEmpty) {
-      print('User email not found in SharedPreferences');
-      return [];
+      if (email.isEmpty) {
+        print('User email not found in SharedPreferences');
+        return [];
+      }
+
+      // Reference to the user's notification collection
+      CollectionReference notificationCollection = FirebaseFirestore.instance
+          .collection('user')
+          .doc(email.toLowerCase())
+          .collection('Notification');
+
+      // Retrieve the documents from the collection with a timeout
+      QuerySnapshot snapshot = await notificationCollection
+          .orderBy('timestamp', descending: true)
+          .get(GetOptions(source: Source.serverAndCache))
+          .timeout(const Duration(seconds: 10));
+
+      // Parse the documents into a list of maps
+      List<Map<String, dynamic>> notifications = snapshot.docs.map((doc) {
+        try {
+          return {
+            'id': doc.id,
+            ...doc.data() as Map<String, dynamic>,
+          };
+        } catch (e) {
+          print('Error parsing notification document ${doc.id}: $e');
+          return {'error': 'Failed to parse notification'};
+        }
+      }).toList();
+
+      print('Successfully fetched ${notifications.length} notifications.');
+      return notifications.where((n) => !n.containsKey('error')).toList();
+    } catch (e) {
+      print('Error fetching notifications: $e');
+      rethrow;
     }
-
-    // Reference to the user's notification collection
-    CollectionReference notificationCollection = FirebaseFirestore.instance
-        .collection('user')
-        .doc(email.toLowerCase())
-        .collection('Notification');
-
-    // Retrieve the documents from the collection
-    QuerySnapshot snapshot = await notificationCollection
-        .orderBy('timestamp', descending: true)
-        .get();
-
-    // Parse the documents into a list of maps
-    List<Map<String, dynamic>> notifications = snapshot.docs.map((doc) {
-      return {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      };
-    }).toList();
-
-    print('Fetched ${notifications.length} notifications.');
-    return notifications;
   }
 
   Future<List<Map<String, dynamic>>> fetchActiveNotifications() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String email = prefs.getString('userEmail') ?? '';
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String email = prefs.getString('userEmail') ?? '';
 
-    // Reference to the user's notification collection
-    CollectionReference notificationCollection = FirebaseFirestore.instance
-        .collection('user')
-        .doc(email.toLowerCase())
-        .collection('Notification');
+      if (email.isEmpty) {
+        print('User email not found in SharedPreferences');
+        return [];
+      }
 
-    // Retrieve the documents from the collection
-    QuerySnapshot snapshot =
-        await notificationCollection.where('status', isEqualTo: 'active').get();
+      // Reference to the user's notification collection
+      CollectionReference notificationCollection = FirebaseFirestore.instance
+          .collection('user')
+          .doc(email.toLowerCase())
+          .collection('Notification');
 
-    // Parse the documents into a list of maps
-    List<Map<String, dynamic>> notifications = snapshot.docs.map((doc) {
-      return {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      };
-    }).toList();
-    return notifications;
+      // Retrieve active notifications with cache fallback
+      QuerySnapshot snapshot = await notificationCollection
+          .where('status', isEqualTo: 'active')
+          .get(GetOptions(source: Source.serverAndCache))
+          .timeout(const Duration(seconds: 10));
+
+      // Parse and validate documents
+      List<Map<String, dynamic>> notifications = snapshot.docs.map((doc) {
+        try {
+          return {
+            'id': doc.id,
+            ...doc.data() as Map<String, dynamic>,
+          };
+        } catch (e) {
+          print('Error parsing active notification ${doc.id}: $e');
+          return {'error': 'Failed to parse notification'};
+        }
+      }).toList();
+
+      print('Fetched ${notifications.length} active notifications.');
+      return notifications.where((n) => !n.containsKey('error')).toList();
+    } catch (e) {
+      print('Error fetching active notifications: $e');
+      rethrow;
+    }
   }
 
   Future<void> updateStatus(String id) async {
