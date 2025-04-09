@@ -20,6 +20,9 @@
 .pub/
 flutter-plugins
 
+# Google Services (e.g. APIs or Firebase)
+google-services.json
+google-services.plist
 # Ignore OS generated files
 .DS_Store
 .DS_Store?
